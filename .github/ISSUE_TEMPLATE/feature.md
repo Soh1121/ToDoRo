@@ -8,7 +8,7 @@ about: ワクワクするような新機能リクエスト
 
 (Closed になるために必要な状態)
 
-## 💪 Motivation
+## 📝 Overview
 
 (Issue を何故立てたのですか？)
 (Issue を作成した背景は？)
