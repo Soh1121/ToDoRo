@@ -1,0 +1,23 @@
+version: '3'
+services:
+  web:
+    build: .
+    environment:
+      - "TZ=Asia/Tokyo"
+    volumes:
+      - ./web:/var/www/html/ToDoRo
+    ports:
+      - 8081:8081
+      - 3000:3000
+  database:
+    image: mysql:5.7.29
+    environment:
+      MYSQL_DATABASE: todoro
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+      TZ: "Asiz/Tokyo"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/var/lib/mysql
