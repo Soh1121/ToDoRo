@@ -17,5 +17,8 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+Route::get('/phpinfo', function () {
+  return view('phpinfo');
+});
 Route::get('/todo{any}', 'SpaController@todo')->where('any', '(/?$|/.*)');
 Route::get('/timer{any}', 'SpaController@timer')->where('any', '(/?$|/.*)');
