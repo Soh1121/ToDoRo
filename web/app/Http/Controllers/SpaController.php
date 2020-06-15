@@ -10,8 +10,4 @@ class SpaController extends Controller
     {
         return view('spa/todo');
     }
-    public function timer()
-    {
-        return view('spa/timer');
-    }
 }
