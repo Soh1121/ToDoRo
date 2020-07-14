@@ -21,3 +21,7 @@ Route::get('/phpinfo', function () {
   return view('phpinfo');
 });
 Route::get('/{any?}', 'SpaController@todo')->where('any', '.+');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
