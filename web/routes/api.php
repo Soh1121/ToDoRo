@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// 会員登録
+Route::post('/register', 'Auth\RegisterController@register')->name('register');
+
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
