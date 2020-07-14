@@ -30,5 +30,9 @@ class RegisterApiTest extends TestCase
             [$data['name'], $data['email']],
             [$user->name, $user->email]
         );
+        $this->assertNotEquals(
+            $data['password'],
+            $user->password
+        );
     }
 }
