@@ -35,5 +35,7 @@ class LoginApiTest extends TestCase
                 'name' => $this->user->name,
                 'email' => $this->user->email,
             ]);
+
+        $this->assertAuthenticatedAs($this->user);
     }
 }
