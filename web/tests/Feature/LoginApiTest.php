@@ -30,6 +30,10 @@ class LoginApiTest extends TestCase
         ]);
 
         $response
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertJson([
+                'name' => $this->user->name,
+                'email' => $this->user->email,
+            ]);
     }
 }
