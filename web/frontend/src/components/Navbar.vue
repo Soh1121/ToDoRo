@@ -26,7 +26,12 @@
       </v-btn>
 
       <div class="my-2">
-        <v-btn outlined large>登録／ログイン</v-btn>
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn outlined large v-on="on" v-bind="attrs">登録／ログイン</v-btn>
+          </template>
+          <Login />
+        </v-dialog>
       </div>
 
       <v-menu left bottom>
@@ -50,5 +55,14 @@
 </template>
 
 <script>
-export default {};
+import Login from "./Login.vue";
+
+export default {
+  components: {
+    Login
+  },
+  data: () => ({
+    dialog: false
+  })
+};
 </script>
