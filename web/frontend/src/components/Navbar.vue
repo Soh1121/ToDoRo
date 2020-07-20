@@ -30,7 +30,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn outlined large v-on="on" v-bind="attrs">登録／ログイン</v-btn>
           </template>
-          <Login />
+          <Login :dialog="dialog" @close-click="emitEvent" />
         </v-dialog>
       </div>
 
@@ -63,6 +63,11 @@ export default {
   },
   data: () => ({
     dialog: false
-  })
+  }),
+  methods: {
+    emitEvent(child_dialog) {
+      this.dialog = child_dialog;
+    }
+  }
 };
 </script>

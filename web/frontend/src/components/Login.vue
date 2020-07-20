@@ -48,20 +48,25 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="orange" text @click="dialog = false">キャンセル</v-btn>
-      <v-btn color="orange" dark @click="dialog = false" v-show="tab === 1">ログイン</v-btn>
-      <v-btn color="orange" dark @click="dialog = false" v-show="tab === 2">登録</v-btn>
+      <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
+      <v-btn color="orange" dark @click="closeByEmit" v-show="tab === 1">ログイン</v-btn>
+      <v-btn color="orange" dark @click="closeByEmit" v-show="tab === 2">登録</v-btn>
     </v-card-actions>
   </v-card>
 </template>
 
 <script>
 export default {
+  props: ["dialog"],
   data() {
     return {
-      tab: 1,
-      dialog: true
+      tab: 1
     };
+  },
+  methods: {
+    closeByEmit() {
+      this.$emit("close-click", (this.dialog = false));
+    }
   }
 };
 </script>
