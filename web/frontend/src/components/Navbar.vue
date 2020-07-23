@@ -28,7 +28,9 @@
       <div class="my-2">
         <v-dialog v-model="dialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined large v-on="on" v-bind="attrs">登録／ログイン</v-btn>
+            <v-btn outlined large v-on="on" v-bind="attrs"
+              >登録／ログイン</v-btn
+            >
           </template>
           <Login :dialog="dialog" @close-click="emitEvent" />
         </v-dialog>

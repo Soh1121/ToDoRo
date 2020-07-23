@@ -9,7 +9,12 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field label="メールアドレス" required color="orange" v-model="loginForm.email" />
+              <v-text-field
+                label="メールアドレス"
+                required
+                color="orange"
+                v-model="loginForm.email"
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -30,7 +35,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark @click="closeByEmit">ログイン</v-btn>
+        <v-btn type="submit" color="orange" dark @click="closeByEmit"
+          >ログイン</v-btn
+        >
       </v-card-actions>
     </form>
     <form v-show="tab === 2" @submit.prevent="register">
@@ -49,7 +56,12 @@
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field label="メールアドレス *" required color="orange" v-model="registerForm.email" />
+              <v-text-field
+                label="メールアドレス *"
+                required
+                color="orange"
+                v-model="registerForm.email"
+              />
             </v-col>
           </v-row>
           <v-row>
@@ -73,9 +85,13 @@
                 required
                 color="orange"
                 v-model="registerForm.password_confirmation"
-                :append-icon="registerForm.show_confirmation ? 'mdi-eye' : 'mdi-eye-off'"
+                :append-icon="
+                  registerForm.show_confirmation ? 'mdi-eye' : 'mdi-eye-off'
+                "
                 :type="registerForm.show_confirmation ? 'text' : 'password'"
-                @click:append="registerForm.show_confirmation = !registerForm.show_confirmation"
+                @click:append="
+                  registerForm.show_confirmation = !registerForm.show_confirmation
+                "
               />
             </v-col>
           </v-row>
@@ -88,7 +104,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark @click="closeByEmit">登録</v-btn>
+        <v-btn type="submit" color="orange" dark @click="closeByEmit"
+          >登録</v-btn
+        >
       </v-card-actions>
     </form>
   </v-card>
