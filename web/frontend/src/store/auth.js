@@ -4,7 +4,11 @@ const state = {
 
 const getters = {};
 
-const mutations = {};
+const mutations = {
+  setUser(state, user) {
+    state.user = user;
+  }
+};
 
 const actions = {};
 
