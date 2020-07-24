@@ -1,4 +1,6 @@
-const state = {};
+const state = {
+  user: null
+};
 
 const getters = {};
 
