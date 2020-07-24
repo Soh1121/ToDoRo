@@ -140,8 +140,13 @@ export default {
     login() {
       console.log(this.loginForm);
     },
-    register() {
-      console.log(this.registerForm);
+    async register() {
+      // authストアのregisterアクションの呼び出し
+      await this.$store.dispatch("auth/register", this.registerForm);
+
+      // 仮実装でトップページに戻るように
+      // TODO: フォーム画面を閉じるように変更
+      this.$router.push("/");
     }
   }
 };
