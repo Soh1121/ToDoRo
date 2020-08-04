@@ -24,9 +24,9 @@
                 required
                 color="orange"
                 v-model="loginForm.password"
-                :append-icon="loginForm.show ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="loginForm.show ? 'text' : 'password'"
-                @click:append="loginForm.show = !loginForm.show"
+                :append-icon="login_show ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="login_show ? 'text' : 'password'"
+                @click:append="login_show = !login_show"
               />
             </v-col>
           </v-row>
@@ -72,9 +72,9 @@
                 required
                 color="orange"
                 v-model="registerForm.password"
-                :append-icon="registerForm.show ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="registerForm.show ? 'text' : 'password'"
-                @click:append="registerForm.show = !registerForm.show"
+                :append-icon="register_show ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="register_show ? 'text' : 'password'"
+                @click:append="register_show = !register_show"
               />
             </v-col>
           </v-row>
@@ -85,13 +85,9 @@
                 required
                 color="orange"
                 v-model="registerForm.password_confirmation"
-                :append-icon="
-                  registerForm.show_confirmation ? 'mdi-eye' : 'mdi-eye-off'
-                "
-                :type="registerForm.show_confirmation ? 'text' : 'password'"
-                @click:append="
-                  registerForm.show_confirmation = !registerForm.show_confirmation
-                "
+                :append-icon="confirmation_show ? 'mdi-eye-off' : 'mdi-eye'"
+                :type="confirmation_show ? 'text' : 'password'"
+                @click:append="confirmation_show = !confirmation_show"
               />
             </v-col>
           </v-row>
@@ -118,18 +114,18 @@ export default {
   data() {
     return {
       tab: 1,
+      login_show: false,
+      register_show: false,
+      confirmation_show: false,
       loginForm: {
         email: "",
-        password: "",
-        show: false
+        password: ""
       },
       registerForm: {
         name: "",
         email: "",
         password: "",
-        password_confirmation: "",
-        show: false,
-        show_confirmation: false
+        password_confirmation: ""
       }
     };
   },
@@ -140,8 +136,13 @@ export default {
     login() {
       console.log(this.loginForm);
     },
-    register() {
-      console.log(this.registerForm);
+    async register() {
+      // authストアのregisterアクションの呼び出し
+      await this.$store.dispatch("auth/register", this.registerForm);
+
+      // 仮実装でトップページに戻るように
+      // TODO: フォーム画面を閉じるように変更
+      // this.$router.push("/");
     }
   }
 };
