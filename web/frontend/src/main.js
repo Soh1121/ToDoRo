@@ -8,6 +8,7 @@ import "@mdi/font/css/materialdesignicons.css";
 require("@/assets/sass/app.scss");
 
 Vue.config.productionTip = false;
+Vue.config.devtools = true;
 
 new Vue({
   router,
