@@ -146,7 +146,7 @@ export default {
 
       // 仮実装でトップページに戻るように
       // TODO: フォーム画面を閉じるように変更
-      this.$router.push("/");
+      // this.$router.push("/");
     }
   }
 };
