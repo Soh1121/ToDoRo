@@ -8,7 +8,7 @@ RUN apt-get update \
   && apt-get install --no-install-recommends -y nodejs \
   && npm install -g npm@latest \
   && : 'Install PHP Extensions' \
-  && docker-php-ext-install -j$(nproc) pdo_pgsql \
+  && docker-php-ext-install -j$(nproc) pdo_mysql \
   && : 'Install Composer' \
   && chmod 755 /install-composer.sh \
   && /install-composer.sh \
