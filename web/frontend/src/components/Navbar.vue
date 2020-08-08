@@ -47,7 +47,7 @@
           <v-list-item>
             <v-list-item-title>設定</v-list-item-title>
           </v-list-item>
-          <v-list-item>
+          <v-list-item @click="logout">
             <v-list-item-title>ログアウト</v-list-item-title>
           </v-list-item>
         </v-list>
@@ -69,6 +69,10 @@ export default {
   methods: {
     emitEvent(child_dialog) {
       this.dialog = child_dialog;
+    },
+
+    async logout() {
+      await this.$store.dispatch("auth/logout");
     }
   }
 };

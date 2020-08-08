@@ -22,7 +22,7 @@ const actions = {
   },
 
   async logout(context) {
-    await window.axiso.post("/api/logout");
+    await window.axios.post("/api/logout");
     context.commit("setUser", null);
   }
 };
