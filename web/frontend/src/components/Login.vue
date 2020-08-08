@@ -9,12 +9,7 @@
         <v-container>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field
-                label="メールアドレス"
-                required
-                color="orange"
-                v-model="loginForm.email"
-              />
+              <v-text-field label="メールアドレス" required color="orange" v-model="loginForm.email" />
             </v-col>
           </v-row>
           <v-row>
@@ -35,9 +30,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark @click="closeByEmit"
-          >ログイン</v-btn
-        >
+        <v-btn type="submit" color="orange" dark @click="closeByEmit">ログイン</v-btn>
       </v-card-actions>
     </form>
     <form v-show="tab === 2" @submit.prevent="register">
@@ -56,12 +49,7 @@
           </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="12">
-              <v-text-field
-                label="メールアドレス *"
-                required
-                color="orange"
-                v-model="registerForm.email"
-              />
+              <v-text-field label="メールアドレス *" required color="orange" v-model="registerForm.email" />
             </v-col>
           </v-row>
           <v-row>
@@ -100,9 +88,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark @click="closeByEmit"
-          >登録</v-btn
-        >
+        <v-btn type="submit" color="orange" dark @click="closeByEmit">登録</v-btn>
       </v-card-actions>
     </form>
   </v-card>
@@ -133,16 +119,13 @@ export default {
     closeByEmit() {
       this.$emit("close-click", (this.dialog = false));
     },
-    login() {
-      console.log(this.loginForm);
+    async login() {
+      // authストアのloginアクションの呼び出し
+      await this.$store.dispatch("auth/login", this.loginForm);
     },
     async register() {
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
-
-      // 仮実装でトップページに戻るように
-      // TODO: フォーム画面を閉じるように変更
-      // this.$router.push("/");
     }
   }
 };
