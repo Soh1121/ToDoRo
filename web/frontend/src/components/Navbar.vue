@@ -74,6 +74,14 @@ export default {
     async logout() {
       await this.$store.dispatch("auth/logout");
     }
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters["auth/check"];
+    },
+    username() {
+      return this.$store.getters["auth/username"];
+    }
   }
 };
 </script>
