@@ -25,18 +25,7 @@
         <v-icon>mdi-plus</v-icon>
       </v-btn>
 
-      <div class="my-2">
-        <v-dialog v-model="dialog" persistent max-width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined large v-on="on" v-bind="attrs"
-              >登録／ログイン</v-btn
-            >
-          </template>
-          <Login :dialog="dialog" @close-click="emitEvent" />
-        </v-dialog>
-      </div>
-
-      <v-menu left bottom>
+      <v-menu left bottom v-if="isLogin">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
             <v-icon>mdi-dots-vertical</v-icon>
@@ -52,6 +41,17 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
+      <div class="my-2" v-else>
+        <v-dialog v-model="dialog" persistent max-width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn outlined large v-on="on" v-bind="attrs"
+              >登録／ログイン</v-btn
+            >
+          </template>
+          <Login :dialog="dialog" @close-click="emitEvent" />
+        </v-dialog>
+      </div>
     </v-app-bar>
   </div>
 </template>
@@ -73,6 +73,14 @@ export default {
 
     async logout() {
       await this.$store.dispatch("auth/logout");
+    }
+  },
+  computed: {
+    isLogin() {
+      return this.$store.getters["auth/check"];
+    },
+    username() {
+      return this.$store.getters["auth/username"];
     }
   }
 };
