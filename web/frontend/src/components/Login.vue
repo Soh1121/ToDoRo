@@ -42,10 +42,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark @click="closeByEmit"
-          >ログイン</v-btn
-        >
+        <v-btn color="orange" text @click="close">キャンセル</v-btn>
+        <v-btn type="submit" color="orange" dark>ログイン</v-btn>
       </v-card-actions>
     </form>
     <form v-show="tab === 2" @submit.prevent="register">
@@ -107,10 +105,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="orange" text @click="closeByEmit">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark @click="closeByEmit"
-          >登録</v-btn
-        >
+        <v-btn color="orange" text @click="close">キャンセル</v-btn>
+        <v-btn type="submit" color="orange" dark>登録</v-btn>
       </v-card-actions>
     </form>
   </v-card>
@@ -140,8 +136,8 @@ export default {
     };
   },
   methods: {
-    closeByEmit() {
-      this.$emit("close-click", (this.dialog = false));
+    close() {
+      this.$store.dispatch("auth/close");
     },
     async login() {
       // authストアのloginアクションの呼び出し

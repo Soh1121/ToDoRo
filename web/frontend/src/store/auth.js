@@ -3,23 +3,28 @@ import { OK, UNPROCESSABLE_ENTITY } from "../util";
 const state = {
   user: null,
   apiStatus: null,
-  loginErrorMessages: null
+  loginErrorMessages: null,
+  display: false
 };
 
 const getters = {
   check: state => !!state.user,
-  username: state => (state.user ? state.user.name : "")
+  username: state => (state.user ? state.user.name : ""),
+  display: state => !!state.display
 };
 
 const mutations = {
   setUser(state, user) {
     state.user = user;
   },
-  setApiStatus(state, status) {
+  setpiStatus(state, status) {
     state.apiStatus = status;
   },
   setLoginErrorMessages(state, messages) {
     state.loginErrorMessages = messages;
+  },
+  reverseDisplay(state, property) {
+    state.display = property;
   }
 };
 
@@ -27,6 +32,7 @@ const actions = {
   async register(context, data) {
     const response = await window.axios.post("/api/register", data);
     context.commit("setUser", response.data);
+    context.commit("reverseDisplay", false);
   },
 
   async login(context, data) {
@@ -38,6 +44,7 @@ const actions = {
     if (response.status === OK) {
       context.commit("setApiStatus", true);
       context.commit("setUser", response.data);
+      context.commit("reverseDisplay", false);
       return false;
     }
 
@@ -52,12 +59,21 @@ const actions = {
   async logout(context) {
     await window.axios.post("/api/logout");
     context.commit("setUser", null);
+    context.commit("reverseDisplay", false);
   },
 
   async currentUser(context) {
     const response = await window.axios.get("/api/user");
     const user = response.data || null;
     context.commit("setUser", user);
+  },
+
+  open(context) {
+    context.commit("reverseDisplay", true);
+  },
+
+  close(context) {
+    context.commit("reverseDisplay", false);
   }
 };
 
