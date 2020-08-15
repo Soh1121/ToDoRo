@@ -7,6 +7,14 @@
     <form v-show="tab === 1" @submit.prevent="login">
       <v-card-text>
         <v-container>
+          <v-row v-if="loginErrors">
+            <ul v-if="loginErrors.email">
+              <li v-for="msg in loginErrors.email" :key="msg">{{ msg }}</li>
+            </ul>
+            <ul v-if="loginErrors.password">
+              <li v-for="msg in loginErrors.password" :key="msg">{{ msg }}</li>
+            </ul>
+          </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="12">
               <v-text-field
@@ -109,6 +117,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   props: ["dialog"],
   data() {
@@ -143,9 +153,10 @@ export default {
     }
   },
   computed: {
-    apiStatus() {
-      return this.$store.state.auth.apiStatus;
-    }
+    ...mapState({
+      apiStatus: state => state.auth.apiStatus,
+      loginErrors: state => state.auth.loginErrorMessages
+    })
   }
 };
 </script>
