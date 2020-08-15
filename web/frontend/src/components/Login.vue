@@ -141,6 +141,11 @@ export default {
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
     }
+  },
+  computed: {
+    apiStatus() {
+      return this.$store.state.auth.apiStatus;
+    }
   }
 };
 </script>
