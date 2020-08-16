@@ -1,8 +1,9 @@
-import { OK } from "../util";
+import { OK, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   user: null,
   apiStatus: null,
+  loginErrorMessages: null,
   display: false
 };
 
@@ -18,6 +19,9 @@ const mutations = {
   },
   setpiStatus(state, status) {
     state.apiStatus = status;
+  },
+  setLoginErrorMessages(state, messages) {
+    state.loginErrorMessages = messages;
   },
   reverseDisplay(state, property) {
     state.display = property;
@@ -45,7 +49,11 @@ const actions = {
     }
 
     context.commit("setApiStatus", false);
-    context.commit("error/setCode", response.status, { root: true });
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setLoginErrorMessages", response.data.errors);
+    } else {
+      context.commit("error/setCode", response.status, { root: true });
+    }
   },
 
   async logout(context) {

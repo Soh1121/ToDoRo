@@ -7,6 +7,21 @@
     <form v-show="tab === 1" @submit.prevent="login">
       <v-card-text>
         <v-container>
+          <v-row
+            v-if="loginErrors"
+            class="font-weight-bold red--text text--darken-3"
+          >
+            <ul v-if="loginErrors.email">
+              <li v-for="msg in loginErrors.email" :key="msg">
+                {{ msg }}
+              </li>
+            </ul>
+            <ul v-if="loginErrors.password">
+              <li v-for="msg in loginErrors.password" :key="msg">
+                {{ msg }}
+              </li>
+            </ul>
+          </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="12">
               <v-text-field
@@ -35,7 +50,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="close">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark>ログイン</v-btn>
+        <v-btn type="submit" color="orange" dark @click="clearError"
+          >ログイン</v-btn
+        >
       </v-card-actions>
     </form>
     <form v-show="tab === 2" @submit.prevent="register">
@@ -105,8 +122,9 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
-  props: ["dialog"],
   data() {
     return {
       tab: 1,
@@ -128,6 +146,7 @@ export default {
   methods: {
     close() {
       this.$store.dispatch("auth/close");
+      this.$store.commit("auth/setLoginErrorMessages", null);
     },
     async login() {
       // authストアのloginアクションの呼び出し
@@ -136,12 +155,16 @@ export default {
     async register() {
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
+    },
+    clearError() {
+      this.$store.commit("auth/setLoginErrorMessages", null);
     }
   },
   computed: {
-    apiStatus() {
-      return this.$store.state.auth.apiStatus;
-    }
+    ...mapState({
+      apiStatus: state => state.auth.apiStatus,
+      loginErrors: state => state.auth.loginErrorMessages
+    })
   }
 };
 </script>
