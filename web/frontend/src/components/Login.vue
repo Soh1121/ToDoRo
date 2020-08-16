@@ -7,12 +7,19 @@
     <form v-show="tab === 1" @submit.prevent="login">
       <v-card-text>
         <v-container>
-          <v-row v-if="loginErrors">
+          <v-row
+            v-if="loginErrors"
+            class="font-weight-bold red--text text--darken-3"
+          >
             <ul v-if="loginErrors.email">
-              <li v-for="msg in loginErrors.email" :key="msg">{{ msg }}</li>
+              <li v-for="msg in loginErrors.email" :key="msg">
+                {{ msg }}
+              </li>
             </ul>
             <ul v-if="loginErrors.password">
-              <li v-for="msg in loginErrors.password" :key="msg">{{ msg }}</li>
+              <li v-for="msg in loginErrors.password" :key="msg">
+                {{ msg }}
+              </li>
             </ul>
           </v-row>
           <v-row>
@@ -43,7 +50,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="close">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark>ログイン</v-btn>
+        <v-btn type="submit" color="orange" dark @click="clearError"
+          >ログイン</v-btn
+        >
       </v-card-actions>
     </form>
     <form v-show="tab === 2" @submit.prevent="register">
@@ -137,6 +146,7 @@ export default {
   methods: {
     close() {
       this.$store.dispatch("auth/close");
+      this.$store.commit("auth/setLoginErrorMessages", null);
     },
     async login() {
       // authストアのloginアクションの呼び出し
@@ -145,6 +155,9 @@ export default {
     async register() {
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
+    },
+    clearError() {
+      this.$store.commit("auth/setLoginErrorMessages", null);
     }
   },
   computed: {
