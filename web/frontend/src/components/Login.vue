@@ -116,7 +116,6 @@
 import { mapState } from "vuex";
 
 export default {
-  props: ["dialog"],
   data() {
     return {
       tab: 1,
