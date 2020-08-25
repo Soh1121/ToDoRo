@@ -58,6 +58,7 @@
 
 <script>
 import Login from "./Login.vue";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {
@@ -73,15 +74,14 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return this.$store.getters["auth/check"];
-    },
-    username() {
-      return this.$store.getters["auth/username"];
-    },
-    dialog() {
-      return this.$store.getters["auth/display"];
-    }
+    ...mapState({
+      apiStatus: state => state.auth.apiStatus
+    }),
+    ...mapGetters({
+      isLogin: "auth/check",
+      username: "auth/username",
+      dialog: "auth/display"
+    })
   }
 };
 </script>

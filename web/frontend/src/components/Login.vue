@@ -58,6 +58,26 @@
     <form v-show="tab === 2" @submit.prevent="register">
       <v-card-text>
         <v-container>
+          <v-row
+            v-if="registerErrors"
+            class="font-weight-bold red--text text--darken-3"
+          >
+            <ul v-if="registerErrors.name">
+              <li v-for="msg in registerErrors.name" :key="msg">
+                {{ msg }}
+              </li>
+            </ul>
+            <ul v-if="registerErrors.email">
+              <li v-for="msg in registerErrors.email" :key="msg">
+                {{ msg }}
+              </li>
+            </ul>
+            <ul v-if="registerErrors.password">
+              <li v-for="msg in registerErrors.password" :key="msg">
+                {{ msg }}
+              </li>
+            </ul>
+          </v-row>
           <v-row>
             <v-col cols="12" sm="12" md="12">
               <v-text-field
@@ -115,7 +135,9 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="orange" text @click="close">キャンセル</v-btn>
-        <v-btn type="submit" color="orange" dark>登録</v-btn>
+        <v-btn type="submit" color="orange" dark @click="clearError"
+          >登録</v-btn
+        >
       </v-card-actions>
     </form>
   </v-card>
@@ -158,12 +180,14 @@ export default {
     },
     clearError() {
       this.$store.commit("auth/setLoginErrorMessages", null);
+      this.$store.commit("auth/setRegisterErrorMessage", null);
     }
   },
   computed: {
     ...mapState({
       apiStatus: state => state.auth.apiStatus,
-      loginErrors: state => state.auth.loginErrorMessages
+      loginErrors: state => state.auth.loginErrorMessages,
+      registerErrors: state => state.auth.registerErrorMessages
     })
   }
 };
