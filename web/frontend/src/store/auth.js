@@ -1,4 +1,9 @@
-import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
+import {
+  OK,
+  CREATED,
+  INTERNAL_SERVER_ERROR,
+  UNPROCESSABLE_ENTITY
+} from "../util";
 
 const state = {
   user: null,
@@ -48,6 +53,9 @@ const actions = {
     if (response.status === UNPROCESSABLE_ENTITY) {
       context.commit("setRegisterErrorMessages", response.data.errors);
     } else {
+      if (response.status === INTERNAL_SERVER_ERROR) {
+        context.commit("reverseDisplay", false);
+      }
       context.commit("error/setCode", response.status, { root: true });
     }
   },
@@ -67,6 +75,9 @@ const actions = {
     if (response.status === UNPROCESSABLE_ENTITY) {
       context.commit("setLoginErrorMessages", response.data.errors);
     } else {
+      if (response.status === INTERNAL_SERVER_ERROR) {
+        context.commit("reverseDisplay", false);
+      }
       context.commit("error/setCode", response.status, { root: true });
     }
   },
