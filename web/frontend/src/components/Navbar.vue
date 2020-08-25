@@ -45,11 +45,11 @@
       <div class="my-2" v-else>
         <v-dialog v-model="dialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined large v-on="on" v-bind="attrs"
+            <v-btn outlined large v-on="on" v-bind="attrs" @click="open"
               >登録／ログイン</v-btn
             >
           </template>
-          <Login :dialog="dialog" @close-click="emitEvent" />
+          <Login />
         </v-dialog>
       </div>
     </v-app-bar>
@@ -58,17 +58,15 @@
 
 <script>
 import Login from "./Login.vue";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {
     Login
   },
-  data: () => ({
-    dialog: false
-  }),
   methods: {
-    emitEvent(child_dialog) {
-      this.dialog = child_dialog;
+    open() {
+      this.$store.dispatch("auth/open");
     },
 
     async logout() {
@@ -76,12 +74,14 @@ export default {
     }
   },
   computed: {
-    isLogin() {
-      return this.$store.getters["auth/check"];
-    },
-    username() {
-      return this.$store.getters["auth/username"];
-    }
+    ...mapState({
+      apiStatus: state => state.auth.apiStatus
+    }),
+    ...mapGetters({
+      isLogin: "auth/check",
+      username: "auth/username",
+      dialog: "auth/display"
+    })
   }
 };
 </script>
