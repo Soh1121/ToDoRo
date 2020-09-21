@@ -37,4 +37,38 @@ class ProjectApiTest extends TestCase
                 "name" => '今日',
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_プロジェクト名は100文字までOK()
+    {
+        $name = str_repeat("a", 100);
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('user.project', [
+                'user' => $this->user->id,
+                'project' => $name,
+            ]));
+
+            $response->assertStatus(201)
+                ->assertJsonFragment([
+                    "user_id" => $this->user->id,
+                    "name" => $name,
+                ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_プロジェクト名は101文字はNG()
+    {
+        $name = str_repeat("a", 101);
+        $response = $this->actingAs($this->user)
+            ->json('POST', route('user.project', [
+                'user' => $this->user->id,
+                'project' => $name,
+            ]));
+
+            $response->assertStatus(422);
+    }
 }
