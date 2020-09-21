@@ -15,7 +15,6 @@ class CreateTasksTable extends Migration
     {
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->string('name');
             $table->unsignedBigInteger('project_id');
             $table->unsignedBigInteger('context_id');
@@ -29,7 +28,6 @@ class CreateTasksTable extends Migration
             $table->unsignedInteger('priority');
             $table->timestamps();
 
-            $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('project_id')->references('id')->on('projects');
             $table->foreign('context_id')->references('id')->on('contexts');
             $table->foreign('repeat_id')->references('id')->on('repeats');
