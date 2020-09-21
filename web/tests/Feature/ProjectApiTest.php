@@ -29,8 +29,12 @@ class ProjectApiTest extends TestCase
             ->json('POST', route('user.project', [
                 'user' => $this->user->id,
                 'project' => '今日',
-            ]), compact('project'));
+            ]));
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                "user_id" => $this->user->id,
+                "name" => '今日',
+            ]);
     }
 }
