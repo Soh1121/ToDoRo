@@ -25,3 +25,6 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 // ログインユーザーの確認
 Route::get('/user', function(){ return Auth::user(); })->name('user');
+
+// プロジェクト追加
+Route::post('/projects/{user}', 'ProjectController@addProject')->name('user.project');
