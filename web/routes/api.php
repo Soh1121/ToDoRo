@@ -30,3 +30,6 @@ Route::get('/user', function(){ return Auth::user(); })->name('user');
 
 // プロジェクト追加
 Route::post('/projects/{user}', 'ProjectController@addProject')->name('user.project');
+
+// プロジェクト一覧
+Route::get('/projects/{user}', 'ProjectController@index')->name('project.index');

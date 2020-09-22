@@ -71,4 +71,22 @@ class ProjectApiTest extends TestCase
 
             $response->assertStatus(422);
     }
+
+    /**
+     * @test
+     */
+    public function should_プロジェクト一覧を取得できる()
+    {
+        // データの取得
+        $response = $this->json('GET', route('project.index', ['user' => 1]));
+        $projects = Project::where('user_id', '1')->orderBy('created_at', 'desc')->get();
+        $expected_data = $projects->map(function($project) {
+            return [
+                'user_id' => $project->user_id,
+                'name' => $project->name,
+            ];
+        })->all();
+
+        $response->assertStatus(200);
+    }
 }
