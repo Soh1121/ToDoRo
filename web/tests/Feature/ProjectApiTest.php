@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use Log;
+
 use App\Project;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,7 +19,9 @@ class ProjectApiTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
+        // $this->user = factory(User::class)->create();
+        $this->seed('UserTableSeeder');
+        $this->user = User::first();
     }
 
     /**
@@ -78,8 +82,10 @@ class ProjectApiTest extends TestCase
     public function should_プロジェクト一覧を取得できる()
     {
         // データの取得
-        $response = $this->json('GET', route('project.index', ['user' => 1]));
-        $projects = Project::where('user_id', '1')->orderBy('created_at', 'desc')->get();
+        $response = $this
+            ->actingAs($this->user)
+            ->json('GET', route('project.index', ['user' => $this->user->id]));
+        $projects = Project::where('user_id', $this->user->id)->orderBy('created_at', 'desc')->get();
         $expected_data = $projects->map(function($project) {
             return [
                 'user_id' => $project->user_id,

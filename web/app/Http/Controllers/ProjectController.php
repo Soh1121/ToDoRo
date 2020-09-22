@@ -35,4 +35,16 @@ class ProjectController extends Controller
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
         return response()->json($new_project, 201, [], JSON_NUMERIC_CHECK);
     }
+
+    /**
+     * プロジェクト一覧
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(int $id)
+    {
+        $projects = Project::where('id', $id)->orderBy('created_at', 'desc')->get();
+
+        return response()->json($projects, 200, [], JSON_NUMERIC_CHECK);
+    }
 }

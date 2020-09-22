@@ -14,12 +14,12 @@ class UserTableSeeder extends Seeder
         App\User::create([
             'name' => 'taro',
             'email' => 'taro@example.com',
-            'password' => Hash::make('hogehoge'),
+            'password' => Hash::make('hoge1234!'),
         ]);
         App\User::create([
             'name' => 'hanako',
             'email' => 'hanako@example.com',
-            'password' => Hash::make('hogehoge'),
+            'password' => Hash::make('hoge1234!'),
         ]);
     }
 }
