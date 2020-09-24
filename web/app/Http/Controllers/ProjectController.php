@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Http\Requests\AddProject;
 use App\Project;
 use Illuminate\Http\Request;
@@ -43,8 +44,10 @@ class ProjectController extends Controller
      */
     public function index(int $id)
     {
-        $projects = Project::where('id', $id)->orderBy('created_at', 'desc')->get();
+        $projects = Project::where('user_id', $id)
+            ->orderBy(Project::CREATED_AT, 'desc')
+            ->get();
 
-        return response()->json($projects, 200, [], JSON_NUMERIC_CHECK);
+        return response()->json(['data' => $projects]);
     }
 }

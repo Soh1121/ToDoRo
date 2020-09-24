@@ -21,6 +21,7 @@ class ProjectApiTest extends TestCase
 
         // $this->user = factory(User::class)->create();
         $this->seed('UserTableSeeder');
+        $this->seed('ProjectTableSeeder');
         $this->user = User::first();
     }
 
@@ -93,6 +94,11 @@ class ProjectApiTest extends TestCase
             ];
         })->all();
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment([
+                'data' => $expected_data,
+            ]);
     }
 }
