@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Log;
 use App\Http\Requests\AddProject;
 use App\Project;
 use Illuminate\Http\Request;
