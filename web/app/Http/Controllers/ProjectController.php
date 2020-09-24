@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Http\Requests\AddProject;
 use App\Project;
 use Illuminate\Http\Request;
@@ -34,5 +35,19 @@ class ProjectController extends Controller
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
         return response()->json($new_project, 201, [], JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * プロジェクト一覧
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(int $id)
+    {
+        $projects = Project::where('user_id', $id)
+            ->orderBy(Project::CREATED_AT, 'desc')
+            ->get();
+
+        return response()->json(['data' => $projects]);
     }
 }
