@@ -58,6 +58,9 @@ class ProjectController extends Controller
      */
     public function edit(int $id, AddProject $request)
     {
-        return response()->json(['message' => '更新完了'], 201);
+        $project = Project::find($id);
+        $project->name = $request->get('project');
+        $project->save();
+        return response()->json($project, 201);
     }
 }

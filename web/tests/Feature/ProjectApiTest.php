@@ -114,6 +114,10 @@ class ProjectApiTest extends TestCase
             ->json('PATCH', route('project.edit', [$target_project->id,]), compact('project'));
 
         $response
-            ->assertStatus(201);
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'user_id' => $target_project->user_id,
+                'name' => $project,
+            ]);
     }
 }
