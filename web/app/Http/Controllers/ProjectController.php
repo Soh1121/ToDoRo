@@ -49,4 +49,18 @@ class ProjectController extends Controller
 
         return response()->json(['data' => $projects]);
     }
+
+    /**
+     * プロジェクト名変更
+     * @param int $id
+     * @param AddProject $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function edit(int $id, AddProject $request)
+    {
+        $project = Project::find($id);
+        $project->name = $request->get('project');
+        $project->save();
+        return response()->json($project, 201);
+    }
 }

@@ -101,4 +101,23 @@ class ProjectApiTest extends TestCase
                 'data' => $expected_data,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_プロジェクト名を変更できる()
+    {
+        $project = 'today';
+        $target_project = Project::where('user_id', $this->user->id)->orderBy('created_at', 'desc')->first();
+        $response = $this
+            ->actingAs($this->user)
+            ->json('PATCH', route('project.edit', [$target_project->id,]), compact('project'));
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'user_id' => $target_project->user_id,
+                'name' => $project,
+            ]);
+    }
 }
