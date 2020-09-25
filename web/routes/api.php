@@ -33,3 +33,6 @@ Route::post('/projects/{user}', 'ProjectController@addProject')->name('user.proj
 
 // プロジェクト一覧
 Route::get('/projects/{user}', 'ProjectController@index')->name('project.index');
+
+// プロジェクト名編集
+Route::patch('/projects/{user}', 'ProjectController@edit')->name('project.edit');
