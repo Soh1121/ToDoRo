@@ -108,7 +108,9 @@ class ProjectApiTest extends TestCase
     public function should_プロジェクト名を変更できる()
     {
         $project = 'today';
-        $target_project = Project::where('user_id', $this->user->id)->orderBy('created_at', 'desc')->first();
+        $target_project = Project::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
         $response = $this
             ->actingAs($this->user)
             ->json('PATCH', route('project.edit', [$target_project->id,]), compact('project'));
@@ -119,5 +121,18 @@ class ProjectApiTest extends TestCase
                 'user_id' => $target_project->user_id,
                 'name' => $project,
             ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_プロジェクトを削除できる()
+    {
+        $target_project = Project::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $response = $this->actingAs($this->user)
+            ->json('DELETE', route('project.delete', [$target_project->id,]));
+        $response->assertStatus(200);
     }
 }

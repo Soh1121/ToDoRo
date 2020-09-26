@@ -38,12 +38,12 @@ class ProjectController extends Controller
 
     /**
      * プロジェクト一覧
-     * @param int $id
+     * @param int $user_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index(int $id)
+    public function index(int $user_id)
     {
-        $projects = Project::where('user_id', $id)
+        $projects = Project::where('user_id', $user_id)
             ->orderBy(Project::CREATED_AT, 'desc')
             ->get();
 
@@ -62,5 +62,15 @@ class ProjectController extends Controller
         $project->name = $request->get('project');
         $project->save();
         return response()->json($project, 201);
+    }
+
+    /**
+     * プロジェクト削除
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(int $id)
+    {
+        return response()->json([], 200);
     }
 }
