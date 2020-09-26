@@ -2,8 +2,6 @@
 
 namespace Tests\Feature;
 
-use Log;
-
 use App\Project;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -133,6 +131,6 @@ class ProjectApiTest extends TestCase
             ->first();
         $response = $this->actingAs($this->user)
             ->json('DELETE', route('project.delete', [$target_project->id,]));
-        $response->assertStatus(200);
+        $response->assertStatus(204);
     }
 }

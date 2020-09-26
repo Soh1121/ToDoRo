@@ -71,6 +71,7 @@ class ProjectController extends Controller
      */
     public function delete(int $id)
     {
-        return response()->json([], 200);
+        Project::find($id)->delete();
+        return response()->json([], 204);
     }
 }
