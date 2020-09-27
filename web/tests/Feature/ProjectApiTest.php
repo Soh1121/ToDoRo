@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Project;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ProjectApiTest extends TestCase
@@ -96,10 +94,11 @@ class ProjectApiTest extends TestCase
                 ])
             );
         $projects = Project::where('user_id',$this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy(Project::CREATED_AT, 'desc')
             ->get();
         $expected_data = $projects->map(function($project) {
             return [
+                'id' => $project->id,
                 'user_id' => $project->user_id,
                 'name' => $project->name,
             ];
