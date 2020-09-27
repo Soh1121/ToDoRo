@@ -68,9 +68,10 @@ class ProjectController extends Controller
      * @param int $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(int $id)
+    public function delete(int $user_id, AddProject $request)
     {
-        Project::find($id)->delete();
-        return response()->json([], 204);
+        Project::find($request->target)->delete();
+        $projects = Project::where('user_id', $user_id)->get();
+        return response()->json($projects, 200);
     }
 }
