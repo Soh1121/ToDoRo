@@ -28,11 +28,11 @@ class ProjectApiTest extends TestCase
      */
     public function should_プロジェクトを追加できる()
     {
+        $name = '今日';
         $response = $this->actingAs($this->user)
-            ->json('POST', route('user.project', [
+            ->json('POST', route('project.store', [
                 'user' => $this->user->id,
-                'project' => '今日',
-            ]));
+            ]), compact('name'));
 
         $response->assertStatus(201)
             ->assertJsonFragment([
@@ -48,7 +48,7 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 15);
         $response = $this->actingAs($this->user)
-            ->json('POST', route('user.project', [
+            ->json('POST', route('project.store', [
                 'user' => $this->user->id,
                 'project' => $name,
             ]));
@@ -67,7 +67,7 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 16);
         $response = $this->actingAs($this->user)
-            ->json('POST', route('user.project', [
+            ->json('POST', route('project.store', [
                 'user' => $this->user->id,
                 'project' => $name,
             ]));

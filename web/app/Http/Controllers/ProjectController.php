@@ -21,14 +21,12 @@ class ProjectController extends Controller
      * @param AddProject $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addProject(AddProject $request)
+    public function store(int $user_id, AddProject $request)
     {
         $project = new Project();
-        $project->user_id = Auth::user()->id;
-        $project->name = $request->project;
-
-        Auth::user()->projects()->save($project);
-        DB::commit();
+        $project->user_id = $user_id;
+        $project->name = $request->name;
+        $project->save();
 
         $new_project = Project::where('id', $project->id)->first();
 
