@@ -90,8 +90,14 @@ class ProjectApiTest extends TestCase
         // データの取得
         $response = $this
             ->actingAs($this->user)
-            ->json('GET', route('project.index', ['user' => $this->user->id]));
-        $projects = Project::where('user_id', $this->user->id)->orderBy('created_at', 'desc')->get();
+            ->json('GET',
+                route('project.index', [
+                    'user' => $this->user->id,
+                ])
+            );
+        $projects = Project::where('user_id',$this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
         $expected_data = $projects->map(function($project) {
             return [
                 'user_id' => $project->user_id,
