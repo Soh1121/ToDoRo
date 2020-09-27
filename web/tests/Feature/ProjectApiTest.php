@@ -5,8 +5,6 @@ namespace Tests\Feature;
 use App\Project;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Support\Facades\Schema;
 use Tests\TestCase;
 
 class ProjectApiTest extends TestCase
@@ -28,11 +26,14 @@ class ProjectApiTest extends TestCase
      */
     public function should_プロジェクトを追加できる()
     {
+        $name = '今日';
         $response = $this->actingAs($this->user)
-            ->json('POST', route('user.project', [
-                'user' => $this->user->id,
-                'project' => '今日',
-            ]));
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
 
         $response->assertStatus(201)
             ->assertJsonFragment([
@@ -48,16 +49,18 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 15);
         $response = $this->actingAs($this->user)
-            ->json('POST', route('user.project', [
-                'user' => $this->user->id,
-                'project' => $name,
-            ]));
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
 
-            $response->assertStatus(201)
-                ->assertJsonFragment([
-                    "user_id" => $this->user->id,
-                    "name" => $name,
-                ]);
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                "user_id" => $this->user->id,
+                "name" => $name,
+            ]);
     }
 
     /**
@@ -67,10 +70,12 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 16);
         $response = $this->actingAs($this->user)
-            ->json('POST', route('user.project', [
-                'user' => $this->user->id,
-                'project' => $name,
-            ]));
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
 
             $response->assertStatus(422);
     }
@@ -83,10 +88,17 @@ class ProjectApiTest extends TestCase
         // データの取得
         $response = $this
             ->actingAs($this->user)
-            ->json('GET', route('project.index', ['user' => $this->user->id]));
-        $projects = Project::where('user_id', $this->user->id)->orderBy('created_at', 'desc')->get();
+            ->json('GET',
+                route('project.index', [
+                    'user' => $this->user->id,
+                ])
+            );
+        $projects = Project::where('user_id',$this->user->id)
+            ->orderBy(Project::CREATED_AT, 'desc')
+            ->get();
         $expected_data = $projects->map(function($project) {
             return [
+                'id' => $project->id,
                 'user_id' => $project->user_id,
                 'name' => $project->name,
             ];
@@ -105,19 +117,23 @@ class ProjectApiTest extends TestCase
      */
     public function should_プロジェクト名を変更できる()
     {
-        $project = 'today';
+        $name = 'today';
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'desc')
             ->first();
-        $response = $this
-            ->actingAs($this->user)
-            ->json('PATCH', route('project.edit', [$target_project->id,]), compact('project'));
+        $target = $target_project->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('project.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'target'));
 
         $response
             ->assertStatus(201)
             ->assertJsonFragment([
                 'user_id' => $target_project->user_id,
-                'name' => $project,
+                'name' => $name,
             ]);
     }
 
@@ -129,8 +145,15 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'desc')
             ->first();
+        $target = $target_project->id;
         $response = $this->actingAs($this->user)
-            ->json('DELETE', route('project.delete', [$target_project->id,]));
-        $response->assertStatus(204);
+            ->json('DELETE',
+                route('project.delete', [
+                    $target_project->id,
+                ]),
+                compact('target')
+            );
+        $response->assertStatus(200)
+            ->assertJsonMissing(['id' => $target]);
     }
 }

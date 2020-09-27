@@ -8,7 +8,7 @@ class Project extends Model
 {
     /** JSONに含まれる属性 */
     protected $visible = [
-        'user_id', 'name',
+        'id', 'user_id', 'name',
     ];
 
     /**

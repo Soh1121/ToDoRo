@@ -29,13 +29,13 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 Route::get('/user', function(){ return Auth::user(); })->name('user');
 
 // プロジェクト追加
-Route::post('/projects/{user}', 'ProjectController@addProject')->name('user.project');
+Route::post('/projects/{user}', 'ProjectController@store')->name('project.store');
 
 // プロジェクト一覧
 Route::get('/projects/{user}', 'ProjectController@index')->name('project.index');
 
 // プロジェクト名編集
-Route::patch('/projects/{user}', 'ProjectController@edit')->name('project.edit');
+Route::patch('/projects/{user}', 'ProjectController@update')->name('project.update');
 
 // プロジェクト削除
 Route::delete('/projects/{user}', 'ProjectController@delete')->name('project.delete');

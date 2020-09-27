@@ -21,14 +21,12 @@ class ProjectController extends Controller
      * @param AddProject $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addProject(AddProject $request)
+    public function store(int $user_id, AddProject $request)
     {
         $project = new Project();
-        $project->user_id = Auth::user()->id;
-        $project->name = $request->project;
-
-        Auth::user()->projects()->save($project);
-        DB::commit();
+        $project->user_id = $user_id;
+        $project->name = $request->name;
+        $project->save();
 
         $new_project = Project::where('id', $project->id)->first();
 
@@ -52,26 +50,28 @@ class ProjectController extends Controller
 
     /**
      * プロジェクト名変更
-     * @param int $id
+     * @param int $user_id
      * @param AddProject $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(int $id, AddProject $request)
+    public function update(int $user_id, AddProject $request)
     {
-        $project = Project::find($id);
-        $project->name = $request->get('project');
+        $project_id = $request->target;
+        $project = Project::find($project_id);
+        $project->name = $request->get('name');
         $project->save();
         return response()->json($project, 201);
     }
 
     /**
      * プロジェクト削除
-     * @param int $id
+     * @param int $user_id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(int $id)
+    public function delete(int $user_id, AddProject $request)
     {
-        Project::find($id)->delete();
-        return response()->json([], 204);
+        Project::find($request->target)->delete();
+        $projects = Project::where('user_id', $user_id)->get();
+        return response()->json($projects, 200);
     }
 }
