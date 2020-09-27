@@ -30,9 +30,12 @@ class ProjectApiTest extends TestCase
     {
         $name = '今日';
         $response = $this->actingAs($this->user)
-            ->json('POST', route('project.store', [
-                'user' => $this->user->id,
-            ]), compact('name'));
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
 
         $response->assertStatus(201)
             ->assertJsonFragment([
@@ -48,16 +51,18 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 15);
         $response = $this->actingAs($this->user)
-            ->json('POST', route('project.store', [
-                'user' => $this->user->id,
-                'project' => $name,
-            ]));
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
 
-            $response->assertStatus(201)
-                ->assertJsonFragment([
-                    "user_id" => $this->user->id,
-                    "name" => $name,
-                ]);
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                "user_id" => $this->user->id,
+                "name" => $name,
+            ]);
     }
 
     /**
@@ -67,10 +72,12 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 16);
         $response = $this->actingAs($this->user)
-            ->json('POST', route('project.store', [
-                'user' => $this->user->id,
-                'project' => $name,
-            ]));
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
 
             $response->assertStatus(422);
     }
