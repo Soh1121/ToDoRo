@@ -50,7 +50,7 @@ class ProjectController extends Controller
 
     /**
      * プロジェクト名変更
-     * @param int $id
+     * @param int $user_id
      * @param AddProject $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -65,7 +65,7 @@ class ProjectController extends Controller
 
     /**
      * プロジェクト削除
-     * @param int $id
+     * @param int $user_id
      * @return \Illuminate\Http\JsonResponse
      */
     public function delete(int $user_id, AddProject $request)
