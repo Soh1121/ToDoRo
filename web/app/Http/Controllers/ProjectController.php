@@ -54,10 +54,11 @@ class ProjectController extends Controller
      * @param AddProject $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function edit(int $id, AddProject $request)
+    public function update(int $user_id, AddProject $request)
     {
-        $project = Project::find($id);
-        $project->name = $request->get('project');
+        $project_id = $request->target;
+        $project = Project::find($project_id);
+        $project->name = $request->get('name');
         $project->save();
         return response()->json($project, 201);
     }

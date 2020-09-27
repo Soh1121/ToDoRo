@@ -25,6 +25,7 @@ class AddProject extends FormRequest
     {
         return [
             'name' => 'required|max:15',
+            'target' => 'integer',
         ];
     }
 }

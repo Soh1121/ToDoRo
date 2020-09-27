@@ -35,7 +35,7 @@ Route::post('/projects/{user}', 'ProjectController@store')->name('project.store'
 Route::get('/projects/{user}', 'ProjectController@index')->name('project.index');
 
 // プロジェクト名編集
-Route::patch('/projects/{user}', 'ProjectController@edit')->name('project.edit');
+Route::patch('/projects/{user}', 'ProjectController@update')->name('project.update');
 
 // プロジェクト削除
 Route::delete('/projects/{user}', 'ProjectController@delete')->name('project.delete');
