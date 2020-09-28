@@ -1,6 +1,12 @@
 <template>
   <div>
-    <v-app-bar color="orange darken-1" app fixed dark>
+    <Drawar />
+    <v-app-bar
+      color="orange darken-1"
+      app
+      dark
+      :clipped-left="$vuetify.breakpoint.lgAndUp"
+    >
       <v-app-bar-nav-icon />
 
       <h1>
@@ -57,12 +63,14 @@
 </template>
 
 <script>
+import Drawar from "./Drawer.vue";
 import Login from "./Login.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {
-    Login
+    Drawar,
+    Login,
   },
   methods: {
     open() {
