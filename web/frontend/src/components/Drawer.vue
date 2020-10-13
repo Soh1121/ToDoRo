@@ -4,36 +4,25 @@
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
   >
-    <v-list-item>
-      <v-list dense>
-        <v-list-item
-          v-for="item in items"
-          :key="item.title"
-          link
-        >
-          <v-list-item-icon>
-            <v-icon>{{ item.icon }}</v-icon>
-          </v-list-item-icon>
-
-          <v-list-item-content>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
-      </v-list>
-    </v-list-item>
+    <v-card
+      height="100%"
+      tile
+      class="l-sidebar"
+    >
+      <Menu />
+      <Calendar />
+    </v-card>
   </v-navigation-drawer>
 </template>
 
 <script>
+import Menu from "./Drawer_menu.vue";
+import Calendar from "./Drawer_calendar.vue";
+
 export default {
-  data() {
-    return {
-      drawer: true,
-      items: [
-        { title: "context", icon: '' },
-        { title: "project", icon: '' },
-      ],
-    }
-  },
+  components: {
+    Menu,
+    Calendar,
+  }
 }
 </script>
