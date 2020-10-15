@@ -6,3 +6,19 @@
   position: absolute;
   bottom: 0;
 }
+
+.l-sidebar__item--content {
+  position: relative;
+}
+
+.l-sidebar__item--left {
+  position: absolute;
+  max-width: 70%;
+  left: 0;
+}
+
+.l-sidebar__item--right {
+  position: absolute;
+  max-width: 30%;
+  right: 0;
+}
