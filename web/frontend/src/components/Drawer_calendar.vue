@@ -2,47 +2,34 @@
   <v-list
     dense
     width="100%"
-    class="l-sidebar__inner--bottom"
   >
     <v-divider />
 
-    <v-list-item
+    <List
       v-for="schedule in schedules"
-      :key="schedule.title"
-      link
-    >
-      <v-list-item-icon>
-        <v-icon>{{ schedule.icon }}</v-icon>
-      </v-list-item-icon>
-
-      <v-list-item-content
-        class="l-sidebar__item--content"
-      >
-        <v-list-item-title
-          class="l-sidebar__item--left"
-        >
-          {{ schedule.title }}
-        </v-list-item-title>
-        <v-list-item-subtitle
-          class="l-sidebar__item--right"
-        >
-          {{ schedule.count }}件
-        </v-list-item-subtitle>
-      </v-list-item-content>
-    </v-list-item>
+      v-bind:key="schedule.id"
+      v-bind:icon="schedule.icon"
+      v-bind:title="schedule.title"
+      v-bind:count="schedule.count"
+    />
   </v-list>
 </template>
 
 <script>
+import List from "./Drawer_list.vue";
+
 export default {
+  components: {
+    List,
+  },
   data() {
     return {
       drawer: true,
       schedules: [
-        { title: "今　日", icon: "mdi-weather-sunny", count: 1 },
-        { title: "明　日", icon: "mdi-moon-waning-crescent", count: 2 },
-        { title: "近日中", icon: "mdi-timer", count: 3 },
-        { title: "いつか", icon: "mdi-calendar-arrow-right", count: 100 },
+        { id: 1, title: "今　日", icon: "mdi-weather-sunny", count: 1 },
+        { id: 2, title: "明　日", icon: "mdi-moon-waning-crescent", count: 2 },
+        { id: 3, title: "近日中", icon: "mdi-timer", count: 3 },
+        { id: 4, title: "いつか", icon: "mdi-calendar-arrow-right", count: 100 },
       ],
     }
   },

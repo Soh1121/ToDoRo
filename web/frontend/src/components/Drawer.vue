@@ -10,7 +10,7 @@
       class="l-sidebar"
     >
       <Menu />
-      <Calendar />
+      <Calendar class="l-sidebar__inner--bottom"/>
     </v-card>
   </v-navigation-drawer>
 </template>
