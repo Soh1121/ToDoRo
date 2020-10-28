@@ -39,3 +39,6 @@ Route::patch('/projects/{user}', 'ProjectController@update')->name('project.upda
 
 // プロジェクト削除
 Route::delete('/projects/{user}', 'ProjectController@delete')->name('project.delete');
+
+// コンテキスト追加
+Route::post('/contexts/{user}', 'ContextController@store')->name('context.store');
