@@ -1,7 +1,13 @@
 <template>
   <div>
-    <v-app-bar color="orange darken-1" app fixed dark>
-      <v-app-bar-nav-icon />
+    <Drawar v-bind:drawer="drawer" />
+    <v-app-bar
+      color="orange darken-1"
+      app
+      dark
+      :clipped-left="$vuetify.breakpoint.lgAndUp"
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <h1>
         <v-toolbar-title>ToDoRo</v-toolbar-title>
@@ -57,12 +63,19 @@
 </template>
 
 <script>
+import Drawar from "./Drawer.vue";
 import Login from "./Login.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {
+    Drawar,
     Login
+  },
+  data() {
+    return {
+      drawer: true
+    };
   },
   methods: {
     open() {
