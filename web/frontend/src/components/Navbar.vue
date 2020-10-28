@@ -70,7 +70,7 @@ import { mapState, mapGetters } from "vuex";
 export default {
   components: {
     Drawar,
-    Login,
+    Login
   },
   methods: {
     open() {

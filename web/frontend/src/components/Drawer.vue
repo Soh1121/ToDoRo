@@ -3,26 +3,23 @@
     v-model="drawer"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
+    width="300px"
   >
-    <v-card
-      height="100%"
-      tile
-      class="l-sidebar"
-    >
-      <Menu />
-      <Calendar class="l-sidebar__inner--bottom"/>
+    <v-card height="100%" tile class="l-sidebar">
+      <Group />
+      <Calendar class="l-sidebar__inner--bottom" />
     </v-card>
   </v-navigation-drawer>
 </template>
 
 <script>
-import Menu from "./Drawer_menu.vue";
+import Group from "./Drawer_group.vue";
 import Calendar from "./Drawer_calendar.vue";
 
 export default {
   components: {
-    Menu,
-    Calendar,
+    Group,
+    Calendar
   }
-}
+};
 </script>
