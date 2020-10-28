@@ -20,6 +20,7 @@ export default {
   components: {
     Group,
     Calendar
-  }
+  },
+  props: ["drawer"]
 };
 </script>

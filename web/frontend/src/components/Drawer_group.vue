@@ -36,7 +36,6 @@ export default {
   },
   data() {
     return {
-      drawer: true,
       contexts: [
         {
           id: 1,

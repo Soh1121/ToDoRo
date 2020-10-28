@@ -1,13 +1,13 @@
 <template>
   <div>
-    <Drawar />
+    <Drawar v-bind:drawer="drawer" />
     <v-app-bar
       color="orange darken-1"
       app
       dark
       :clipped-left="$vuetify.breakpoint.lgAndUp"
     >
-      <v-app-bar-nav-icon />
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <h1>
         <v-toolbar-title>ToDoRo</v-toolbar-title>
@@ -71,6 +71,11 @@ export default {
   components: {
     Drawar,
     Login
+  },
+  data() {
+    return {
+      drawer: true
+    };
   },
   methods: {
     open() {
