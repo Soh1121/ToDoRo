@@ -8,7 +8,7 @@ class Context extends Model
 {
     /** JSONに含まれる属性 */
     protected $visible = [
-        'id', 'user', 'context',
+        'id', 'user_id', 'name',
     ];
 
     /**
