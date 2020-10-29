@@ -45,4 +45,13 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Project');
     }
+
+    /**
+     * リレーションシップ - contextsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contexts()
+    {
+        return $this->hasMany('App\Context');
+    }
 }
