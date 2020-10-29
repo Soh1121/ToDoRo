@@ -44,6 +44,14 @@ class User extends Authenticatable
     public function projects()
     {
         return $this->hasMany('App\Project');
+    }
+
+    /**
+     * リレーションシップ - contextsテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function contexts()
+    {
         return $this->hasMany('App\Context');
     }
 }
