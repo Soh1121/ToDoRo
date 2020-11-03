@@ -140,6 +140,30 @@ class ProjectApiTest extends TestCase
     /**
      * @test
      */
+    public function should_プロジェクト名は30文字まで変更できる()
+    {
+        $name = str_repeat("a", 30);        $target_project = Project::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $target = $target_project->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('project.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'target'));
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'user_id' => $target_project->user_id,
+                'name' => $name,
+            ]);
+    }
+
+    /**
+     * @test
+     */
     public function should_プロジェクトを削除できる()
     {
         $target_project = Project::where('user_id', $this->user->id)
