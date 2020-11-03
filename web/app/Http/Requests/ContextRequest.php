@@ -25,7 +25,7 @@ class ContextRequest extends FormRequest
     {
         return [
             'context_id' => 'integer',
-            'name' => 'max:15',
+            'name' => 'max:30',
         ];
     }
 }
