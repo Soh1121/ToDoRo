@@ -45,4 +45,15 @@ class ContextController extends Controller
 
         return response()->json(['data' => $contexts]);
     }
+
+    /**
+     * コンテキスト名変更
+     * @param int $user_id
+     * @param ContextRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(int $user_id, ContextRequest $request)
+    {
+        return response()->json([], 201);
+    }
 }

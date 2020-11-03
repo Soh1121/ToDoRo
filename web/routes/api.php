@@ -45,3 +45,6 @@ Route::post('/contexts/{user}', 'ContextController@store')->name('context.store'
 
 // コンテキスト一覧
 Route::get('/contexts/{user}', 'ContextController@index')->name('context.index');
+
+// コンテキスト名編集
+Route::patch('/contexts/{user}', 'ContextController@update')->name('context.update');

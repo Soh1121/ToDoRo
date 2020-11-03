@@ -113,4 +113,26 @@ class ContextApiTest extends TestCase
                 'data' => $expected_data,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_コンテキスト名を変更できる()
+    {
+        $name = 'J_深夜（22:00-24:00）';
+        $target_context = Context::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $target = $target_context->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('context.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'target')
+            );
+
+        $response
+            ->assertStatus(201);
+    }
 }
