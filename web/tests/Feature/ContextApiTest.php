@@ -203,6 +203,7 @@ class ContextApiTest extends TestCase
                 ]),
                 compact('context_id')
             );
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonMissing(['id' => $context_id]);
     }
 }

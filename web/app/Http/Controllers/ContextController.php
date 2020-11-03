@@ -69,6 +69,8 @@ class ContextController extends Controller
      */
     public function delete(int $user_id, ContextRequest $request)
     {
-        return response()->json([], 200);
+        Context::find($request->context_id)->delete();
+        $contexts = Context::where('user_id', $user_id)->get();
+        return response()->json($contexts, 200);
     }
 }
