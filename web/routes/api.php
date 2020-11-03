@@ -48,3 +48,6 @@ Route::get('/contexts/{user}', 'ContextController@index')->name('context.index')
 
 // コンテキスト名編集
 Route::patch('/contexts/{user}', 'ContextController@update')->name('context.update');
+
+// コンテキスト削除
+Route::delete('/contexts/{user}', 'ContextController@delete')->name('context.delete');
