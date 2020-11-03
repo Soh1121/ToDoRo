@@ -186,4 +186,23 @@ class ContextApiTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    /**
+     * @test
+     */
+    public function should_コンテキストを削除できる()
+    {
+        $target_context = Context::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $context_id = $target_context->id;
+        $response = $this->actingAs($this->user)
+            ->json('DELETE',
+                route('context.delete', [
+                    $this->user->id,
+                ]),
+                compact('context_id')
+            );
+        $response->assertStatus(200);
+    }
 }

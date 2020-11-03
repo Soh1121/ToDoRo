@@ -60,4 +60,15 @@ class ContextController extends Controller
         $context->save();
         return response()->json($context, 201);
     }
+
+    /**
+     * コンテキスト削除
+     * @param int $user_id
+     * @param ContextRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function delete(int $user_id, ContextRequest $request)
+    {
+        return response()->json([], 200);
+    }
 }
