@@ -54,6 +54,10 @@ class ContextController extends Controller
      */
     public function update(int $user_id, ContextRequest $request)
     {
-        return response()->json([], 201);
+        $context_id = $request->context_id;
+        $context = Context::find($context_id);
+        $context->name = $request->get('name');
+        $context->save();
+        return response()->json($context, 201);
     }
 }
