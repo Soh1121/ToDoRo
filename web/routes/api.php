@@ -42,3 +42,6 @@ Route::delete('/projects/{user}', 'ProjectController@delete')->name('project.del
 
 // コンテキスト追加
 Route::post('/contexts/{user}', 'ContextController@store')->name('context.store');
+
+// コンテキスト一覧
+Route::get('/contexts/{user}', 'ContextController@index')->name('context.index');

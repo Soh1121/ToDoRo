@@ -18,6 +18,7 @@ class ContextApiTest extends TestCase
 
         // $this->user = factory(User::class)->create();
         $this->seed('UserTableSeeder');
+        $this->seed('ContextTableSeeder');
         $this->user = User::first();
     }
 
@@ -39,6 +40,38 @@ class ContextApiTest extends TestCase
             ->assertJsonFragment([
                 "user_id" => $this->user->id,
                 "name" => 'A_早朝（4:00-6:00）',
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_コンテキスト一覧を取得できる()
+    {
+        // データの取得
+        $response = $this
+            ->actingAs($this->user)
+            ->json('GET',
+                route('context.index', [
+                    'user' => $this->user->id,
+                ])
+            );
+        $contexts = Context::where('user_id', $this->user->id)
+            ->orderBy(Context::CREATED_AT, 'desc')
+            ->get();
+        $expected_data = $contexts->map(function($context) {
+            return [
+                'id' => $context->id,
+                'user_id' => $context->user_id,
+                'name' => $context->name,
+            ];
+        })->all();
+
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment([
+                'data' => $expected_data,
             ]);
     }
 }
