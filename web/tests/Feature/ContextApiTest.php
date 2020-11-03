@@ -113,4 +113,77 @@ class ContextApiTest extends TestCase
                 'data' => $expected_data,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_コンテキスト名を変更できる()
+    {
+        $name = 'J_深夜（22:00-24:00）';
+        $target_context = Context::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $context_id = $target_context->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('context.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'context_id')
+            );
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'user_id' => $target_context->user_id,
+                'name' => $name,
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_コンテキスト名は30文字まで変更できる()
+    {
+        $name = str_repeat("a", 30);
+        $target_context = Context::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $context_id = $target_context->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('context.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'context_id')
+            );
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'user_id' => $target_context->user_id,
+                'name' => $name,
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_コンテキスト名は31文字に変更できない()
+    {
+        $name = str_repeat("a", 31);
+        $target_context = Context::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        $context_id = $target_context->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('context.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'context_id')
+            );
+
+        $response->assertStatus(422);
+    }
 }
