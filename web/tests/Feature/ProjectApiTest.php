@@ -45,9 +45,9 @@ class ProjectApiTest extends TestCase
     /**
      * @test
      */
-    public function should_プロジェクト名は15文字までOK()
+    public function should_プロジェクト名は30文字までOK()
     {
-        $name = str_repeat("a", 15);
+        $name = str_repeat("a", 30);
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('project.store', [
@@ -66,9 +66,9 @@ class ProjectApiTest extends TestCase
     /**
      * @test
      */
-    public function should_プロジェクト名は16文字はNG()
+    public function should_プロジェクト名は31文字はNG()
     {
-        $name = str_repeat("a", 16);
+        $name = str_repeat("a", 31);
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('project.store', [
