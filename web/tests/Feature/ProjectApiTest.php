@@ -192,7 +192,7 @@ class ProjectApiTest extends TestCase
         $response = $this->actingAs($this->user)
             ->json('DELETE',
                 route('project.delete', [
-                    $target_project->id,
+                    $this->user->id,
                 ]),
                 compact('target')
             );
