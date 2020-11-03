@@ -15,7 +15,7 @@ class ContextController extends Controller
     }
 
     /**
-     * プロジェクト追加
+     * コンテキスト追加
      * @param ContextRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -30,5 +30,15 @@ class ContextController extends Controller
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
         return response()->json($new_context, 201, [], JSON_NUMERIC_CHECK);
+    }
+
+    /**
+     * コンテキスト一覧
+     * @param int $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(int $user_id)
+    {
+        return response()->json(['data' => '']);
     }
 }
