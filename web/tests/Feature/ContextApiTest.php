@@ -18,6 +18,7 @@ class ContextApiTest extends TestCase
 
         // $this->user = factory(User::class)->create();
         $this->seed('UserTableSeeder');
+        $this->seed('ContextTableSeeder');
         $this->user = User::first();
     }
 
@@ -66,6 +67,11 @@ class ContextApiTest extends TestCase
             ];
         })->all();
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment([
+                'data' => $expected_data,
+            ]);
     }
 }
