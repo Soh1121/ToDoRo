@@ -58,8 +58,8 @@ class ProjectApiTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonFragment([
-                "user_id" => $this->user->id,
-                "name" => $name,
+                'user_id' => $this->user->id,
+                'name' => $name,
             ]);
     }
 
@@ -77,7 +77,7 @@ class ProjectApiTest extends TestCase
                 compact('name')
             );
 
-            $response->assertStatus(422);
+        $response->assertStatus(422);
     }
 
     /**

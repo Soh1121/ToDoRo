@@ -46,6 +46,45 @@ class ContextApiTest extends TestCase
     /**
      * @test
      */
+    public function should_コンテキスト名は30文字までOK()
+    {
+        $name = str_repeat("a", 30);
+        $response = $this
+            ->actingAs($this->user)
+            ->json('POST',
+                route('context.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
+
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                'user_id' => $this->user->id,
+                'name' => $name,
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_プロジェクト名は31文字はNG()
+    {
+        $name = str_repeat("a", 31);
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
     public function should_コンテキスト一覧を取得できる()
     {
         // データの取得
