@@ -121,13 +121,13 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'desc')
             ->first();
-        $target = $target_project->id;
+        $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
             ->json('PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'target'));
+                compact('project_id', 'name'));
 
         $response
             ->assertStatus(201)
@@ -145,13 +145,13 @@ class ProjectApiTest extends TestCase
         $name = str_repeat("a", 30);        $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'desc')
             ->first();
-        $target = $target_project->id;
+        $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
             ->json('PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'target'));
+                compact('project_id', 'name'));
 
         $response
             ->assertStatus(201)
@@ -166,16 +166,17 @@ class ProjectApiTest extends TestCase
      */
     public function should_プロジェクト名は31文字に変更できない()
     {
-        $name = str_repeat("a", 31);        $target_project = Project::where('user_id', $this->user->id)
+        $name = str_repeat("a", 31);
+        $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'desc')
             ->first();
-        $target = $target_project->id;
+        $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
             ->json('PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'target'));
+                compact('project_id', 'name'));
 
         $response->assertStatus(422);
     }
@@ -188,15 +189,15 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'desc')
             ->first();
-        $target = $target_project->id;
+        $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
             ->json('DELETE',
                 route('project.delete', [
                     $this->user->id,
                 ]),
-                compact('target')
+                compact('project_id')
             );
         $response->assertStatus(200)
-            ->assertJsonMissing(['id' => $target]);
+            ->assertJsonMissing(['id' => $project_id]);
     }
 }

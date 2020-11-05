@@ -16,6 +16,7 @@ class ContextController extends Controller
 
     /**
      * コンテキスト追加
+     * @param int $user_id
      * @param ContextRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
