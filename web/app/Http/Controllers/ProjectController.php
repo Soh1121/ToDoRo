@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AddProject;
+use App\Http\Requests\ProjectRequest;
 use App\Project;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -18,10 +15,11 @@ class ProjectController extends Controller
 
     /**
      * プロジェクト追加
-     * @param AddProject $request
+     * @param int $user_id
+     * @param ProjectRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(int $user_id, AddProject $request)
+    public function store(int $user_id, ProjectRequest $request)
     {
         $project = new Project();
         $project->user_id = $user_id;
@@ -51,10 +49,10 @@ class ProjectController extends Controller
     /**
      * プロジェクト名変更
      * @param int $user_id
-     * @param AddProject $request
+     * @param ProjectRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(int $user_id, AddProject $request)
+    public function update(int $user_id, ProjectRequest $request)
     {
         $project_id = $request->target;
         $project = Project::find($project_id);
@@ -66,10 +64,10 @@ class ProjectController extends Controller
     /**
      * プロジェクト削除
      * @param int $user_id
-     * @param AddProject $request
+     * @param ProjectRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function delete(int $user_id, AddProject $request)
+    public function delete(int $user_id, ProjectRequest $request)
     {
         Project::find($request->target)->delete();
         $projects = Project::where('user_id', $user_id)->get();
