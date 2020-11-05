@@ -54,7 +54,7 @@ class ProjectController extends Controller
      */
     public function update(int $user_id, ProjectRequest $request)
     {
-        $project_id = $request->target;
+        $project_id = $request->project_id;
         $project = Project::find($project_id);
         $project->name = $request->get('name');
         $project->save();
@@ -69,7 +69,7 @@ class ProjectController extends Controller
      */
     public function delete(int $user_id, ProjectRequest $request)
     {
-        Project::find($request->target)->delete();
+        Project::find($request->project_id)->delete();
         $projects = Project::where('user_id', $user_id)->get();
         return response()->json($projects, 200);
     }

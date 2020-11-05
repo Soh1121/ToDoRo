@@ -24,8 +24,8 @@ class ProjectRequest extends FormRequest
     public function rules()
     {
         return [
+            'project_id' => 'integer',
             'name' => 'max:30',
-            'target' => 'integer',
         ];
     }
 }
