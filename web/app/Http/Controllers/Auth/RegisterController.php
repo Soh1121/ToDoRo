@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ContextRequest;
+use App\Http\Requests\ProjectRequest;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -65,11 +67,25 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $new_user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+
+        // 未設定プロジェクトを作成
+        $project_controller = app()->make('App\Http\Controllers\ProjectController');
+        $project = new ProjectRequest();
+        $project->name = '未設定';
+        $project_controller->store($new_user->id, $project);
+
+        // 未設定コンテキストを作成
+        $context_controller = app()->make('App\Http\Controllers\ContextController');
+        $context = new ContextRequest();
+        $context->name = '未設定';
+        $context_controller->store($new_user->id, $context);
+
+        return $new_user;
     }
 
     protected function registered(Request $request, $user)
