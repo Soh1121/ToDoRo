@@ -28,7 +28,9 @@
 </template>
 
 <script>
+import { OK } from "../util";
 import List from "./Drawer_list.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -118,6 +120,63 @@ export default {
         { id: 4, title: "いつか", icon: "mdi-moon-full", count: 101 }
       ]
     };
+  },
+  methods: {
+    async fetchProjects() {
+      const route = "/api/projects/" + this.userId;
+      const response = await window.axios.get(route);
+
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+
+      let projects = [];
+      response.data.data.forEach(function(item) {
+        projects.push({
+          id: item.id,
+          title: item.name,
+          icon: "mdi-moon-full",
+          count: 0
+        });
+      });
+      this.projects = projects;
+    },
+    async fetchContexts() {
+      const route = "/api/contexts/" + this.userId;
+      const response = await window.axios.get(route);
+
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+
+      let contexts = [];
+      response.data.data.forEach(function(item) {
+        contexts.push({
+          id: item.id,
+          title: item.name,
+          icon: "mdi-moon-full",
+          count: 0
+        });
+      });
+      this.contexts = contexts;
+    }
+  },
+  computed: {
+    ...mapGetters({
+      isLogin: "auth/check",
+      userId: "auth/user_id"
+    })
+  },
+  watch: {
+    $route: {
+      async handler() {
+        const functions = [this.fetchProjects(), this.fetchContexts()];
+        await Promise.all(functions);
+      },
+      immediate: true
+    }
   }
 };
 </script>
