@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\User;
 use App\Project;
+use App\Context;
 
 class RegisterApiTest extends TestCase
 {
@@ -293,6 +294,31 @@ class RegisterApiTest extends TestCase
         $response->assertStatus(201);
         $this->assertEquals(
             $project->name, '未設定'
+        );
+    }
+
+    /**
+     * @test
+     */
+    public function should_ユーザー登録すると未設定コンテキストが作成される()
+    {
+        $data = [
+            'name' => 'user',
+            'email' => 'test@email.com',
+            'password' => 'te-st_12',
+            'password_confirmation' => 'te-st_12',
+        ];
+
+        $response = $this->json('POST', route('register'), $data);
+
+        $user = User::first();
+        $context = Context::where('user_id', $user->id)
+            ->orderBy(Context::CREATED_AT, 'desc')
+            ->first();
+
+        $response->assertStatus(201);
+        $this->assertEquals(
+            $context->name, '未設定'
         );
     }
 }

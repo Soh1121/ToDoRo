@@ -79,6 +79,12 @@ class RegisterController extends Controller
         $project->name = '未設定';
         $project_controller->store($new_user->id, $project);
 
+        // 未設定コンテキストを作成
+        $context_controller = app()->make('App\Http\Controllers\ContextController');
+        $context = new ContextRequest();
+        $context->name = '未設定';
+        $context_controller->store($new_user->id, $context);
+
         return $new_user;
     }
 
