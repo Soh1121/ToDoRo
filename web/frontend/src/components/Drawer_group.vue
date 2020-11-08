@@ -122,8 +122,13 @@ export default {
     };
   },
   methods: {
-    async fetchProjects() {
-      const route = "/api/projects/" + this.userId;
+    async fetch(target) {
+      let route = "";
+      if (target === "projects") {
+        route = "/api/projects/" + this.userId;
+      } else if (target === "contexts") {
+        route = "/api/contexts/" + this.userId;
+      }
       const response = await window.axios.get(route);
 
       if (response.status !== OK) {
@@ -131,36 +136,21 @@ export default {
         return false;
       }
 
-      let projects = [];
+      let datas = [];
       response.data.data.forEach(function(item) {
-        projects.push({
+        datas.push({
           id: item.id,
           title: item.name,
           icon: "mdi-moon-full",
           count: 0
         });
       });
-      this.projects = projects;
-    },
-    async fetchContexts() {
-      const route = "/api/contexts/" + this.userId;
-      const response = await window.axios.get(route);
 
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
+      if (target === "projects") {
+        this.projects = datas;
+      } else if (target === "contexts") {
+        this.contexts = datas;
       }
-
-      let contexts = [];
-      response.data.data.forEach(function(item) {
-        contexts.push({
-          id: item.id,
-          title: item.name,
-          icon: "mdi-moon-full",
-          count: 0
-        });
-      });
-      this.contexts = contexts;
     }
   },
   computed: {
@@ -172,7 +162,7 @@ export default {
   watch: {
     $route: {
       async handler() {
-        const functions = [this.fetchProjects(), this.fetchContexts()];
+        const functions = [this.fetch("projects"), this.fetch("contexts")];
         await Promise.all(functions);
       },
       immediate: true
