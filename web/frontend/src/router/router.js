@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Setting from "../components/Setting.vue";
 import SystemError from "../components/System.vue";
 
 Vue.use(VueRouter);
@@ -21,6 +22,11 @@ const routes = [
       import(/* webpackChunkName: "about" */ "../views/About.vue")
   },
   {
+    path: "/setting",
+    name: "Setting",
+    component: Setting
+  },
+  {
     path: "/500",
     component: SystemError
   }
@@ -28,7 +34,6 @@ const routes = [
 
 const router = new VueRouter({
   mode: "history",
-  base: "/src/",
   routes
 });
 
