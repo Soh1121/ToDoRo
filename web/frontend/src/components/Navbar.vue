@@ -9,9 +9,11 @@
     >
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
-      <h1>
-        <v-toolbar-title>ToDoRo</v-toolbar-title>
-      </h1>
+      <Router-link to="/" class="u-text__text-decoration-none">
+        <h1>
+          <v-toolbar-title class="u-text__color-white">ToDoRo</v-toolbar-title>
+        </h1>
+      </Router-link>
 
       <v-spacer />
 
@@ -39,8 +41,10 @@
         </template>
 
         <v-list>
-          <v-list-item>
-            <v-list-item-title>設定</v-list-item-title>
+          <v-list-item :to="'setting'">
+            <v-list-item-title>
+              設定
+            </v-list-item-title>
           </v-list-item>
           <v-list-item @click="logout">
             <v-list-item-title>ログアウト</v-list-item-title>
