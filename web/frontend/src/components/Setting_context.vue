@@ -1,3 +1,41 @@
 <template>
-  <h3>Contextの設定</h3>
+  <div
+    margin="10px auto"
+  >
+    <div width="80%">
+      <h3>Context設定</h3>
+      <v-btn
+        depressed
+        color="primary"
+      >
+        追加
+      </v-btn>
+      <v-card>
+        <v-list>
+          <v-list-tile>
+            <v-list-tile-content>
+              <v-list-tile-title>
+                テスト
+              </v-list-tile-title>
+            </v-list-tile-content>
+            <v-list-tile-action>
+              <v-btn
+                depressed
+              >
+                編集
+              </v-btn>
+            </v-list-tile-action>
+            <v-list-tile-action>
+              <v-btn
+                depressed
+                color="error"
+              >
+                削除
+              </v-btn>
+            </v-list-tile-action>
+          </v-list-tile>
+        </v-list>
+      </v-card>
+    </div>
+  </div>
 </template>

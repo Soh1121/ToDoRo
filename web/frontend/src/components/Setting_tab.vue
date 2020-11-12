@@ -1,16 +1,16 @@
 <template>
-  <div>
+  <v-card>
     <v-tabs color="orange">
       <v-tab @click="tab = 1">Context</v-tab>
       <v-tab @click="tab = 2">Project</v-tab>
     </v-tabs>
-    <div v-show="tab === 1">
+    <div v-if="tab === 1">
       <ContextSetting />
     </div>
-    <div v-show="tab === 2">
+    <div v-if="tab === 2">
       <ProjectSetting />
     </div>
-  </div>
+  </v-card>
 </template>
 
 <script>
