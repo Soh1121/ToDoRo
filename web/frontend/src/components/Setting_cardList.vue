@@ -1,0 +1,35 @@
+<template>
+  <v-card>
+    <v-list
+      class="u-margin__padding--r16l16 u-position__relative u-size__line-height--36px"
+    >
+      <v-list-tile
+      >
+        <v-list-tile-content>
+          <v-list-tile-title>
+            テスト
+          </v-list-tile-title>
+        </v-list-tile-content>
+        <v-list-tile-action>
+          <v-btn
+            depressed
+            absolute
+            class="u-position__absolute--right96px"
+          >
+            編集
+          </v-btn>
+        </v-list-tile-action>
+        <v-list-tile-action>
+          <v-btn
+            depressed
+            absolute
+            class="u-position__absolute--right16px"
+            color="error"
+          >
+            削除
+          </v-btn>
+        </v-list-tile-action>
+      </v-list-tile>
+    </v-list>
+  </v-card>
+</template>
