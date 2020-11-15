@@ -7,7 +7,7 @@
       >
         <v-list-tile-content>
           <v-list-tile-title>
-            テスト
+            {{ title }}
           </v-list-tile-title>
         </v-list-tile-content>
         <v-list-tile-action>
@@ -33,3 +33,9 @@
     </v-list>
   </v-card>
 </template>
+
+<script>
+export default {
+  props: ["id", "title"]
+};
+</script>
