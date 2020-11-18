@@ -7,11 +7,21 @@
       >
         <v-list-tile-content>
           <v-list-tile-title>
-            テスト
+            {{ title }}
           </v-list-tile-title>
         </v-list-tile-content>
         <v-list-tile-action>
           <v-btn
+            v-if="title === '未設定'"
+            disabled
+            depressed
+            absolute
+            class="u-position__absolute--right96px"
+          >
+            編集
+          </v-btn>
+          <v-btn
+            v-else
             depressed
             absolute
             class="u-position__absolute--right96px"
@@ -21,6 +31,17 @@
         </v-list-tile-action>
         <v-list-tile-action>
           <v-btn
+            v-if="title === '未設定'"
+            disabled
+            depressed
+            absolute
+            class="u-position__absolute--right16px"
+            color="error"
+          >
+            削除
+          </v-btn>
+          <v-btn
+            v-else
             depressed
             absolute
             class="u-position__absolute--right16px"
@@ -33,3 +54,9 @@
     </v-list>
   </v-card>
 </template>
+
+<script>
+export default {
+  props: ["id", "title"]
+};
+</script>
