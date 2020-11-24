@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <form @submit.prevent="">
+    <form @submit.prevent="store">
       <v-card-text>
         <v-container>
           <v-row
@@ -22,6 +22,7 @@
             <v-col cols="12" sm="12" md="12">
               <v-text-field
                 label="コンテキスト名"
+                hint="30文字以内"
                 required
                 color="orange"
                 v-model="contextAddForm.name"
@@ -42,7 +43,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   data() {
@@ -51,17 +52,25 @@ export default {
         name: ""
       },
       display: true
-    }
+    };
   },
   methods: {
     close() {
       this.$store.dispatch("context/close");
+    },
+
+    async store() {
+      // contextストアのstoreアクションの呼び出し
+      await this.$store.dispatch("context/store", [
+        this.userId,
+        this.contextAddForm
+      ]);
     }
   },
   computed: {
-    ...mapState({
-
+    ...mapGetters({
+      userId: "auth/user_id"
     })
   }
-}
+};
 </script>

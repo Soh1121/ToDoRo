@@ -1,4 +1,8 @@
+import { CREATED, INTERNAL_SERVER_ERROR, UNPROCESSABLE_ENTITY } from "../util";
+
 const state = {
+  contexts: null,
+  apiStatus: null,
   display: false
 };
 
@@ -7,12 +11,49 @@ const getters = {
 };
 
 const mutations = {
+  setContexts(state, contexts) {
+    state.contexts = contexts;
+  },
+
+  setApiStatus(state, status) {
+    state.apiStatus = status;
+  },
+
+  setStoreErrorMessages(state, messages) {
+    state.stateErrorMessages = messages;
+  },
+
   reverseDisplay(state, property) {
     state.display = property;
   }
 };
 
 const actions = {
+  async store(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.post(
+      "/api/contexts/" + data[0],
+      data[1]
+    );
+
+    if (response.status === CREATED) {
+      context.commit("setApiStatus", true);
+      context.commit("setContexts", response.data);
+      context.commit("reverseDisplay", false);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setStoreErrorMessages", response.data.errors);
+    } else {
+      if (response.status === INTERNAL_SERVER_ERROR) {
+        context.commit("reverseDisplay", false);
+      }
+      context.commit("error/setCode", response.status, { root: true });
+    }
+  },
+
   open(context) {
     context.commit("reverseDisplay", true);
   },

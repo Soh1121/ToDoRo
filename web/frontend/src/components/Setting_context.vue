@@ -1,10 +1,7 @@
 <template>
   <div class="u-margin__padding--10px0">
     <div class="u-size__width--94per u-align__block--center">
-      <v-dialog
-        v-model="dialog"
-        max-width="600px"
-      >
+      <v-dialog v-model="dialog" max-width="600px">
         <template v-slot:activator="{ on, attrs }">
           <v-btn
             depressed
