@@ -3,8 +3,7 @@
     <v-list
       class="u-margin__padding--r16l16 u-position__relative u-size__line-height--36px"
     >
-      <v-list-tile
-      >
+      <v-list-tile>
         <v-list-tile-content>
           <v-list-tile-title>
             {{ title }}

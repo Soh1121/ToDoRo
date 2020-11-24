@@ -1,13 +1,25 @@
 <template>
   <div class="u-margin__padding--10px0">
     <div class="u-size__width--94per u-align__block--center">
-      <v-btn
-        depressed
-        color="primary"
-        class="u-margin__margin--10px0"
+      <v-dialog
+        v-model="dialog"
+        max-width="600px"
       >
-        追加
-      </v-btn>
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            depressed
+            color="primary"
+            class="u-margin__margin--10px0"
+            v-on="on"
+            v-bind="attrs"
+            @click="open"
+          >
+            追加
+          </v-btn>
+        </template>
+        <ContextAdd />
+      </v-dialog>
+
       <CardList
         v-for="context in contexts"
         v-bind:key="context.id"
@@ -21,11 +33,13 @@
 <script>
 import { OK } from "../util";
 import CardList from "./Setting_cardList";
+import ContextAdd from "./Setting_contextAdd";
 import { mapGetters } from "vuex";
 
 export default {
   components: {
-    CardList
+    CardList,
+    ContextAdd
   },
   data() {
     return {
@@ -33,16 +47,21 @@ export default {
         {
           id: 0,
           title: ""
-        },
+        }
       ]
     };
   },
   computed: {
     ...mapGetters({
-      userId: "auth/user_id"
+      userId: "auth/user_id",
+      dialog: "context/display"
     })
   },
   methods: {
+    open() {
+      this.$store.dispatch("context/open");
+    },
+
     async fetch() {
       const route = "/api/contexts/" + this.userId;
       const response = await window.axios.get(route);
@@ -56,7 +75,7 @@ export default {
       response.data.data.forEach(function(item) {
         datas.push({
           id: item.id,
-          title: item.name,
+          title: item.name
         });
       });
 
@@ -66,11 +85,11 @@ export default {
   watch: {
     $route: {
       async handler() {
-        const functions = this.fetch();
-        await Promise.all(functions)
+        const functions = [this.fetch()];
+        await Promise.all(functions);
       },
       immediate: true
     }
   }
-}
+};
 </script>

@@ -27,5 +27,5 @@ export default {
       tab: 1
     };
   }
-}
+};
 </script>
