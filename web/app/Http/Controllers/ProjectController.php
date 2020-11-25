@@ -26,10 +26,12 @@ class ProjectController extends Controller
         $project->name = $request->name;
         $project->save();
 
-        $new_project = Project::where('id', $project->id)->first();
+        $new_project = Project::where('id', $project->id)
+            ->orderBy(Project::CREATED_AT, 'asc')
+            ->get();
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
-        return response()->json($new_project, 201, [], JSON_NUMERIC_CHECK);
+        return response()->json(['data' => $new_project], 201);
     }
 
     /**
