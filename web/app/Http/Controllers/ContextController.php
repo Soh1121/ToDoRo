@@ -62,7 +62,11 @@ class ContextController extends Controller
         $context = Context::find($context_id);
         $context->name = $request->get('name');
         $context->save();
-        return response()->json($context, 201);
+
+        $contexts = Context::where('user_id', $user_id)
+            ->orderBy(Context::CREATED_AT, 'asc')
+            ->get();
+        return response()->json($contexts, 201);
     }
 
     /**
