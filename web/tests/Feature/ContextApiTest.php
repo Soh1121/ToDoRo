@@ -25,9 +25,38 @@ class ContextApiTest extends TestCase
     /**
      * @test
      */
+    public function should_コンテキストを追加すると想定した構造のJSONが返ってくる()
+    {
+        $name = 'test';
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('context.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'user_id',
+                        'name',
+                    ]
+                ]
+            ]);
+    }
+
+    /**
+     * @test
+     */
     public function should_コンテキストを追加できる()
     {
-        $name = 'A_早朝（4:00-6:00）';
+        $contexts = Context::where('user_id', $this->user->id)
+            ->orderBy(Context::CREATED_AT, 'asc')
+            ->get();
+        $name = 'X_深夜（22:00-24:00）';
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('context.store', [
@@ -38,8 +67,8 @@ class ContextApiTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonFragment([
-                "user_id" => $this->user->id,
-                "name" => 'A_早朝（4:00-6:00）',
+                'user_id' => (string)$this->user->id,
+                'name' => $name,
             ]);
     }
 
@@ -58,9 +87,9 @@ class ContextApiTest extends TestCase
                 compact('name')
             );
 
-        $response->assertStatus(201)
+            $response->assertStatus(201)
             ->assertJsonFragment([
-                'user_id' => $this->user->id,
+                'user_id' => (string)$this->user->id,
                 'name' => $name,
             ]);
     }
@@ -96,7 +125,7 @@ class ContextApiTest extends TestCase
                 ])
             );
         $contexts = Context::where('user_id', $this->user->id)
-            ->orderBy(Context::CREATED_AT, 'desc')
+            ->orderBy(Context::CREATED_AT, 'asc')
             ->get();
         $expected_data = $contexts->map(function($context) {
             return [
@@ -121,7 +150,7 @@ class ContextApiTest extends TestCase
     {
         $name = 'J_深夜（22:00-24:00）';
         $target_context = Context::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $context_id = $target_context->id;
         $response = $this->actingAs($this->user)
@@ -147,7 +176,7 @@ class ContextApiTest extends TestCase
     {
         $name = str_repeat("a", 30);
         $target_context = Context::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $context_id = $target_context->id;
         $response = $this->actingAs($this->user)
@@ -173,7 +202,7 @@ class ContextApiTest extends TestCase
     {
         $name = str_repeat("a", 31);
         $target_context = Context::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $context_id = $target_context->id;
         $response = $this->actingAs($this->user)
@@ -193,7 +222,7 @@ class ContextApiTest extends TestCase
     public function should_コンテキストを削除できる()
     {
         $target_context = Context::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $context_id = $target_context->id;
         $response = $this->actingAs($this->user)
