@@ -27,10 +27,13 @@ class ContextController extends Controller
         $context->name = $request->name;
         $context->save();
 
-        $new_context = Context::where('id', $context->id)->first();
+        $new_context = Context::where('user_id', $user_id)
+            ->orderBy(Context::CREATED_AT, 'asc')
+            ->get();
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
-        return response()->json($new_context, 201, [], JSON_NUMERIC_CHECK);
+        // return response()->json(['data' => $new_context], 201, [], JSON_NUMERIC_CHECK);
+        return response()->json(['data' => $new_context], 201);
     }
 
     /**
@@ -41,7 +44,7 @@ class ContextController extends Controller
     public function index(int $user_id)
     {
         $contexts = Context::where('user_id', $user_id)
-            ->orderBy(Context::CREATED_AT, 'desc')
+            ->orderBy(Context::CREATED_AT, 'asc')
             ->get();
 
         return response()->json(['data' => $contexts]);
@@ -59,7 +62,11 @@ class ContextController extends Controller
         $context = Context::find($context_id);
         $context->name = $request->get('name');
         $context->save();
-        return response()->json($context, 201);
+
+        $contexts = Context::where('user_id', $user_id)
+            ->orderBy(Context::CREATED_AT, 'asc')
+            ->get();
+        return response()->json($contexts, 201);
     }
 
     /**

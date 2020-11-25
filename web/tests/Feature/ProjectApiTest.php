@@ -24,8 +24,37 @@ class ProjectApiTest extends TestCase
     /**
      * @test
      */
+    public function should_プロジェクトを追加すると想定した構造のJSONが返ってくる()
+    {
+        $name = 'test';
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
+
+        $response->assertStatus(201)
+            ->assertJsonStructure([
+                'data' => [
+                    '*' => [
+                        'id',
+                        'user_id',
+                        'name',
+                    ]
+                ]
+            ]);
+    }
+
+    /**
+     * @test
+     */
     public function should_プロジェクトを追加できる()
     {
+        $projects = Project::where('user_id', $this->user->id)
+            ->orderBy(Project::CREATED_AT, 'asc')
+            ->get();
         $name = '今日';
         $response = $this->actingAs($this->user)
             ->json('POST',
@@ -37,8 +66,8 @@ class ProjectApiTest extends TestCase
 
         $response->assertStatus(201)
             ->assertJsonFragment([
-                "user_id" => $this->user->id,
-                "name" => '今日',
+                "user_id" => (string)$this->user->id,
+                "name" => $name,
             ]);
     }
 
@@ -57,10 +86,10 @@ class ProjectApiTest extends TestCase
             );
 
         $response->assertStatus(201)
-            ->assertJsonFragment([
-                'user_id' => $this->user->id,
-                'name' => $name,
-            ]);
+        ->assertJsonFragment([
+            "user_id" => (string)$this->user->id,
+            "name" => $name,
+        ]);
     }
 
     /**
@@ -94,7 +123,7 @@ class ProjectApiTest extends TestCase
                 ])
             );
         $projects = Project::where('user_id',$this->user->id)
-            ->orderBy(Project::CREATED_AT, 'desc')
+            ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
         $expected_data = $projects->map(function($project) {
             return [
@@ -119,7 +148,7 @@ class ProjectApiTest extends TestCase
     {
         $name = 'today';
         $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
@@ -143,7 +172,7 @@ class ProjectApiTest extends TestCase
     public function should_プロジェクト名は30文字まで変更できる()
     {
         $name = str_repeat("a", 30);        $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
@@ -168,7 +197,7 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 31);
         $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
@@ -187,7 +216,7 @@ class ProjectApiTest extends TestCase
     public function should_プロジェクトを削除できる()
     {
         $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)

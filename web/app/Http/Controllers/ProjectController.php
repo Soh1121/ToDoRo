@@ -26,10 +26,12 @@ class ProjectController extends Controller
         $project->name = $request->name;
         $project->save();
 
-        $new_project = Project::where('id', $project->id)->first();
+        $new_project = Project::where('id', $project->id)
+            ->orderBy(Project::CREATED_AT, 'asc')
+            ->get();
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
-        return response()->json($new_project, 201, [], JSON_NUMERIC_CHECK);
+        return response()->json(['data' => $new_project], 201);
     }
 
     /**
@@ -40,7 +42,7 @@ class ProjectController extends Controller
     public function index(int $user_id)
     {
         $projects = Project::where('user_id', $user_id)
-            ->orderBy(Project::CREATED_AT, 'desc')
+            ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
 
         return response()->json(['data' => $projects]);
@@ -58,7 +60,11 @@ class ProjectController extends Controller
         $project = Project::find($project_id);
         $project->name = $request->get('name');
         $project->save();
-        return response()->json($project, 201);
+
+        $projects = Project::where('user_id', $user_id)
+            ->orderBy(Project::CREATED_AT, 'asc')
+            ->get();
+        return response()->json($projects, 201);
     }
 
     /**
