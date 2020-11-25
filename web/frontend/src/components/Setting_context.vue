@@ -31,7 +31,7 @@
 import { OK } from "../util";
 import CardList from "./Setting_cardList";
 import ContextAdd from "./Setting_contextAdd";
-// import { mapGetters } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -49,19 +49,11 @@ export default {
     };
   },
   computed: {
-    userId: function() {
-      return this.$store.getters["auth/user_id"];
-    },
-    storeContexts: function() {
-      return this.$store.getters["context/contexts"];
-    },
-    dialog: function() {
-      return this.$store.getters["context/display"];
-    }
-    // ...mapGetters({
-    //   userId: "auth/user_id",
-    //   dialog: "context/display"
-    // })
+    ...mapGetters({
+      userId: "auth/user_id",
+      storeContexts: "context/contexts",
+      dialog: "context/display"
+    })
   },
   methods: {
     open() {
@@ -99,7 +91,7 @@ export default {
     storeContexts(values) {
       if (values) {
         let datas = [];
-        values.forEach(function(item) {
+        values["data"].forEach(function(item) {
           datas.push({
             id: item.id,
             title: item.name
