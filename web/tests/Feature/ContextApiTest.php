@@ -66,10 +66,6 @@ class ContextApiTest extends TestCase
             );
 
         $response->assertStatus(201)
-<<<<<<< HEAD
-=======
-            // ->assertJsonCount($context_count + 1, 'data');
->>>>>>> cfe9616... [update]コンテキスト変更時に一覧を返却するように変更
             ->assertJsonFragment([
                 'user_id' => (string)$this->user->id,
                 'name' => $name,
@@ -101,12 +97,12 @@ class ContextApiTest extends TestCase
     /**
      * @test
      */
-    public function should_プロジェクト名は31文字はNG()
+    public function should_コンテキスト名は31文字はNG()
     {
         $name = str_repeat("a", 31);
         $response = $this->actingAs($this->user)
             ->json('POST',
-                route('project.store', [
+                route('context.store', [
                     'user' => $this->user->id,
                 ]),
                 compact('name')
