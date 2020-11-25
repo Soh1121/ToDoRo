@@ -7,6 +7,7 @@ const state = {
 };
 
 const getters = {
+  contexts: state => state.contexts,
   display: state => !!state.display
 };
 
@@ -52,6 +53,19 @@ const actions = {
       }
       context.commit("error/setCode", response.status, { root: true });
     }
+  },
+
+  async index(context, data) {
+    const route = "/api/contexts/" + data[0];
+    const response = await window.axios.get(route);
+
+    if (response.status !== OK) {
+      context.commit("error/setCode", response.status, { root: true });
+      return false;
+    }
+
+    context.commit("setApiStatus", true);
+    context.commit("setContexts", response.data);
   },
 
   open(context) {
