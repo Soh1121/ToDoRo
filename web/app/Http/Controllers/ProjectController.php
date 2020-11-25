@@ -60,7 +60,11 @@ class ProjectController extends Controller
         $project = Project::find($project_id);
         $project->name = $request->get('name');
         $project->save();
-        return response()->json($project, 201);
+
+        $projects = Project::where('user_id', $user_id)
+            ->orderBy(Project::CREATED_AT, 'asc')
+            ->get();
+        return response()->json($projects, 201);
     }
 
     /**
