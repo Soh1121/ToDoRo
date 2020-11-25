@@ -123,7 +123,7 @@ class ProjectApiTest extends TestCase
                 ])
             );
         $projects = Project::where('user_id',$this->user->id)
-            ->orderBy(Project::CREATED_AT, 'desc')
+            ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
         $expected_data = $projects->map(function($project) {
             return [
@@ -148,7 +148,7 @@ class ProjectApiTest extends TestCase
     {
         $name = 'today';
         $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
@@ -172,7 +172,7 @@ class ProjectApiTest extends TestCase
     public function should_プロジェクト名は30文字まで変更できる()
     {
         $name = str_repeat("a", 30);        $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
@@ -197,7 +197,7 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 31);
         $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)
@@ -216,7 +216,7 @@ class ProjectApiTest extends TestCase
     public function should_プロジェクトを削除できる()
     {
         $target_project = Project::where('user_id', $this->user->id)
-            ->orderBy('created_at', 'desc')
+            ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
         $response = $this->actingAs($this->user)

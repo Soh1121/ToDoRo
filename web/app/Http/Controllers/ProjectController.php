@@ -42,7 +42,7 @@ class ProjectController extends Controller
     public function index(int $user_id)
     {
         $projects = Project::where('user_id', $user_id)
-            ->orderBy(Project::CREATED_AT, 'desc')
+            ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
 
         return response()->json(['data' => $projects]);
