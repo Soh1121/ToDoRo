@@ -156,7 +156,8 @@ export default {
   computed: {
     ...mapGetters({
       isLogin: "auth/check",
-      userId: "auth/user_id"
+      userId: "auth/user_id",
+      storeContexts: "context/contexts"
     })
   },
   watch: {
@@ -166,6 +167,18 @@ export default {
         await Promise.all(functions);
       },
       immediate: true
+    },
+    storeContexts(values) {
+      if (values) {
+        let datas = [];
+        values["data"].forEach(function(item) {
+          datas.push({
+            id: item.id,
+            title: item.name
+          });
+        });
+        this.contexts = datas;
+      }
     }
   }
 };
