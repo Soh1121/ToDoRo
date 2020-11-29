@@ -18,10 +18,7 @@
       </v-dialog>
 
       <CardList
-        v-for="context in contexts"
-        v-bind:key="context.id"
-        v-bind:id="context.id"
-        v-bind:title="context.title"
+        v-bind:mode="context"
       />
     </div>
   </div>
