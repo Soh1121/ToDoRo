@@ -1,19 +1,12 @@
-import {
-  OK,
-  CREATED,
-  INTERNAL_SERVER_ERROR,
-  UNPROCESSABLE_ENTITY
-} from "../util";
+import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   contexts: null,
-  apiStatus: null,
-  display: false
+  apiStatus: null
 };
 
 const getters = {
-  contexts: state => state.contexts,
-  display: state => !!state.display
+  contexts: state => state.contexts
 };
 
 const mutations = {
@@ -27,15 +20,11 @@ const mutations = {
 
   setStoreErrorMessages(state, messages) {
     state.stateErrorMessages = messages;
-  },
-
-  reverseDisplay(state, property) {
-    state.display = property;
   }
 };
 
 const actions = {
-  async store(context, data) {
+  async create(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.post(
       "/api/contexts/" + data[0],
@@ -45,7 +34,6 @@ const actions = {
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
       context.commit("setContexts", response.data);
-      context.commit("reverseDisplay", false);
       return false;
     }
 
@@ -53,9 +41,27 @@ const actions = {
     if (response.status === UNPROCESSABLE_ENTITY) {
       context.commit("setStoreErrorMessages", response.data.errors);
     } else {
-      if (response.status === INTERNAL_SERVER_ERROR) {
-        context.commit("reverseDisplay", false);
-      }
+      context.commit("error/setCode", response.status, { root: true });
+    }
+  },
+
+  async update(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.patch(
+      "/api/contexts/" + data[0],
+      data[1]
+    );
+
+    if (response.status === CREATED) {
+      context.commit("setApiStatus", true);
+      context.commit("setContexts", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setStoreErrorMessages", response.data.errors);
+    } else {
       context.commit("error/setCode", response.status, { root: true });
     }
   },
@@ -71,14 +77,6 @@ const actions = {
 
     context.commit("setApiStatus", true);
     context.commit("setContexts", response.data);
-  },
-
-  open(context) {
-    context.commit("reverseDisplay", true);
-  },
-
-  close(context) {
-    context.commit("reverseDisplay", false);
   }
 };
 
