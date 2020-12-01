@@ -66,6 +66,27 @@ const actions = {
     }
   },
 
+  async remove(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.delete(
+      "/api/contexts/" + data[0],
+      data[1]
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setContexts", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setStoreErrorMessages", response.data.errors);
+    } else {
+      context.commit("error/setCode", response.status, { root: true });
+    }
+  },
+
   async index(context, data) {
     const route = "/api/contexts/" + data[0];
     const response = await window.axios.get(route);

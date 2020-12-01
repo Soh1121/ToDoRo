@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ContextRequest;
 use App\Context;
 use Illuminate\Http\Request;
@@ -78,7 +79,9 @@ class ContextController extends Controller
     public function delete(int $user_id, ContextRequest $request)
     {
         Context::find($request->context_id)->delete();
-        $contexts = Context::where('user_id', $user_id)->get();
-        return response()->json($contexts, 200);
+        $contexts = Context::where('user_id', $user_id)
+            ->orderBy(Context::CREATED_AT, 'asc')
+            ->get();
+        return response()->json(['data' => $contexts], 200);
     }
 }

@@ -179,6 +179,14 @@ export default {
       this.close();
     },
 
+    async remove(item) {
+      this.contextAddForm = item;
+      await this.$store.dispatch("context/remove", [
+        this.userId,
+        { data: this.contextAddForm }
+      ]);
+    },
+
     close() {
       this.dialog = false;
     }
