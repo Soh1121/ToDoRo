@@ -25,21 +25,18 @@
             <v-card>
               <v-card-text>
                 <v-container>
-                  <!-- <v-row
-                    v-if="contextAddErrors"
+                  <!-- エラーメッセージ表示部分 -->
+                  <v-row
+                    v-if="contextNameErrors"
                     class="font-weight-bold red--text text--darken-3"
                   >
-                    <ul v-if="contextAddErrors.email">
-                      <li v-for="msg in loginErrors.email" :key="msg">
+                    <ul v-if="contextNameErrors.name">
+                      <li v-for="msg in contextNameErrors.name" :key="msg">
                         {{ msg }}
                       </li>
                     </ul>
-                    <ul v-if="loginErrors.password">
-                      <li v-for="msg in loginErrors.password" :key="msg">
-                        {{ msg }}
-                      </li>
-                    </ul>
-                  </v-row> -->
+                  </v-row>
+                  <!-- フォーム表示部分 -->
                   <v-row>
                     <v-col cols="12" sm="12" md="12">
                       <v-text-field
@@ -90,7 +87,7 @@
 
 <script>
 import { OK } from "../util";
-import { mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
   data() {
@@ -122,6 +119,11 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      apiStatus: state => state.context.apiStatus,
+      contextNameErrors: state => state.context.contextNameErrorMessages
+    }),
+
     ...mapGetters({
       userId: "auth/user_id",
       storeContexts: "context/contexts"
@@ -155,6 +157,7 @@ export default {
 
     add() {
       this.contextAddForm = {};
+      this.clearError();
       this.dialog = true;
     },
 
@@ -163,11 +166,14 @@ export default {
         this.userId,
         this.contextAddForm
       ]);
-      this.close();
+      if (this.apiStatus) {
+        this.close();
+      }
     },
 
     edit(item) {
       this.contextAddForm = item;
+      this.clearError();
       this.dialog = true;
     },
 
@@ -189,6 +195,10 @@ export default {
 
     close() {
       this.dialog = false;
+    },
+
+    clearError() {
+      this.$store.commit("context/setContextNameErrorMessages", null);
     }
   },
 
