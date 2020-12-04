@@ -25,7 +25,19 @@ class ContextRequest extends FormRequest
     {
         return [
             'context_id' => 'integer',
-            'name' => 'max:30',
+            'name' => 'string|max:30',
+        ];
+    }
+
+    /**
+     * エラーメッセージのカスタマイズ
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.string' => 'コンテキスト名を入力してください',
+            'name.max' => 'コンテキスト名は30文字以内で入力してください',
         ];
     }
 }

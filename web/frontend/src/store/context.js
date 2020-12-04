@@ -2,7 +2,8 @@ import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   contexts: null,
-  apiStatus: null
+  apiStatus: null,
+  contextNameErrorMessages: null
 };
 
 const getters = {
@@ -18,8 +19,8 @@ const mutations = {
     state.apiStatus = status;
   },
 
-  setStoreErrorMessages(state, messages) {
-    state.stateErrorMessages = messages;
+  setContextNameErrorMessages(state, messages) {
+    state.contextNameErrorMessages = messages;
   }
 };
 
@@ -39,7 +40,7 @@ const actions = {
 
     context.commit("setApiStatus", false);
     if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("setStoreErrorMessages", response.data.errors);
+      context.commit("setContextNameErrorMessages", response.data.errors);
     } else {
       context.commit("error/setCode", response.status, { root: true });
     }
@@ -60,7 +61,7 @@ const actions = {
 
     context.commit("setApiStatus", false);
     if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("setStoreErrorMessages", response.data.errors);
+      context.commit("setContextNameErrorMessages", response.data.errors);
     } else {
       context.commit("error/setCode", response.status, { root: true });
     }
@@ -80,11 +81,7 @@ const actions = {
     }
 
     context.commit("setApiStatus", false);
-    if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("setStoreErrorMessages", response.data.errors);
-    } else {
-      context.commit("error/setCode", response.status, { root: true });
-    }
+    context.commit("error/setCode", response.status, { root: true });
   },
 
   async index(context, data) {
