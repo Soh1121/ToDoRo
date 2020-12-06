@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -99,6 +99,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      apiStatus: state => state.project.apiStatus
+    }),
+
     ...mapGetters({
       userId: "auth/user_id",
       storeProjects: "project/projects"
@@ -124,6 +128,16 @@ export default {
     add() {
       this.projectSettingForm = {};
       this.dialog = true;
+    },
+
+    async create() {
+      await this.$store.dispatch("project/create", [
+        this.userId,
+        this.projectSettingForm
+      ]);
+      if (this.apiStatus) {
+        this.close();
+      }
     },
 
     close() {

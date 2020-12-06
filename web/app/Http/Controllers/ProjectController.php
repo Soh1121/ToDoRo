@@ -26,7 +26,7 @@ class ProjectController extends Controller
         $project->name = $request->name;
         $project->save();
 
-        $new_project = Project::where('id', $project->id)
+        $new_project = Project::where('user_id', $user_id)
             ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
 
