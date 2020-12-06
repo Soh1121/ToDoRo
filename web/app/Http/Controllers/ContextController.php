@@ -46,7 +46,14 @@ class ContextController extends Controller
         $context->name = $request->name;
         // 重複していたらエラーを返す
         if ($this->duplicate($context)) {
-            return response()->json(['error' => 'Error msg'], 422);
+            return response()->json(
+                [
+                    'message' => 'The given data was duplicates.',
+                    'errors' => [
+                        'name' => ['コンテキスト名が重複しています']
+                    ]
+                ], 422
+            );
         }
         // 重複していなければ追加
         $context->save();
@@ -87,7 +94,14 @@ class ContextController extends Controller
         $context->name = $request->get('name');
         // 重複していたらエラーを返す
         if ($this->duplicate($context)) {
-            return response()->json(['error' => 'Error msg'], 422);
+            return response()->json(
+                [
+                    'message' => 'The given data was duplicates.',
+                    'errors' => [
+                        'name' => 'コンテキスト名が重複しています'
+                    ]
+                ], 422
+            );
         }
         // 重複していなければ保存
         $context->save();
