@@ -7,6 +7,7 @@
           color="primary"
           class="u-margin__margin--10px0"
           v-bind="attrs"
+          @click="add"
         >
           追加
         </v-btn>
@@ -19,6 +20,38 @@
         disable-pagination="true"
         hide-default-footer="true"
       >
+        <template v-slot:top>
+          <v-dialog v-model="dialog" max-width="600px">
+            <v-card>
+              <v-card-text>
+                <v-container>
+                  <!-- フォーム表示部分 -->
+                  <v-row>
+                    <v-col cols="12" sm="12" md="12">
+                      <v-text-field
+                        label="プロジェクト名"
+                        hint="30文字以内"
+                        required
+                        color="orange"
+                        v-model="projectSettingForm.name"
+                      />
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer />
+                <v-btn color="orange" text @click="close">
+                  キャンセル
+                </v-btn>
+                <v-btn color="orange" dark @click="create">
+                  追加
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </template>
+
         <template v-slot:item.actions="{ item }">
           <div v-if="item.name !== '未設定'">
             <v-icon>
@@ -35,7 +68,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 export default {
   data() {
     return {
@@ -59,11 +92,17 @@ export default {
           align: "center",
           width: "100px"
         }
-      ]
+      ],
+      // 設定用のダイアログのフォームデータ
+      projectSettingForm: {}
     };
   },
 
   computed: {
+    ...mapState({
+      apiStatus: state => state.project.apiStatus
+    }),
+
     ...mapGetters({
       userId: "auth/user_id",
       storeProjects: "project/projects"
@@ -84,6 +123,25 @@ export default {
       });
 
       this.projects = datas;
+    },
+
+    add() {
+      this.projectSettingForm = {};
+      this.dialog = true;
+    },
+
+    async create() {
+      await this.$store.dispatch("project/create", [
+        this.userId,
+        this.projectSettingForm
+      ]);
+      if (this.apiStatus) {
+        this.close();
+      }
+    },
+
+    close() {
+      this.dialog = false;
     }
   },
 
@@ -94,6 +152,19 @@ export default {
         await Promise.all(functions);
       },
       immediate: true
+    },
+
+    storeProjects(values) {
+      if (values) {
+        let datas = [];
+        values["data"].forEach(function(item) {
+          datas.push({
+            project_id: item.id,
+            name: item.name
+          });
+        });
+        this.projects = datas;
+      }
     }
   }
 };
