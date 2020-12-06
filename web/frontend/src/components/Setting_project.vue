@@ -152,6 +152,19 @@ export default {
         await Promise.all(functions);
       },
       immediate: true
+    },
+
+    storeProjects(values) {
+      if (values) {
+        let datas = [];
+        values["data"].forEach(function(item) {
+          datas.push({
+            project_id: item.id,
+            name: item.name
+          });
+        });
+        this.projects = datas;
+      }
     }
   }
 };

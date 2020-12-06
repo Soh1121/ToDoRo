@@ -1,10 +1,13 @@
 import { CREATED } from "../util";
 
 const state = {
+  projects: null,
   apiStatus: null
 };
 
-const getters = {};
+const getters = {
+  projects: state => state.projects
+};
 
 const mutations = {
   setProjects(state, projects) {
