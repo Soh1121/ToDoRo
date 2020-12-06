@@ -4,11 +4,11 @@
       <header>
         <Navbar />
       </header>
-      <main>
+      <v-main>
         <div class="container">
           <RouterView />
         </div>
-      </main>
+      </v-main>
       <footer>
         <Footer />
       </footer>

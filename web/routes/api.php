@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +27,27 @@ Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 // ログインユーザーの確認
 Route::get('/user', function(){ return Auth::user(); })->name('user');
+
+// プロジェクト追加
+Route::post('/projects/{user}', 'ProjectController@store')->name('project.store');
+
+// プロジェクト一覧
+Route::get('/projects/{user}', 'ProjectController@index')->name('project.index');
+
+// プロジェクト名編集
+Route::patch('/projects/{user}', 'ProjectController@update')->name('project.update');
+
+// プロジェクト削除
+Route::delete('/projects/{user}', 'ProjectController@delete')->name('project.delete');
+
+// コンテキスト追加
+Route::post('/contexts/{user}', 'ContextController@store')->name('context.store');
+
+// コンテキスト一覧
+Route::get('/contexts/{user}', 'ContextController@index')->name('context.index');
+
+// コンテキスト名編集
+Route::patch('/contexts/{user}', 'ContextController@update')->name('context.update');
+
+// コンテキスト削除
+Route::delete('/contexts/{user}', 'ContextController@delete')->name('context.delete');

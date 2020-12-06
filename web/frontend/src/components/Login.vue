@@ -103,7 +103,7 @@
             <v-col cols="12" sm="12" md="12">
               <v-text-field
                 label="パスワード *"
-                hint="英数字・記号を利用可能"
+                hint="英数字・ハイフン・アンダーバーを利用可能"
                 required
                 color="orange"
                 v-model="registerForm.password"

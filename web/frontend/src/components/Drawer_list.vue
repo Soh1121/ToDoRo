@@ -1,0 +1,39 @@
+<template>
+  <v-list-item link>
+    <v-list-item-icon>
+      <v-icon>{{ icon }}</v-icon>
+    </v-list-item-icon>
+
+    <v-list-item-content class="l-sidebar__item--content">
+      <v-list-item-title class="l-sidebar__item--left">
+        {{ title }}
+      </v-list-item-title>
+      <v-list-item-subtitle class="l-sidebar__item--right">
+        {{ maxfifty }}件<span v-if="isOver50">+</span>
+      </v-list-item-subtitle>
+    </v-list-item-content>
+  </v-list-item>
+</template>
+
+<script>
+export default {
+  props: ["icon", "title", "count"],
+  data() {
+    return {
+      menuIcon: "mdi-dots-vertical"
+    };
+  },
+  computed: {
+    isOver50: function() {
+      return 50 < this.count;
+    },
+    maxfifty: function() {
+      if (50 < this.count) {
+        return 50;
+      } else {
+        return this.count;
+      }
+    }
+  }
+};
+</script>
