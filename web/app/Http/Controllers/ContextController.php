@@ -16,6 +16,24 @@ class ContextController extends Controller
     }
 
     /**
+     * 重複するコンテキスト名があるとエラーを返す
+     * フロントエンドで「未設定」の場合、編集・削除を非表示にするため、
+     * 未設定を複数作られると操作できなくなる
+     * @param Context $context
+     * @return boolean
+     */
+    private static function duplicate(Context $context) {
+        $duplicate_context = Context::where('user_id', $context->user_id)
+            ->where('name', $context->name)
+            ->get();
+        if (count($duplicate_context) != 0) {
+            return True;
+        } else {
+            return False;
+        }
+    }
+
+    /**
      * コンテキスト追加
      * @param int $user_id
      * @param ContextRequest $request
@@ -26,6 +44,11 @@ class ContextController extends Controller
         $context = new Context();
         $context->user_id = $user_id;
         $context->name = $request->name;
+        // 重複していたらエラーを返す
+        if ($this->duplicate($context)) {
+            return response()->json(['error' => 'Error msg'], 422);
+        }
+        // 重複していなければ追加
         $context->save();
 
         $new_context = Context::where('user_id', $user_id)
@@ -62,6 +85,11 @@ class ContextController extends Controller
         $context_id = $request->context_id;
         $context = Context::find($context_id);
         $context->name = $request->get('name');
+        // 重複していたらエラーを返す
+        if ($this->duplicate($context)) {
+            return response()->json(['error' => 'Error msg'], 422);
+        }
+        // 重複していなければ保存
         $context->save();
 
         $contexts = Context::where('user_id', $user_id)
