@@ -114,6 +114,23 @@ class ContextApiTest extends TestCase
     /**
      * @test
      */
+    public function should_重複しているコンテキストは登録できない()
+    {
+        $name = 'A_早朝（4:00-6:00）';
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('context.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
     public function should_コンテキスト一覧を取得できる()
     {
         // データの取得
@@ -201,6 +218,27 @@ class ContextApiTest extends TestCase
     public function should_コンテキスト名は31文字に変更できない()
     {
         $name = str_repeat("a", 31);
+        $target_context = Context::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $context_id = $target_context->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('context.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'context_id')
+            );
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
+    public function should_重複しているコンテキストには変更できない()
+    {
+        $name = 'A_早朝（4:00-6:00）';
         $target_context = Context::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
