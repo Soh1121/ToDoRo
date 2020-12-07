@@ -48,6 +48,7 @@
                   v-if="isPersistedItem"
                   color="orange"
                   dark
+                  @click="update"
                 >
                   変更
                 </v-btn>
@@ -155,6 +156,14 @@ export default {
     edit(item) {
       this.projectSettingForm = item;
       this.dialog = true;
+    },
+
+    async update() {
+      await this.$store.dispatch("project/update", [
+        this.userId,
+        this.projectSettingForm
+      ]);
+      this.close();
     },
 
     close() {

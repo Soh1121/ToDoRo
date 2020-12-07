@@ -64,7 +64,7 @@ class ProjectController extends Controller
         $projects = Project::where('user_id', $user_id)
             ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
-        return response()->json($projects, 201);
+        return response()->json(['data' => $projects], 201);
     }
 
     /**
