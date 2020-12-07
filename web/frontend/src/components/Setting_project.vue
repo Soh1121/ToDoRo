@@ -44,7 +44,15 @@
                 <v-btn color="orange" text @click="close">
                   キャンセル
                 </v-btn>
-                <v-btn color="orange" dark @click="create">
+                <v-btn
+                  v-if="isPersistedItem"
+                  color="orange"
+                  dark
+                  @click="update"
+                >
+                  変更
+                </v-btn>
+                <v-btn v-else color="orange" dark @click="create">
                   追加
                 </v-btn>
               </v-card-actions>
@@ -54,7 +62,7 @@
 
         <template v-slot:item.actions="{ item }">
           <div v-if="item.name !== '未設定'">
-            <v-icon>
+            <v-icon @click="edit(item)">
               mdi-pencil
             </v-icon>
             <v-icon>
@@ -69,6 +77,7 @@
 
 <script>
 import { mapGetters, mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -106,7 +115,11 @@ export default {
     ...mapGetters({
       userId: "auth/user_id",
       storeProjects: "project/projects"
-    })
+    }),
+
+    isPersistedItem() {
+      return !!this.projectSettingForm.project_id;
+    }
   },
 
   methods: {
@@ -138,6 +151,19 @@ export default {
       if (this.apiStatus) {
         this.close();
       }
+    },
+
+    edit(item) {
+      this.projectSettingForm = item;
+      this.dialog = true;
+    },
+
+    async update() {
+      await this.$store.dispatch("project/update", [
+        this.userId,
+        this.projectSettingForm
+      ]);
+      this.close();
     },
 
     close() {
