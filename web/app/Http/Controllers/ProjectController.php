@@ -77,6 +77,6 @@ class ProjectController extends Controller
     {
         Project::find($request->project_id)->delete();
         $projects = Project::where('user_id', $user_id)->get();
-        return response()->json($projects, 200);
+        return response()->json(['data' => $projects], 200);
     }
 }
