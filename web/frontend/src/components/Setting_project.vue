@@ -65,7 +65,7 @@
             <v-icon @click="edit(item)">
               mdi-pencil
             </v-icon>
-            <v-icon>
+            <v-icon @click="remove(item)">
               mdi-delete
             </v-icon>
           </div>
@@ -164,6 +164,14 @@ export default {
         this.projectSettingForm
       ]);
       this.close();
+    },
+
+    async remove(item) {
+      this.projectSettingForm = item;
+      await this.$store.dispatch("project/remove", [
+        this.userId,
+        { data: this.projectSettingForm }
+      ]);
     },
 
     close() {
