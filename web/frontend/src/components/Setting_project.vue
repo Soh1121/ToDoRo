@@ -25,6 +25,17 @@
             <v-card>
               <v-card-text>
                 <v-container>
+                  <!-- エラーメッセージ表示部分 -->
+                  <v-row
+                    v-if="projectNameErrors"
+                    class="font-weight-bold red--text text--darken-3"
+                  >
+                    <ul v-if="projectNameErrors.name">
+                      <li v-for="msg in projectNameErrors.name" :key="msg">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </v-row>
                   <!-- フォーム表示部分 -->
                   <v-row>
                     <v-col cols="12" sm="12" md="12">
@@ -76,6 +87,7 @@
 </template>
 
 <script>
+import { OK } from "../util";
 import { mapGetters, mapState } from "vuex";
 
 export default {
@@ -109,7 +121,8 @@ export default {
 
   computed: {
     ...mapState({
-      apiStatus: state => state.project.apiStatus
+      apiStatus: state => state.project.apiStatus,
+      projectNameErrors: state => state.project.projectNameErrorMessages
     }),
 
     ...mapGetters({
@@ -127,6 +140,11 @@ export default {
       const route = "/api/projects/" + this.userId;
       const response = await window.axios.get(route);
 
+      if (response.status !== OK) {
+        this.$store.commit("error/setCode", response.status);
+        return false;
+      }
+
       let datas = [];
       response.data.data.forEach(function(item) {
         datas.push({
@@ -140,6 +158,7 @@ export default {
 
     add() {
       this.projectSettingForm = {};
+      this.clearError();
       this.dialog = true;
     },
 
@@ -155,6 +174,7 @@ export default {
 
     edit(item) {
       this.projectSettingForm = item;
+      this.clearError();
       this.dialog = true;
     },
 
@@ -163,7 +183,9 @@ export default {
         this.userId,
         this.projectSettingForm
       ]);
-      this.close();
+      if (this.apiStatus) {
+        this.close();
+      }
     },
 
     async remove(item) {
@@ -176,6 +198,10 @@ export default {
 
     close() {
       this.dialog = false;
+    },
+
+    clearError() {
+      this.$store.commit("project/setProjectNameErrorMessages", null);
     }
   },
 

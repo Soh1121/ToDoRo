@@ -25,7 +25,19 @@ class ProjectRequest extends FormRequest
     {
         return [
             'project_id' => 'integer',
-            'name' => 'max:30',
+            'name' => 'required|max:30',
+        ];
+    }
+
+    /**
+     * エラーメッセージのカスタマイズ
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => 'プロジェクト名を入力してください',
+            'name.max' => 'プロジェクト名は30文字以内で入力してください',
         ];
     }
 }

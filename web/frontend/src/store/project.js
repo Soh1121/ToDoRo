@@ -1,8 +1,9 @@
-import { OK, CREATED } from "../util";
+import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   projects: null,
-  apiStatus: null
+  apiStatus: null,
+  projectNameErrorMessages: null
 };
 
 const getters = {
@@ -16,6 +17,10 @@ const mutations = {
 
   setApiStatus(state, status) {
     state.apiStatus = status;
+  },
+
+  setProjectNameErrorMessages(state, messages) {
+    state.projectNameErrorMessages = messages;
   }
 };
 
@@ -34,7 +39,11 @@ const actions = {
     }
 
     context.commit("setApiStatus", false);
-    context.commit("error/setCode", response.status, { root: true });
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setProjectNameErrorMessages", response.data.errors);
+    } else {
+      context.commit("error/setCode", response.status, { root: true });
+    }
   },
 
   async update(context, data) {
@@ -51,7 +60,11 @@ const actions = {
     }
 
     context.commit("setApiStatus", false);
-    context.commit("error/setCode", response.status, { root: true });
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setProjectNameErrorMessages", response.data.errors);
+    } else {
+      context.commit("error/setCode", response.status, { root: true });
+    }
   },
 
   async remove(context, data) {
