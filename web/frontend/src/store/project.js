@@ -2,7 +2,8 @@ import { OK, CREATED } from "../util";
 
 const state = {
   projects: null,
-  apiStatus: null
+  apiStatus: null,
+  projectNameErrorMessages: null
 };
 
 const getters = {
@@ -16,6 +17,10 @@ const mutations = {
 
   setApiStatus(state, status) {
     state.apiStatus = status;
+  },
+
+  setProjectNameErrorMessages(state, messages) {
+    state.projectNameErrorMessages = messages;
   }
 };
 

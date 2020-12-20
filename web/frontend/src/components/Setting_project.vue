@@ -25,6 +25,17 @@
             <v-card>
               <v-card-text>
                 <v-container>
+                  <!-- エラーメッセージ表示部分 -->
+                  <v-row
+                    v-if="projectNameErrors"
+                    class="font-weight-bold red--text text--darken-3"
+                  >
+                    <ul v-if="projectNameErrors.name">
+                      <li v-for="msg in projectNameErrors.name" :key="msg">
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </v-row>
                   <!-- フォーム表示部分 -->
                   <v-row>
                     <v-col cols="12" sm="12" md="12">
@@ -109,7 +120,8 @@ export default {
 
   computed: {
     ...mapState({
-      apiStatus: state => state.project.apiStatus
+      apiStatus: state => state.project.apiStatus,
+      projectNameErrors: state => state.project.projectNameErrors
     }),
 
     ...mapGetters({
