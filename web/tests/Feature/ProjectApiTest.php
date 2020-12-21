@@ -112,6 +112,23 @@ class ProjectApiTest extends TestCase
     /**
      * @test
      */
+    public function should_重複しているプロジェクトは登録できない()
+    {
+        $name = '今日1';
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('project.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact('name')
+            );
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
     public function should_プロジェクト一覧を取得できる()
     {
         // データの取得
@@ -206,6 +223,27 @@ class ProjectApiTest extends TestCase
                     $this->user->id,
                 ]),
                 compact('project_id', 'name'));
+
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
+    public function should_重複しているプロジェクトには変更できない()
+    {
+        $name = '今日1';
+        $target_project = Project::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $project_id = $target_project->id;
+        $response = $this->actingAs($this->user)
+            ->json('PATCH',
+                route('project.update', [
+                    $this->user->id,
+                ]),
+                compact('name', 'project_id')
+        );
 
         $response->assertStatus(422);
     }
