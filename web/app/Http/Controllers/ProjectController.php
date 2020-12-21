@@ -90,6 +90,18 @@ class ProjectController extends Controller
         $project_id = $request->project_id;
         $project = Project::find($project_id);
         $project->name = $request->get('name');
+        // 重複していたらエラーを返す
+        if ($this->duplicate($project)) {
+            return response()->json(
+                [
+                    'message' => 'The given data was duplicates.',
+                    'errors' => [
+                        'name' => ['プロジェクト名が重複しています']
+                    ]
+                    ], 422
+            );
+        }
+        // 重複していなければ追加
         $project->save();
 
         $projects = Project::where('user_id', $user_id)
