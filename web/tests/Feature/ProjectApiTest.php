@@ -257,12 +257,13 @@ class ProjectApiTest extends TestCase
             ->orderBy('created_at', 'asc')
             ->first();
         $project_id = $target_project->id;
+        $name = $target_project->name;
         $response = $this->actingAs($this->user)
             ->json('DELETE',
                 route('project.delete', [
                     $this->user->id,
                 ]),
-                compact('project_id')
+                compact(['project_id', 'name'])
             );
         $response->assertStatus(200)
             ->assertJsonMissing(['id' => $project_id]);
