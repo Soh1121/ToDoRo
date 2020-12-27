@@ -182,7 +182,9 @@ export default {
         this.userId,
         this.contextAddForm
       ]);
-      this.close();
+      if (this.apiStatus) {
+        this.close();
+      }
     },
 
     async remove(item) {
