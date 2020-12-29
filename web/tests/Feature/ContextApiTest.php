@@ -263,12 +263,13 @@ class ContextApiTest extends TestCase
             ->orderBy('created_at', 'asc')
             ->first();
         $context_id = $target_context->id;
+        $name = $target_context->name;
         $response = $this->actingAs($this->user)
             ->json('DELETE',
                 route('context.delete', [
                     $this->user->id,
                 ]),
-                compact('context_id')
+                compact(['context_id', 'name'])
             );
         $response->assertStatus(200)
             ->assertJsonMissing(['id' => $context_id]);

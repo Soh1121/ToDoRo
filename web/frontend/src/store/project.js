@@ -1,26 +1,26 @@
 import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
-  contexts: null,
+  projects: null,
   apiStatus: null,
-  contextNameErrorMessages: null
+  projectNameErrorMessages: null
 };
 
 const getters = {
-  contexts: state => state.contexts
+  projects: state => state.projects
 };
 
 const mutations = {
-  setContexts(state, contexts) {
-    state.contexts = contexts;
+  setProjects(state, projects) {
+    state.projects = projects;
   },
 
   setApiStatus(state, status) {
     state.apiStatus = status;
   },
 
-  setContextNameErrorMessages(state, messages) {
-    state.contextNameErrorMessages = messages;
+  setProjectNameErrorMessages(state, messages) {
+    state.projectNameErrorMessages = messages;
   }
 };
 
@@ -28,19 +28,19 @@ const actions = {
   async create(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.post(
-      "/api/contexts/" + data[0],
+      "/api/projects/" + data[0],
       data[1]
     );
 
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
-      context.commit("setContexts", response.data);
+      context.commit("setProjects", response.data);
       return false;
     }
 
     context.commit("setApiStatus", false);
     if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("setContextNameErrorMessages", response.data.errors);
+      context.commit("setProjectNameErrorMessages", response.data.errors);
     } else {
       context.commit("error/setCode", response.status, { root: true });
     }
@@ -49,19 +49,19 @@ const actions = {
   async update(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.patch(
-      "/api/contexts/" + data[0],
+      "/api/projects/" + data[0],
       data[1]
     );
 
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
-      context.commit("setContexts", response.data);
+      context.commit("setProjects", response.data);
       return false;
     }
 
     context.commit("setApiStatus", false);
     if (response.status === UNPROCESSABLE_ENTITY) {
-      context.commit("setContextNameErrorMessages", response.data.errors);
+      context.commit("setProjectNameErrorMessages", response.data.errors);
     } else {
       context.commit("error/setCode", response.status, { root: true });
     }
@@ -70,13 +70,13 @@ const actions = {
   async remove(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.delete(
-      "/api/contexts/" + data[0],
+      "/api/projects/" + data[0],
       data[1]
     );
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
-      context.commit("setContexts", response.data);
+      context.commit("setProjects", response.data);
       return false;
     }
 

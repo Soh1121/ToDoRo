@@ -6,7 +6,7 @@
 
     <v-list-item-content class="l-sidebar__item--content">
       <v-list-item-title class="l-sidebar__item--left">
-        {{ title }}
+        {{ name }}
       </v-list-item-title>
       <v-list-item-subtitle class="l-sidebar__item--right">
         {{ maxfifty }}件<span v-if="isOver50">+</span>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  props: ["icon", "title", "count"],
+  props: ["icon", "name", "count"],
   data() {
     return {
       menuIcon: "mdi-dots-vertical"
