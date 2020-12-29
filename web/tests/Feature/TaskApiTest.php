@@ -16,19 +16,21 @@ class TaskApiTest extends TestCase
         parent::setUp();
 
         $this->seed('UserTableSeeder');
-        $this->seed('TaskTableSeeder');
+        // $this->seed('TaskTableSeeder');
         $this->user = User::first();
     }
 
     /**
-     * A basic feature test example.
-     *
-     * @return void
+     * @test
      */
-    public function testExample()
+    public function should_タスクを追加できる()
     {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('task.store', [
+                    'user' => $this->user->id,
+                ])
+            );
+        $response->assertStatus(201);
     }
 }
