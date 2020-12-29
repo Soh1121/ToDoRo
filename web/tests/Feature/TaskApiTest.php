@@ -2,12 +2,24 @@
 
 namespace Tests\Feature;
 
+use App\Task;
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class TaskApiTest extends TestCase
 {
+    use RefreshDatabase;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed('UserTableSeeder');
+        $this->seed('TaskTableSeeder');
+        $this->user = User::first();
+    }
+
     /**
      * A basic feature test example.
      *
