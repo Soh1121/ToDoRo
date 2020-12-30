@@ -24,7 +24,16 @@ class TaskRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'id' => 'integer',
+            'name' => 'max:140',
+            'project_id' => 'integer',
+            'context_id' => 'integer',
+            'start_date' => 'date|before_or_equal:due_date',
+            'due_date' => 'date|after_or_equal:start_date',
+            'term' => 'integer',
+            'timer' => 'integer',
+            'repeat_id' => 'integer',
+            'priority' => 'integer',
         ];
     }
 }
