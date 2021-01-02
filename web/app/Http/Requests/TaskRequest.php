@@ -30,10 +30,10 @@ class TaskRequest extends FormRequest
             'context_id' => 'integer',
             'start_date' => 'date|before_or_equal:due_date',
             'due_date' => 'date|after_or_equal:start_date',
-            'term' => 'integer',
+            'term' => 'integer|between:0,99',
             'timer' => 'integer',
             'repeat_id' => 'integer',
-            'priority' => 'integer',
+            'priority' => 'integer|between:0,4',
         ];
     }
 }
