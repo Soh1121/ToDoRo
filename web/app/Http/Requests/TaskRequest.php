@@ -25,7 +25,7 @@ class TaskRequest extends FormRequest
     {
         return [
             'id' => 'integer',
-            'name' => 'max:140',
+            'name' => 'required|max:140',
             'project_id' => 'integer',
             'context_id' => 'integer',
             'start_date' => 'date|before_or_equal:due_date',

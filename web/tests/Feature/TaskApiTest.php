@@ -79,6 +79,44 @@ class TaskApiTest extends TestCase
     /**
      * @test
      */
+    public function should_タスク名は0文字は追加できない()
+    {
+        $project = Project::where('user_id', $this->user->id)
+            ->orderBy(Project::CREATED_AT, 'asc')
+            ->first();
+        $context = Context::where('user_id', $this->user->id)
+            ->orderBy(Context::CREATED_AT, 'asc')
+            ->first();
+        $name = "";
+        $project_id = $project->id;
+        $context_id = $context->id;
+        $start_date = '2020-12-31';
+        $due_date = '2020-12-31';
+        $term = 5;
+        $repeat_id = 1;
+        $priority = 0;
+        $response = $this->actingAs($this->user)
+            ->json('POST',
+                route('task.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact(
+                    'name',
+                    'project_id',
+                    'context_id',
+                    'start_date',
+                    'due_date',
+                    'term',
+                    'repeat_id',
+                    'priority'
+                )
+            );
+        $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
     public function should_タスク名は140文字まで追加できる()
     {
         $project = Project::where('user_id', $this->user->id)
