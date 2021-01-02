@@ -51,3 +51,6 @@ Route::patch('/contexts/{user}', 'ContextController@update')->name('context.upda
 
 // コンテキスト削除
 Route::delete('/contexts/{user}', 'ContextController@delete')->name('context.delete');
+
+// タスク追加
+Route::post('/tasks/{user}', 'TaskController@store')->name('task.store');
