@@ -53,9 +53,9 @@
       </v-menu>
 
       <div class="my-2" v-else>
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="login_dialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined large v-on="on" v-bind="attrs" @click="open"
+            <v-btn outlined large v-on="on" v-bind="attrs" @click="login_open"
               >登録／ログイン</v-btn
             >
           </template>
@@ -82,7 +82,7 @@ export default {
     };
   },
   methods: {
-    open() {
+    login_open() {
       this.$store.dispatch("auth/open");
     },
 
@@ -97,7 +97,7 @@ export default {
     ...mapGetters({
       isLogin: "auth/check",
       username: "auth/username",
-      dialog: "auth/display"
+      login_dialog: "auth/display"
     })
   }
 };
