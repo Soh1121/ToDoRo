@@ -29,9 +29,14 @@
 
       <v-spacer />
 
-      <v-btn icon class="ma-2">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+      <v-dialog v-model="task_dialog" max-width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-on="on" v-bind="attrs" class="ma-2">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+        <ControlTask />
+      </v-dialog>
 
       <v-menu left bottom v-if="isLogin">
         <template v-slot:activator="{ on, attrs }">
@@ -67,12 +72,14 @@
 </template>
 
 <script>
+import ControlTask from "./ControlTask.vue";
 import Drawar from "./Drawer.vue";
 import Login from "./Login.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {
+    ControlTask,
     Drawar,
     Login
   },
@@ -97,7 +104,8 @@ export default {
     ...mapGetters({
       isLogin: "auth/check",
       username: "auth/username",
-      login_dialog: "auth/display"
+      login_dialog: "auth/display",
+      task_dialog: "task/display"
     })
   }
 };
