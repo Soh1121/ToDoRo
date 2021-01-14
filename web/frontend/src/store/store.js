@@ -6,6 +6,7 @@ import error from "./error";
 import project from "./project";
 
 Vue.use(Vuex);
+Vue.config.devtools = true;
 
 export default new Vuex.Store({
   modules: {

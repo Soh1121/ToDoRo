@@ -82,6 +82,20 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  async index(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.get("/api/contexts/" + data[0]);
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setContexts", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
   }
 };
 
