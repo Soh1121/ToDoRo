@@ -17,7 +17,7 @@ class RepeatApiTest extends TestCase
     {
         $response = $this
             ->json('GET',
-                route('repeat.index')
+                route('repeat')
         );
 
         $response->assertStatus(200);
