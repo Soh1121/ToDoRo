@@ -10,6 +10,12 @@ class RepeatApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function setUp(): void{
+        parent::setUp();
+
+        $this->seed('RepeatsTableSeeder');
+    }
+
     /**
      * @test
      */
@@ -20,6 +26,18 @@ class RepeatApiTest extends TestCase
                 route('repeat')
         );
 
-        $response->assertStatus(200);
+        $repeats = Repeat::get();
+        $repeats = $repeats->map(function($repeat) {
+            return [
+                'id' => $repeat->id,
+                'name' => $repeat->name,
+            ];
+        })->all();
+
+        $response->assertStatus(200)
+            ->assertJsonFragment(([
+                'data' => $repeats,
+            ]
+        ));
     }
 }

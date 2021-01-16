@@ -12,6 +12,8 @@ class RepeatController extends Controller
      */
     public function index()
     {
-        return response()->json(['data' => '']);
+        $repeats = Repeat::get();
+
+        return response()->json(['data' => $repeats]);
     }
 }
