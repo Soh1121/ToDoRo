@@ -2,20 +2,23 @@
 
 namespace Tests\Feature;
 
+use App\Repeat;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class RepeatApiTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
-     * A basic feature test example.
-     *
-     * @return void
+     * @test
      */
-    public function testExample()
+    public function should_繰り返し一覧を取得できる()
     {
-        $response = $this->get('/');
+        $response = $this
+            ->json('GET',
+                route('repeat.index')
+        );
 
         $response->assertStatus(200);
     }
