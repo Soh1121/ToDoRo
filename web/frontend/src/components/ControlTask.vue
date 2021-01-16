@@ -17,6 +17,7 @@
           <v-col cols="12" sm="12" md="12">
             <v-select
               label="プロジェクト"
+              :items="projects"
             />
           </v-col>
         </v-row>
@@ -25,6 +26,7 @@
           <v-col cols="12" sm="12" md="12">
             <v-select
               label="コンテキスト"
+              :items="contexts"
             />
           </v-col>
         </v-row>
@@ -94,6 +96,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import DatePicker from "./DatePicker";
 
 const maxPomodoro = 1000;
@@ -109,6 +112,14 @@ export default {
       pomodoro_items: pomodoroRange,
       value: null
     };
+  },
+
+  computed: {
+    ...mapGetters({
+      contexts: "context/fetchContextNames",
+      projects: "project/fetchProjectNames"
+    })
   }
 };
+
 </script>

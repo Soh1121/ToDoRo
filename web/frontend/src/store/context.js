@@ -7,7 +7,14 @@ const state = {
 };
 
 const getters = {
-  contexts: state => state.contexts
+  contexts: state => state.contexts,
+  fetchContextNames: (state, getters) => {
+    let datas = [];
+    getters.contexts["data"].forEach(item => {
+      datas.push(item.name);
+    });
+    return datas;
+  }
 };
 
 const mutations = {
