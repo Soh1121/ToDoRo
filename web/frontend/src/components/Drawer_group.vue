@@ -68,14 +68,6 @@ export default {
   },
 
   watch: {
-    $route: {
-      async handler() {
-        const functions = [this.fetch("context"), this.fetch("project")];
-        await Promise.all(functions);
-      },
-      immediate: true
-    },
-
     storeContexts(values) {
       if (values) {
         let datas = [];
