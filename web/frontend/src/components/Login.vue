@@ -179,7 +179,8 @@ export default {
         const functions = [
           this.fetch("context"),
           this.fetch("project"),
-          this.fetchDefaultData("repeat")
+          this.fetchDefaultData("repeat"),
+          this.fetchDefaultData("priority")
         ];
         Promise.all(functions);
       }
@@ -188,6 +189,15 @@ export default {
     async register() {
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
+      if (this.apiStatus) {
+        const functions = [
+          this.fetch("context"),
+          this.fetch("project"),
+          this.fetchDefaultData("repeat"),
+          this.fetchDefaultData("priority")
+        ];
+        Promise.all(functions);
+      }
     },
 
     clearError() {

@@ -5,51 +5,35 @@
         <!-- タスク名 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-text-field
-              label="タスク名"
-              required
-              color="orange"
-            />
+            <v-text-field label="タスク名" required color="orange" />
           </v-col>
         </v-row>
         <!-- プロジェクト名 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select
-              label="プロジェクト"
-              :items="projects"
-            />
+            <v-select label="プロジェクト" :items="projects" />
           </v-col>
         </v-row>
         <!-- コンテキスト名 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select
-              label="コンテキスト"
-              :items="contexts"
-            />
+            <v-select label="コンテキスト" :items="contexts" />
           </v-col>
         </v-row>
         <v-row>
           <!-- 開始日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field
-              label="開始日"
-              v-model="value"
-              disable>
+            <v-text-field label="開始日" v-model="value" disable>
               <template v-slot:append-outer>
-                <date-picker v-model="value"/>
+                <date-picker v-model="value" />
               </template>
             </v-text-field>
           </v-col>
           <!-- 終了日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field
-              label="終了日"
-              v-model="value"
-              disable>
+            <v-text-field label="終了日" v-model="value" disable>
               <template v-slot:append-outer>
-                <date-picker v-model="value"/>
+                <date-picker v-model="value" />
               </template>
             </v-text-field>
           </v-col>
@@ -57,50 +41,39 @@
         <!-- ポモドーロ数 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select
-              label="ポモドーロ数"
-              :items="pomodoro_items"
-            />
+            <v-select label="ポモドーロ数" :items="pomodoro_items" />
           </v-col>
         </v-row>
         <!-- 繰り返し -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select
-              label="繰り返し"
-            />
+            <v-select label="繰り返し" />
           </v-col>
         </v-row>
         <!-- 優先度 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select
-              label="優先度"
-            />
+            <v-select label="優先度" />
           </v-col>
         </v-row>
       </v-container>
     </v-card-text>
     <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn color="orange" text>キャンセル</v-btn>
-        <v-btn
-          type="submit"
-          color="orange"
-          dark
-        >
-          追加
-        </v-btn>
-      </v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="orange" text>キャンセル</v-btn>
+      <v-btn type="submit" color="orange" dark>
+        追加
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 import DatePicker from "./DatePicker";
 
 const maxPomodoro = 1000;
-const pomodoroRange = [...Array(maxPomodoro).keys()]
+const pomodoroRange = [...Array(maxPomodoro).keys()];
 
 export default {
   components: {
@@ -121,5 +94,4 @@ export default {
     })
   }
 };
-
 </script>
