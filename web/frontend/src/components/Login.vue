@@ -176,7 +176,11 @@ export default {
       // authストアのloginアクションの呼び出し
       await this.$store.dispatch("auth/login", this.loginForm);
       if (this.apiStatus) {
-        const functions = [this.fetch("context"), this.fetch("project")];
+        const functions = [
+          this.fetch("context"),
+          this.fetch("project"),
+          this.fetchDefaultData("repeat")
+        ];
         Promise.all(functions);
       }
     },
@@ -193,6 +197,10 @@ export default {
 
     async fetch(target) {
       await this.$store.dispatch(target + "/index", [this.userId]);
+    },
+
+    async fetchDefaultData(target) {
+      await this.$store.dispatch(target + "/index");
     }
   },
 

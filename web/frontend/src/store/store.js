@@ -4,6 +4,7 @@ import auth from "./auth";
 import context from "./context";
 import error from "./error";
 import project from "./project";
+import repeat from "./repeat";
 
 Vue.use(Vuex);
 Vue.config.devtools = true;
