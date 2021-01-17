@@ -13,6 +13,7 @@ export default new Vuex.Store({
     auth,
     context,
     error,
-    project
+    project,
+    repeat
   }
 });
