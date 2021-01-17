@@ -5,7 +5,7 @@
         <v-icon>mdi-calendar</v-icon>
       </v-btn>
     </template>
-    <v-date-picker v-model="picker" @click="menu = false"/>
+    <v-date-picker v-model="picker" @click="menu = false" />
   </v-menu>
 </template>
 

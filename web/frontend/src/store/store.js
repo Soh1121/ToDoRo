@@ -3,7 +3,9 @@ import Vuex from "vuex";
 import auth from "./auth";
 import context from "./context";
 import error from "./error";
+import priority from "./priority";
 import project from "./project";
+import repeat from "./repeat";
 
 Vue.use(Vuex);
 Vue.config.devtools = true;
@@ -13,6 +15,8 @@ export default new Vuex.Store({
     auth,
     context,
     error,
-    project
+    priority,
+    project,
+    repeat
   }
 });

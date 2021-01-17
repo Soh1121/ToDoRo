@@ -144,7 +144,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   data() {
@@ -165,29 +165,64 @@ export default {
       }
     };
   },
+
   methods: {
     close() {
       this.$store.dispatch("auth/close");
       this.$store.commit("auth/setLoginErrorMessages", null);
     },
+
     async login() {
       // authストアのloginアクションの呼び出し
       await this.$store.dispatch("auth/login", this.loginForm);
+      if (this.apiStatus) {
+        const functions = [
+          this.fetch("context"),
+          this.fetch("project"),
+          this.fetchDefaultData("repeat"),
+          this.fetchDefaultData("priority")
+        ];
+        Promise.all(functions);
+      }
     },
+
     async register() {
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
+      if (this.apiStatus) {
+        const functions = [
+          this.fetch("context"),
+          this.fetch("project"),
+          this.fetchDefaultData("repeat"),
+          this.fetchDefaultData("priority")
+        ];
+        Promise.all(functions);
+      }
     },
+
     clearError() {
       this.$store.commit("auth/setLoginErrorMessages", null);
       this.$store.commit("auth/setRegisterErrorMessage", null);
+    },
+
+    async fetch(target) {
+      await this.$store.dispatch(target + "/index", [this.userId]);
+    },
+
+    async fetchDefaultData(target) {
+      await this.$store.dispatch(target + "/index");
     }
   },
+
   computed: {
     ...mapState({
       apiStatus: state => state.auth.apiStatus,
       loginErrors: state => state.auth.loginErrorMessages,
       registerErrors: state => state.auth.registerErrorMessages
+    }),
+
+    ...mapGetters({
+      userId: "auth/user_id"
     })
   }
 };
