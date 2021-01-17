@@ -31,6 +31,9 @@ Route::get('/user', function(){ return Auth::user(); })->name('user');
 // 繰り返し一覧
 Route::get('/repeat', 'RepeatController@index')->name('repeat');
 
+// 優先度一覧
+Route::get('/priority', 'PriorityController@index')->name('priority');
+
 // プロジェクト追加
 Route::post('/projects/{user}', 'ProjectController@store')->name('project.store');
 
