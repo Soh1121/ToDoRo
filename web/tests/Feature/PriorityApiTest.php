@@ -2,20 +2,29 @@
 
 namespace Tests\Feature;
 
+use App\Priority;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class PriorityApiTest extends TestCase
 {
+    use RefreshDatabase;
+
+    public function setUp(): void {
+        parent::setUp();
+
+        $this->seed('PrioritiesTableSeeder');
+    }
+
     /**
-     * A basic feature test example.
-     *
-     * @return void
+     * @test
      */
-    public function testExample()
+    public function should_優先度一覧を取得できる()
     {
-        $response = $this->get('/');
+        $response = $this
+            ->json('GET',
+                route('priority')
+            );
 
         $response->assertStatus(200);
     }
