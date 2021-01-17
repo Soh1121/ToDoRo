@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Repeat;
+use App\Priority;
 
 class PriorityController extends Controller
 {
@@ -12,6 +12,8 @@ class PriorityController extends Controller
      */
     public function index()
     {
-        return response()->json(['data' => '']);
+        $priorities = Priority::get();
+
+        return response()->json(['data' => $priorities]);
     }
 }

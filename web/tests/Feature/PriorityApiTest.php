@@ -26,6 +26,18 @@ class PriorityApiTest extends TestCase
                 route('priority')
             );
 
-        $response->assertStatus(200);
+        $priorities = Priority::get();
+        $priorities = $priorities->map(function($priority) {
+            return [
+                'id' => $priority->id,
+                'name' => $priority->name,
+            ];
+        })->all();
+
+        $response->assertStatus(200)
+            ->assertJsonFragment(([
+                'data' => $priorities,
+            ]
+        ));
     }
 }
