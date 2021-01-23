@@ -11,7 +11,27 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 const createApp = async () => {
+  // プロジェクト・コンテキスト・タスクを取得する
+  async function fetch(target, user_id) {
+    await store.dispatch(target + "/index", [user_id]);
+  }
+
+  // 繰り返し・優先度を取得する
+  async function fetchDefaultData(target) {
+    await store.dispatch(target + "/index");
+  }
+
   await store.dispatch("auth/currentUser");
+  const user_id = store.getters["auth/user_id"];
+  if (user_id) {
+    const functions = [
+      fetch("context", user_id),
+      fetch("project", user_id),
+      fetchDefaultData("repeat"),
+      fetchDefaultData("priority")
+    ];
+    Promise.all(functions);
+  }
 
   new Vue({
     router,
