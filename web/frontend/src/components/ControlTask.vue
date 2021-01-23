@@ -57,7 +57,12 @@
         <!-- 繰り返し -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select label="繰り返し" />
+            <v-select
+              label="繰り返し"
+              :items="repeats.data"
+              item-text="name"
+              item-value="id"
+            />
           </v-col>
         </v-row>
         <!-- 優先度 -->
@@ -106,6 +111,7 @@ export default {
     ...mapGetters({
       contexts: "context/contexts",
       projects: "project/projects",
+      repeats: "repeat/repeats",
       priorities: "priority/priorities"
     })
   }
