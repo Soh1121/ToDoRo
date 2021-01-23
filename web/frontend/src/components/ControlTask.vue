@@ -11,13 +11,23 @@
         <!-- プロジェクト名 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select label="プロジェクト" :items="projects" />
+            <v-select
+              label="プロジェクト"
+              :items="projects.data"
+              item-text="name"
+              item-value="id"
+            />
           </v-col>
         </v-row>
         <!-- コンテキスト名 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select label="コンテキスト" :items="contexts" />
+            <v-select
+              label="コンテキスト"
+              :items="contexts.data"
+              item-text="name"
+              item-value="id"
+            />
           </v-col>
         </v-row>
         <v-row>
@@ -53,7 +63,12 @@
         <!-- 優先度 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select label="優先度" />
+            <v-select
+              label="優先度"
+              :items="priorities.data"
+              item-text="name"
+              item-value="id"
+            />
           </v-col>
         </v-row>
       </v-container>
@@ -89,8 +104,9 @@ export default {
 
   computed: {
     ...mapGetters({
-      contexts: "context/fetchContextNames",
-      projects: "project/fetchProjectNames"
+      contexts: "context/contexts",
+      projects: "project/projects",
+      priorities: "priority/priorities"
     })
   }
 };
