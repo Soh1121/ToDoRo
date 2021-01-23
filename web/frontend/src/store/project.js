@@ -7,14 +7,7 @@ const state = {
 };
 
 const getters = {
-  projects: state => state.projects,
-  fetchProjectNames: (state, getters) => {
-    let datas = [];
-    getters.projects["data"].forEach(item => {
-      datas.push(item.name);
-    });
-    return datas;
-  }
+  projects: state => state.projects
 };
 
 const mutations = {
