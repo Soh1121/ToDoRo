@@ -17,7 +17,8 @@ const getters = {
   check: state => !!state.user,
   username: state => (state.user ? state.user.name : ""),
   user_id: state => (state.user ? state.user.id : 0),
-  display: state => !!state.display
+  display: state => !!state.display,
+  api_status: state => !!state.apiStatus
 };
 
 const mutations = {
