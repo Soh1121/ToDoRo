@@ -30,7 +30,7 @@
               label="タスク名"
               required
               color="orange"
-              v-model="add_form.name"
+              v-model="addForm.name"
             />
           </v-col>
         </v-row>
@@ -42,7 +42,7 @@
               :items="projects.data"
               item-text="name"
               item-value="id"
-              v-model="add_form.project_id"
+              v-model="addForm.project_id"
             />
           </v-col>
         </v-row>
@@ -54,24 +54,24 @@
               :items="contexts.data"
               item-text="name"
               item-value="id"
-              v-model="add_form.context_id"
+              v-model="addForm.context_id"
             />
           </v-col>
         </v-row>
         <v-row>
           <!-- 開始日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field label="開始日" v-model="add_form.start_date" disable>
+            <v-text-field label="開始日" v-model="addForm.start_date" disable>
               <template v-slot:append-outer>
-                <date-picker v-model="add_form.start_date" />
+                <date-picker v-model="addForm.start_date" />
               </template>
             </v-text-field>
           </v-col>
           <!-- 終了日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field label="終了日" v-model="add_form.due_date" disable>
+            <v-text-field label="終了日" v-model="addForm.due_date" disable>
               <template v-slot:append-outer>
-                <date-picker v-model="add_form.due_date" />
+                <date-picker v-model="addForm.due_date" />
               </template>
             </v-text-field>
           </v-col>
@@ -79,9 +79,10 @@
         <!-- ポモドーロ数 -->
         <v-row>
           <v-col cols="12" sm="12" md="12">
-            <v-select label="ポモドーロ数"
-              :items="pomodoro_items"
-              v-model="add_form.term"
+            <v-select
+              label="ポモドーロ数"
+              :items="pomodoroItems"
+              v-model="addForm.term"
             />
           </v-col>
         </v-row>
@@ -93,7 +94,7 @@
               :items="repeats.data"
               item-text="name"
               item-value="id"
-              v-model="add_form.repeat_id"
+              v-model="addForm.repeat_id"
             />
           </v-col>
         </v-row>
@@ -105,7 +106,7 @@
               :items="priorities.data"
               item-text="name"
               item-value="id"
-              v-model="add_form.priority"
+              v-model="addForm.priority"
             />
           </v-col>
         </v-row>
@@ -113,7 +114,9 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn color="orange" text @click="close">キャンセル</v-btn>
+      <v-btn color="orange" text @click="close">
+        キャンセル
+      </v-btn>
       <v-btn color="orange" dark @click="create">
         追加
       </v-btn>
@@ -135,10 +138,8 @@ export default {
 
   data() {
     return {
-      add_form: {},
-      pomodoro_items: pomodoroRange,
-      start_date: null,
-      due_date: null
+      addForm: {},
+      pomodoroItems: pomodoroRange
     };
   },
 
@@ -160,10 +161,7 @@ export default {
 
   methods: {
     async create() {
-      await this.$store.dispatch("task/create", [
-        this.userId,
-        this.add_form
-      ]);
+      await this.$store.dispatch("task/create", [this.userId, this.addForm]);
       if (this.apiStatus) {
         this.close();
       }

@@ -29,9 +29,9 @@
 
       <v-spacer />
 
-      <v-dialog v-model="task_dialog" max-width="600px">
+      <v-dialog v-model="taskDialog" max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-on="on" v-bind="attrs" class="ma-2" @click="task_open">
+          <v-btn icon v-on="on" v-bind="attrs" class="ma-2" @click="taskOpen">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
@@ -58,9 +58,9 @@
       </v-menu>
 
       <div class="my-2" v-else>
-        <v-dialog v-model="login_dialog" persistent max-width="600px">
+        <v-dialog v-model="loginDialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined large v-on="on" v-bind="attrs" @click="login_open"
+            <v-btn outlined large v-on="on" v-bind="attrs" @click="loginOpen"
               >登録／ログイン</v-btn
             >
           </template>
@@ -89,11 +89,11 @@ export default {
     };
   },
   methods: {
-    task_open() {
+    taskOpen() {
       this.$store.dispatch("task/open");
     },
 
-    login_open() {
+    loginOpen() {
       this.$store.dispatch("auth/open");
     },
 
@@ -108,8 +108,8 @@ export default {
     ...mapGetters({
       isLogin: "auth/check",
       username: "auth/username",
-      login_dialog: "auth/display",
-      task_dialog: "task/display"
+      loginDialog: "auth/display",
+      taskDialog: "task/display"
     })
   }
 };

@@ -32,10 +32,7 @@ const mutations = {
 const actions = {
   async create(context, data) {
     context.commit("setApiStatus", null);
-    const response = await window.axios.post(
-      "/api/tasks/" + data[0],
-      data[1]
-    );
+    const response = await window.axios.post("/api/tasks/" + data[0], data[1]);
 
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
@@ -47,7 +44,7 @@ const actions = {
     if (response.status === UNPROCESSABLE_ENTITY) {
       context.commit("setAddTaskErrorMessages", response.data.errors);
     } else {
-      context.commit("error/setCode", response.status,  { root: true });
+      context.commit("error/setCode", response.status, { root: true });
     }
   },
 
