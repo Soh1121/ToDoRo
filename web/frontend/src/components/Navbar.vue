@@ -31,7 +31,7 @@
 
       <v-dialog v-model="task_dialog" max-width="600px">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn icon v-on="on" v-bind="attrs" class="ma-2">
+          <v-btn icon v-on="on" v-bind="attrs" class="ma-2" @click="task_open">
             <v-icon>mdi-plus</v-icon>
           </v-btn>
         </template>
@@ -89,6 +89,10 @@ export default {
     };
   },
   methods: {
+    task_open() {
+      this.$store.dispatch("task/open");
+    },
+
     login_open() {
       this.$store.dispatch("auth/open");
     },
