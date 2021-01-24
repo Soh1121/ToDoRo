@@ -6,6 +6,7 @@ import error from "./error";
 import priority from "./priority";
 import project from "./project";
 import repeat from "./repeat";
+import task from "./task";
 
 Vue.use(Vuex);
 Vue.config.devtools = true;
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     error,
     priority,
     project,
-    repeat
+    repeat,
+    task
   }
 });

@@ -5,7 +5,9 @@ const state = {
   apiStatus: null
 };
 
-const getters = {};
+const getters = {
+  repeats: state => state.repeats
+};
 
 const mutations = {
   setRepeats(state, repeats) {

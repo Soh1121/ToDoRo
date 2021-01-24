@@ -5,7 +5,9 @@ const state = {
   apiStatus: null
 };
 
-const getters = {};
+const getters = {
+  priorities: state => state.priorities
+};
 
 const mutations = {
   setPriorities(state, priorities) {
