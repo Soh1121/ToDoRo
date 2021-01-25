@@ -553,7 +553,7 @@ class TaskApiTest extends TestCase
     /**
      * @test
      */
-    public function should_priorityが4は追加できる()
+    public function should_priorityが5は追加できる()
     {
         $project = Project::where('user_id', $this->user->id)
             ->orderBy(Project::CREATED_AT, 'asc')
@@ -568,7 +568,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 4;
+        $priority = 5;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -605,7 +605,7 @@ class TaskApiTest extends TestCase
     /**
      * @test
      */
-    public function should_priorityが5以上は追加できない()
+    public function should_priorityが6以上は追加できない()
     {
         $project = Project::where('user_id', $this->user->id)
             ->orderBy(Project::CREATED_AT, 'asc')
@@ -620,7 +620,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 5;
+        $priority = 6;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
