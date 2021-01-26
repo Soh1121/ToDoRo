@@ -42,7 +42,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 3;
+        $priority_id = 3;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -56,7 +56,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(201)
@@ -72,7 +72,7 @@ class TaskApiTest extends TestCase
                 'done' => '0',
                 'timer' => (string)(25 * 60),
                 'repeat_id' => (string)$repeat_id,
-                'priority' => (string)$priority
+                'priority_id' => (string)$priority_id
             ]);
     }
 
@@ -94,7 +94,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -108,7 +108,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -132,7 +132,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -146,7 +146,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(201)
@@ -162,7 +162,7 @@ class TaskApiTest extends TestCase
                 'done' => '0',
                 'timer' => (string)(25 * 60),
                 'repeat_id' => (string)$repeat_id,
-                'priority' => (string)$priority
+                'priority_id' => (string)$priority_id
             ]);
     }
 
@@ -184,7 +184,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -198,7 +198,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -222,7 +222,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -236,7 +236,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -260,7 +260,7 @@ class TaskApiTest extends TestCase
         $due_date = '2019-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -274,7 +274,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -298,7 +298,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = -1;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -312,7 +312,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -336,7 +336,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 0;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -350,7 +350,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(201)
@@ -366,7 +366,7 @@ class TaskApiTest extends TestCase
                 'done' => '0',
                 'timer' => (string)(25 * 60),
                 'repeat_id' => (string)$repeat_id,
-                'priority' => (string)$priority
+                'priority_id' => (string)$priority_id
             ]);
     }
 
@@ -388,7 +388,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 99;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -402,7 +402,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(201)
@@ -418,7 +418,7 @@ class TaskApiTest extends TestCase
                 'done' => '0',
                 'timer' => (string)(25 * 60),
                 'repeat_id' => (string)$repeat_id,
-                'priority' => (string)$priority
+                'priority_id' => (string)$priority_id
             ]);
     }
 
@@ -440,7 +440,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 100;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -454,7 +454,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -478,7 +478,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = -1;
+        $priority_id = -1;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -492,7 +492,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);
@@ -516,7 +516,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 0;
+        $priority_id = 0;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -530,7 +530,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
             $response->assertStatus(201)
@@ -546,7 +546,7 @@ class TaskApiTest extends TestCase
                 'done' => '0',
                 'timer' => (string)(25 * 60),
                 'repeat_id' => (string)$repeat_id,
-                'priority' => (string)$priority
+                'priority_id' => (string)$priority_id
             ]);
     }
 
@@ -568,7 +568,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 5;
+        $priority_id = 5;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -582,7 +582,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
             $response->assertStatus(201)
@@ -598,7 +598,7 @@ class TaskApiTest extends TestCase
                 'done' => '0',
                 'timer' => (string)(25 * 60),
                 'repeat_id' => (string)$repeat_id,
-                'priority' => (string)$priority
+                'priority_id' => (string)$priority_id
             ]);
     }
 
@@ -620,7 +620,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority = 6;
+        $priority_id = 6;
         $response = $this->actingAs($this->user)
             ->json('POST',
                 route('task.store', [
@@ -634,7 +634,7 @@ class TaskApiTest extends TestCase
                     'due_date',
                     'term',
                     'repeat_id',
-                    'priority'
+                    'priority_id'
                 )
             );
         $response->assertStatus(422);

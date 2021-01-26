@@ -10,4 +10,13 @@ class Repeat extends Model
     protected $visible = [
         'id', 'name',
     ];
+
+    /**
+     * リレーションシップ - tasksテーブル
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tasks()
+    {
+        return $this->hasMany('App\Tasks');
+    }
 }
