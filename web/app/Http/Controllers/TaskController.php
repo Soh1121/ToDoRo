@@ -33,7 +33,7 @@ class TaskController extends Controller
         $task->done = 0;        // 未完：0 完了：1
         $task->timer = 25 * 60; // 1ポモドーロ 25分 × 60秒で残り何秒か
         $task->repeat_id = $request->repeat_id;
-        $task->priority = $request->priority;
+        $task->priority_id = $request->priority_id;
         $task->save();
 
         $new_tasks = Task::where('user_id', $user_id)

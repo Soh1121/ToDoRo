@@ -106,7 +106,7 @@
               :items="priorities.data"
               item-text="name"
               item-value="id"
-              v-model="addForm.priority"
+              v-model="addForm.priority_id"
             />
           </v-col>
         </v-row>
