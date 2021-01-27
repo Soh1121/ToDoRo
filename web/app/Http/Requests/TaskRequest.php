@@ -36,4 +36,15 @@ class TaskRequest extends FormRequest
             'priority_id' => 'integer|between:0,5',
         ];
     }
+
+    /**
+     * エラーメッセージのカスタマイズ
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'name.required' => 'タスク名を入力してください'
+        ];
+    }
 }
