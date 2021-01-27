@@ -45,7 +45,8 @@ class TaskRequest extends FormRequest
     {
         return [
             'name.required' => 'タスク名を入力してください',
-            'start_date.before_or_equal' => '開始日は終了日以前を選択してください'
+            'start_date.before_or_equal' => '開始日は終了日以前を選択してください',
+            'due_date.after_or_equal' => '終了日は開始日以後を選択してください',
         ];
     }
 }
