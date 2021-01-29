@@ -49,6 +49,7 @@ const actions = {
   },
 
   open(context) {
+    context.commit("setAddTaskErrorMessages", null);
     context.commit("setDisplay", true);
   },
 
