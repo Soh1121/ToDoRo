@@ -639,4 +639,20 @@ class TaskApiTest extends TestCase
             );
         $response->assertStatus(422);
     }
+
+    /**
+     * @test
+     */
+    public function should_タスク一覧を取得できる()
+    {
+        $response = $this
+            ->actingAs($this->user)
+            ->json('GET',
+                route('task.index', [
+                    'user' => $this->user->id,
+                ])
+            );
+
+        $response->assertStatus(200);
+    }
 }

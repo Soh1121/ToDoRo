@@ -43,4 +43,14 @@ class TaskController extends Controller
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
         return response()->json(['data' => $new_tasks], 201);
     }
+
+    /**
+     * タスク一覧
+     * @param int $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(int $user_id)
+    {
+        return response()->json(['data' => 'dummy']);
+    }
 }
