@@ -12,8 +12,8 @@ class TaskTableSeeder extends Seeder
     public function run()
     {
         $param = [
-            'user_id' => 1,
             'name' => 'テスト1',
+            'user_id' => 1,
             'project_id' => 1,
             'context_id' => 1,
             'start_date' => '2021-01-26 00:00:00',

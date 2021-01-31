@@ -20,7 +20,7 @@ class TaskApiTest extends TestCase
         $this->seed('UserTableSeeder');
         $this->seed('ProjectTableSeeder');
         $this->seed('ContextTableSeeder');
-        // $this->seed('TaskTableSeeder');
+        $this->seed('TaskTableSeeder');
         $this->user = User::first();
     }
 
@@ -652,7 +652,32 @@ class TaskApiTest extends TestCase
                     'user' => $this->user->id,
                 ])
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project_id' => $task->project_id,
+                'context_id' => $task->context_id,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat_id' => $task->repeat_id,
+                'priority_id' => $task->priority_id,
+            ];
+        })->all();
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment([
+                'data' => $expected_data,
+            ]);
     }
 }

@@ -51,6 +51,10 @@ class TaskController extends Controller
      */
     public function index(int $user_id)
     {
-        return response()->json(['data' => 'dummy']);
+        $tasks = Task::where('user_id', $user_id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+
+        return response()->json(['data' => $tasks]);
     }
 }
