@@ -43,4 +43,35 @@ class TaskController extends Controller
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
         return response()->json(['data' => $new_tasks], 201);
     }
+
+    /**
+     * タスク一覧
+     * @param int $user_id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(int $user_id)
+    {
+        $tasks = Task::where('user_id', $user_id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
+
+        return response()->json(['data' => $data]);
+    }
 }

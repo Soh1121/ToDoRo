@@ -20,7 +20,9 @@ class TaskApiTest extends TestCase
         $this->seed('UserTableSeeder');
         $this->seed('ProjectTableSeeder');
         $this->seed('ContextTableSeeder');
-        // $this->seed('TaskTableSeeder');
+        $this->seed('TaskTableSeeder');
+        $this->seed('RepeatsTableSeeder');
+        $this->seed('PrioritiesTableSeeder');
         $this->user = User::first();
     }
 
@@ -44,7 +46,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 3;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -96,7 +99,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -134,7 +138,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -186,7 +191,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -224,7 +230,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -262,7 +269,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -300,7 +308,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -338,7 +347,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -390,7 +400,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -442,7 +453,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -480,7 +492,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = -1;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -518,7 +531,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 0;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -533,7 +547,7 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
-            $response->assertStatus(201)
+        $response->assertStatus(201)
             ->assertJsonFragment([
                 'name' => $name,
                 'user_id' => (string)$this->user->id,
@@ -570,7 +584,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 5;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -585,7 +600,7 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
-            $response->assertStatus(201)
+        $response->assertStatus(201)
             ->assertJsonFragment([
                 'name' => $name,
                 'user_id' => (string)$this->user->id,
@@ -622,7 +637,8 @@ class TaskApiTest extends TestCase
         $repeat_id = 1;
         $priority_id = 6;
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('task.store', [
                     'user' => $this->user->id,
                 ]),
@@ -638,5 +654,47 @@ class TaskApiTest extends TestCase
                 )
             );
         $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
+    public function should_タスク一覧を取得できる()
+    {
+        $response = $this
+            ->actingAs($this->user)
+            ->json(
+                'GET',
+                route('task.index', [
+                    'user' => $this->user->id,
+                ])
+            );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
+
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(2, 'data')
+            ->assertJsonFragment([
+                'data' => $expected_data,
+            ]);
     }
 }

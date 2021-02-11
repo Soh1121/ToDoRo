@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -60,3 +61,6 @@ Route::delete('/contexts/{user}', 'ContextController@delete')->name('context.del
 
 // タスク追加
 Route::post('/tasks/{user}', 'TaskController@store')->name('task.store');
+
+// タスク一覧
+Route::get('/tasks/{user}', 'TaskController@index')->name('task.index');
