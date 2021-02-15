@@ -550,7 +550,7 @@ class TaskApiTest extends TestCase
     /**
      * @test
      */
-    public function should_priorityが0は追加できる()
+    public function should_priorityが0は追加できない()
     {
         $project = Project::where('user_id', $this->user->id)
             ->orderBy(Project::CREATED_AT, 'asc')
@@ -583,30 +583,7 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
-        $tasks = Task::where('user_id', $this->user->id)
-            ->orderBy(Task::CREATED_AT, 'asc')
-            ->get();
-        $expected_data = $tasks->map(function ($task) {
-            return [
-                'id' => $task->id,
-                'name' => $task->name,
-                'user_id' => $task->user_id,
-                'project' => $task->project->name,
-                'context' => $task->context->name,
-                'start_date' => $task->start_date,
-                'due_date' => $task->due_date,
-                'term' => $task->term,
-                'finished' => $task->finished,
-                'done' => $task->done,
-                'timer' => $task->timer,
-                'repeat' => $task->repeat->name,
-                'priority' => $task->priority->name,
-            ];
-        })->all();
-        $response->assertStatus(201)
-            ->assertJsonFragment([
-                'data' => $expected_data,
-            ]);
+        $response->assertStatus(422);
     }
 
     /**
