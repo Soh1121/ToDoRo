@@ -62,20 +62,29 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'name' => $name,
-                'user_id' => (string)$this->user->id,
-                'project_id' => (string)$project->id,
-                'context_id' => (string)$context->id,
-                'start_date' => $start_date,
-                'due_date' => $due_date,
-                'term' => (string)$term,
-                'finished' => '0',
-                'done' => '0',
-                'timer' => (string)(25 * 60),
-                'repeat_id' => (string)$repeat_id,
-                'priority_id' => (string)$priority_id
+                'data' => $expected_data,
             ]);
     }
 
@@ -154,21 +163,45 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'name' => $name,
-                'user_id' => (string)$this->user->id,
-                'project_id' => (string)$project->id,
-                'context_id' => (string)$context->id,
-                'start_date' => $start_date,
-                'due_date' => $due_date,
-                'term' => (string)$term,
-                'finished' => '0',
-                'done' => '0',
-                'timer' => (string)(25 * 60),
-                'repeat_id' => (string)$repeat_id,
-                'priority_id' => (string)$priority_id
+                'data' => $expected_data,
             ]);
+        // $response->assertStatus(201)
+        //     ->assertJsonFragment([
+        //         'name' => $name,
+        //         'user_id' => (string)$this->user->id,
+        //         'project_id' => (string)$project->id,
+        //         'context_id' => (string)$context->id,
+        //         'start_date' => $start_date,
+        //         'due_date' => $due_date,
+        //         'term' => (string)$term,
+        //         'finished' => '0',
+        //         'done' => '0',
+        //         'timer' => (string)(25 * 60),
+        //         'repeat_id' => (string)$repeat_id,
+        //         'priority_id' => (string)$priority_id
+        //     ]);
     }
 
     /**
@@ -363,21 +396,45 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'name' => $name,
-                'user_id' => (string)$this->user->id,
-                'project_id' => (string)$project->id,
-                'context_id' => (string)$context->id,
-                'start_date' => $start_date,
-                'due_date' => $due_date,
-                'term' => (string)$term,
-                'finished' => '0',
-                'done' => '0',
-                'timer' => (string)(25 * 60),
-                'repeat_id' => (string)$repeat_id,
-                'priority_id' => (string)$priority_id
+                'data' => $expected_data,
             ]);
+        // $response->assertStatus(201)
+        //     ->assertJsonFragment([
+        //         'name' => $name,
+        //         'user_id' => (string)$this->user->id,
+        //         'project_id' => (string)$project->id,
+        //         'context_id' => (string)$context->id,
+        //         'start_date' => $start_date,
+        //         'due_date' => $due_date,
+        //         'term' => (string)$term,
+        //         'finished' => '0',
+        //         'done' => '0',
+        //         'timer' => (string)(25 * 60),
+        //         'repeat_id' => (string)$repeat_id,
+        //         'priority_id' => (string)$priority_id
+        //     ]);
     }
 
     /**
@@ -416,21 +473,45 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'name' => $name,
-                'user_id' => (string)$this->user->id,
-                'project_id' => (string)$project->id,
-                'context_id' => (string)$context->id,
-                'start_date' => $start_date,
-                'due_date' => $due_date,
-                'term' => (string)$term,
-                'finished' => '0',
-                'done' => '0',
-                'timer' => (string)(25 * 60),
-                'repeat_id' => (string)$repeat_id,
-                'priority_id' => (string)$priority_id
+                'data' => $expected_data,
             ]);
+        // $response->assertStatus(201)
+        //     ->assertJsonFragment([
+        //         'name' => $name,
+        //         'user_id' => (string)$this->user->id,
+        //         'project_id' => (string)$project->id,
+        //         'context_id' => (string)$context->id,
+        //         'start_date' => $start_date,
+        //         'due_date' => $due_date,
+        //         'term' => (string)$term,
+        //         'finished' => '0',
+        //         'done' => '0',
+        //         'timer' => (string)(25 * 60),
+        //         'repeat_id' => (string)$repeat_id,
+        //         'priority_id' => (string)$priority_id
+        //     ]);
     }
 
     /**
@@ -547,21 +628,45 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'name' => $name,
-                'user_id' => (string)$this->user->id,
-                'project_id' => (string)$project->id,
-                'context_id' => (string)$context->id,
-                'start_date' => $start_date,
-                'due_date' => $due_date,
-                'term' => (string)$term,
-                'finished' => '0',
-                'done' => '0',
-                'timer' => (string)(25 * 60),
-                'repeat_id' => (string)$repeat_id,
-                'priority_id' => (string)$priority_id
+                'data' => $expected_data,
             ]);
+        // $response->assertStatus(201)
+        //     ->assertJsonFragment([
+        //         'name' => $name,
+        //         'user_id' => (string)$this->user->id,
+        //         'project_id' => (string)$project->id,
+        //         'context_id' => (string)$context->id,
+        //         'start_date' => $start_date,
+        //         'due_date' => $due_date,
+        //         'term' => (string)$term,
+        //         'finished' => '0',
+        //         'done' => '0',
+        //         'timer' => (string)(25 * 60),
+        //         'repeat_id' => (string)$repeat_id,
+        //         'priority_id' => (string)$priority_id
+        //     ]);
     }
 
     /**
@@ -600,21 +705,45 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
         $response->assertStatus(201)
             ->assertJsonFragment([
-                'name' => $name,
-                'user_id' => (string)$this->user->id,
-                'project_id' => (string)$project->id,
-                'context_id' => (string)$context->id,
-                'start_date' => $start_date,
-                'due_date' => $due_date,
-                'term' => (string)$term,
-                'finished' => '0',
-                'done' => '0',
-                'timer' => (string)(25 * 60),
-                'repeat_id' => (string)$repeat_id,
-                'priority_id' => (string)$priority_id
+                'data' => $expected_data,
             ]);
+        // $response->assertStatus(201)
+        //     ->assertJsonFragment([
+        //         'name' => $name,
+        //         'user_id' => (string)$this->user->id,
+        //         'project_id' => (string)$project->id,
+        //         'context_id' => (string)$context->id,
+        //         'start_date' => $start_date,
+        //         'due_date' => $due_date,
+        //         'term' => (string)$term,
+        //         'finished' => '0',
+        //         'done' => '0',
+        //         'timer' => (string)(25 * 60),
+        //         'repeat_id' => (string)$repeat_id,
+        //         'priority_id' => (string)$priority_id
+        //     ]);
     }
 
     /**
