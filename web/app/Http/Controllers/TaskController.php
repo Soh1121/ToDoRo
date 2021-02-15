@@ -36,12 +36,10 @@ class TaskController extends Controller
         $task->priority_id = $request->priority_id;
         $task->save();
 
-        $new_tasks = Task::where('user_id', $user_id)
-            ->orderBy(Task::CREATED_AT, 'asc')
-            ->get();
+        $new_tasks = $this->index($user_id);
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
-        return response()->json(['data' => $new_tasks], 201);
+        return response()->json($new_tasks, 201);
     }
 
     /**

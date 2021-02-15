@@ -145,7 +145,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 5;
         $repeat_id = 1;
-        $priority_id = 0;
+        $priority_id = 3;
         $response = $this->actingAs($this->user)
             ->json(
                 'POST',
@@ -378,7 +378,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 0;
         $repeat_id = 1;
-        $priority_id = 0;
+        $priority_id = 3;
         $response = $this->actingAs($this->user)
             ->json(
                 'POST',
@@ -455,7 +455,7 @@ class TaskApiTest extends TestCase
         $due_date = '2020-12-31';
         $term = 99;
         $repeat_id = 1;
-        $priority_id = 0;
+        $priority_id = 3;
         $response = $this->actingAs($this->user)
             ->json(
                 'POST',
