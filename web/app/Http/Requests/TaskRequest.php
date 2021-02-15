@@ -33,7 +33,7 @@ class TaskRequest extends FormRequest
             'term' => 'integer|between:0,99',
             'timer' => 'integer',
             'repeat_id' => 'integer',
-            'priority_id' => 'integer|between:0,5',
+            'priority_id' => 'integer|between:1,5',
         ];
     }
 
