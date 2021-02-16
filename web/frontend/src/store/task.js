@@ -1,4 +1,4 @@
-import { CREATED, UNPROCESSABLE_ENTITY } from "../util";
+import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   tasks: null,
@@ -46,6 +46,20 @@ const actions = {
     } else {
       context.commit("error/setCode", response.status, { root: true });
     }
+  },
+
+  async index(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.get("/api/tasks/" + data[0]);
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setTasks", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
   },
 
   open(context) {

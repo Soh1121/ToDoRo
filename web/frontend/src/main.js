@@ -25,6 +25,7 @@ const createApp = async () => {
   const user_id = store.getters["auth/user_id"];
   if (user_id) {
     const functions = [
+      fetch("task", user_id),
       fetch("context", user_id),
       fetch("project", user_id),
       fetchDefaultData("repeat"),
