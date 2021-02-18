@@ -177,6 +177,7 @@ export default {
       await this.$store.dispatch("auth/login", this.loginForm);
       if (this.apiStatus) {
         const functions = [
+          this.fetch("task"),
           this.fetch("context"),
           this.fetch("project"),
           this.fetchDefaultData("repeat"),

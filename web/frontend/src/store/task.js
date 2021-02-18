@@ -8,6 +8,7 @@ const state = {
 };
 
 const getters = {
+  tasks: state => state.tasks,
   display: state => !!state.display
 };
 
@@ -36,6 +37,7 @@ const actions = {
 
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
+      console.log(response.data);
       context.commit("setTasks", response.data);
       return false;
     }
