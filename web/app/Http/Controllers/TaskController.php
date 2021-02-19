@@ -13,6 +13,33 @@ class TaskController extends Controller
         $this->middleware('auth');
     }
 
+    // タスク検索
+    private function search($user_id)
+    {
+        $tasks = Task::where('user_id', $user_id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
+
+        return $data;
+    }
+
     /**
      * タスク追加
      * @param int $user_id
@@ -36,10 +63,10 @@ class TaskController extends Controller
         $task->priority_id = $request->priority_id;
         $task->save();
 
-        $new_tasks = $this->index($user_id);
+        $new_tasks = $this->search($user_id);
 
         // リソースの新規作成なのでレスポンスコードは201(CREATED)
-        return response()->json($new_tasks, 201);
+        return response()->json(['data' => $new_tasks], 201);
     }
 
     /**
@@ -49,26 +76,7 @@ class TaskController extends Controller
      */
     public function index(int $user_id)
     {
-        $tasks = Task::where('user_id', $user_id)
-            ->orderBy(Task::CREATED_AT, 'asc')
-            ->get();
-        $data = $tasks->map(function ($task) {
-            return [
-                'id' => $task->id,
-                'name' => $task->name,
-                'user_id' => $task->user_id,
-                'project' => $task->project->name,
-                'context' => $task->context->name,
-                'start_date' => $task->start_date,
-                'due_date' => $task->due_date,
-                'term' => $task->term,
-                'finished' => $task->finished,
-                'done' => $task->done,
-                'timer' => $task->timer,
-                'repeat' => $task->repeat->name,
-                'priority' => $task->priority->name,
-            ];
-        })->all();
+        $data = $this->search($user_id);
 
         return response()->json(['data' => $data]);
     }
