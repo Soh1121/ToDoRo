@@ -80,4 +80,14 @@ class TaskController extends Controller
 
         return response()->json(['data' => $data]);
     }
+
+    /** タスク変更
+     * @param int $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(int $user_id, TaskRequest $request)
+    {
+        return response()->json(['data' => ''], 200);
+    }
 }

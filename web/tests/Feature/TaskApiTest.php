@@ -728,4 +728,38 @@ class TaskApiTest extends TestCase
                 'data' => $expected_data,
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_タスク名を変更できる()
+    {
+        $task_id = 0;
+        $name = 'テスト';
+        $project_id = 1;
+        $context_id = 1;
+        $start_date = '2020-12-31';
+        $due_date = '2020-12-31';
+        $term = 5;
+        $repeat_id = 1;
+        $priority_id = 3;
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.update', [
+                    'user' => $this->user->id,
+                ]),
+                compact(
+                    'name',
+                    'project_id',
+                    'context_id',
+                    'start_date',
+                    'due_date',
+                    'term',
+                    'repeat_id',
+                    'priority_id'
+                )
+            );
+        $response->assertStatus(200);
+    }
 }
