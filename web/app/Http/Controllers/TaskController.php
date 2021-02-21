@@ -13,7 +13,12 @@ class TaskController extends Controller
         $this->middleware('auth');
     }
 
-    // タスク検索
+    /**
+     * タスク検索
+     *
+     * @param int $user_id
+     * @return array
+     */
     private function search($user_id)
     {
         $tasks = Task::where('user_id', $user_id)
@@ -79,5 +84,19 @@ class TaskController extends Controller
         $data = $this->search($user_id);
 
         return response()->json(['data' => $data]);
+    }
+
+    /** タスク変更
+     * @param int $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(int $user_id, TaskRequest $request)
+    {
+        $task_id = $request->task_id;
+        $task = Task::find($task_id);
+        $task->fill($request->all())->save();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
     }
 }

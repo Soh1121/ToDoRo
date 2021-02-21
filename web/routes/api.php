@@ -27,7 +27,9 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 // ログインユーザーの確認
-Route::get('/user', function(){ return Auth::user(); })->name('user');
+Route::get('/user', function () {
+  return Auth::user();
+})->name('user');
 
 // 繰り返し一覧
 Route::get('/repeat', 'RepeatController@index')->name('repeat');
@@ -64,3 +66,6 @@ Route::post('/tasks/{user}', 'TaskController@store')->name('task.store');
 
 // タスク一覧
 Route::get('/tasks/{user}', 'TaskController@index')->name('task.index');
+
+// タスク変更
+Route::patch('/tasks/{user}', 'TaskController@update')->name('task.update');
