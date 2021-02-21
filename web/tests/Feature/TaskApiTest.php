@@ -734,15 +734,50 @@ class TaskApiTest extends TestCase
      */
     public function should_タスク名を変更できる()
     {
-        $task_id = 0;
-        $name = 'テスト';
-        $project_id = 1;
-        $context_id = 1;
-        $start_date = '2020-12-31';
-        $due_date = '2020-12-31';
-        $term = 5;
-        $repeat_id = 1;
-        $priority_id = 3;
+        // 変更に必要な情報の設定
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = 'タスク名変更';
+        $project_id = $target_task->project_id;
+        $context_id = $target_task->context_id;
+        $start_date = $target_task->start_date;
+        $due_date = $target_task->due_date;
+        $term = $target_task->term;
+        $repeat_id = $target_task->repeat_id;
+        $priority_id = $target_task->priority_id;
+        $target_task->name = $name;
+
+        // 正解を設定
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        $expected_datas = [];
+        foreach ($tasks as $task) {
+            if ($task->id === $task_id) {
+                $task->name = $name;
+            }
+        }
+        $expected_data = $tasks->map(function ($task) {
+            return [
+                'id' => $task->id,
+                'name' => $task->name,
+                'user_id' => $task->user_id,
+                'project' => $task->project->name,
+                'context' => $task->context->name,
+                'start_date' => $task->start_date,
+                'due_date' => $task->due_date,
+                'term' => $task->term,
+                'finished' => $task->finished,
+                'done' => $task->done,
+                'timer' => $task->timer,
+                'repeat' => $task->repeat->name,
+                'priority' => $task->priority->name,
+            ];
+        })->all();
+
+        // 更新処理を実行
         $response = $this->actingAs($this->user)
             ->json(
                 'PATCH',
@@ -750,6 +785,7 @@ class TaskApiTest extends TestCase
                     'user' => $this->user->id,
                 ]),
                 compact(
+                    'task_id',
                     'name',
                     'project_id',
                     'context_id',
@@ -760,6 +796,11 @@ class TaskApiTest extends TestCase
                     'priority_id'
                 )
             );
-        $response->assertStatus(200);
+
+        // 処理が意図したとおりか確認
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'data' => $expected_data,
+            ]);
     }
 }

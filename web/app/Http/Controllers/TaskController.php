@@ -88,6 +88,10 @@ class TaskController extends Controller
      */
     public function update(int $user_id, TaskRequest $request)
     {
-        return response()->json(['data' => ''], 200);
+        $task_id = $request->task_id;
+        $task = Task::find($task_id);
+        $task->fill($request->all())->save();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
     }
 }

@@ -14,6 +14,12 @@ class Task extends Model
         'timer', 'repeat_id', 'priority_id',
     ];
 
+    /** 複数代入できる属性 */
+    protected $fillable = [
+        'name', 'project_id', 'context_id',
+        'start_date', 'due_date', 'term', 'repeat_id', 'priority_id',
+    ];
+
     /**
      * リレーションシップ：user_id
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
