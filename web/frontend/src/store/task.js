@@ -2,6 +2,7 @@ import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   tasks: null,
+  taskControlForm: null,
   apiStatus: null,
   taskAddErrorMessages: null,
   display: false
@@ -15,6 +16,10 @@ const getters = {
 const mutations = {
   setTasks(state, tasks) {
     state.tasks = tasks;
+  },
+
+  setTaskControlForm(state, task) {
+    state.taskControlForm = task;
   },
 
   setApiStatus(state, status) {
@@ -64,7 +69,8 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
-  open(context) {
+  open(context, item) {
+    context.commit("setTaskControlForm", item);
     context.commit("setAddTaskErrorMessages", null);
     context.commit("setDisplay", true);
   },

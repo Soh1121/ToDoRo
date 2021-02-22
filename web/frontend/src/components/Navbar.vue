@@ -90,7 +90,7 @@ export default {
   },
   methods: {
     taskOpen() {
-      this.$store.dispatch("task/open");
+      this.$store.dispatch("task/open", {});
     },
 
     loginOpen() {
