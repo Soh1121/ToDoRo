@@ -139,7 +139,8 @@ export default {
   data() {
     return {
       addForm: {},
-      pomodoroItems: pomodoroRange
+      pomodoroItems: pomodoroRange,
+      taskControlForm: {}
     };
   },
 
@@ -156,7 +157,11 @@ export default {
       repeats: "repeat/repeats",
       priorities: "priority/priorities",
       display: "task/display"
-    })
+    }),
+
+    isPersistedItem() {
+      return !!this.taskControlForm.task_id;
+    }
   },
 
   methods: {
