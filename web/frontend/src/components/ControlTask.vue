@@ -117,7 +117,14 @@
       <v-btn color="orange" text @click="close">
         キャンセル
       </v-btn>
-      <v-btn color="orange" dark @click="create">
+      <v-btn
+        v-if="isPersistedItem"
+        color="orange"
+        dark
+      >
+        変更
+      </v-btn>
+      <v-btn v-else color="orange" dark @click="create">
         追加
       </v-btn>
     </v-card-actions>
@@ -146,7 +153,7 @@ export default {
     ...mapState({
       taskControlForm: state => state.task.taskControlForm,
       apiStatus: state => state.task.apiStatus,
-      taskAddErrors: state => state.task.taskAddErrorMessages
+      taskAddErrors: state => state.task.taskAddErrorMessages,
     }),
 
     ...mapGetters({
@@ -155,12 +162,9 @@ export default {
       projects: "project/projects",
       repeats: "repeat/repeats",
       priorities: "priority/priorities",
+      isPersistedItem: "task/isPersistedItem",
       display: "task/display"
-    }),
-
-    isPersistedItem() {
-      return !!this.taskControlForm.task_id;
-    }
+    })
   },
 
   methods: {
@@ -175,14 +179,6 @@ export default {
     close() {
       this.$store.dispatch("task/close");
     }
-  },
-
-  // watch: {
-  //   storeTaskControlForm(values) {
-  //     if (values) {
-  //       this.taskControlForm = values;
-  //     }
-  //   }
-  // }
+  }
 };
 </script>

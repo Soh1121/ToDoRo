@@ -5,12 +5,14 @@ const state = {
   taskControlForm: null,
   apiStatus: null,
   taskAddErrorMessages: null,
+  isPersistedItem: false,
   display: false
 };
 
 const getters = {
   tasks: state => state.tasks,
   taskControlForm: state => state.taskControlForm,
+  isPersistedItem: state => !!state.isPersistedItem,
   display: state => !!state.display
 };
 
@@ -29,6 +31,10 @@ const mutations = {
 
   setAddTaskErrorMessages(state, messages) {
     state.taskAddErrorMessages = messages;
+  },
+
+  setIsPersistedItem(state, status) {
+    state.isPersistedItem = status;
   },
 
   setDisplay(state, status) {
@@ -73,6 +79,11 @@ const actions = {
   open(context, item) {
     context.commit("setTaskControlForm", item);
     context.commit("setAddTaskErrorMessages", null);
+    if (Object.keys(item).length) {
+      context.commit("setIsPersistedItem", true);
+    } else {
+      context.commit("setIsPersistedItem", false);
+    };
     context.commit("setDisplay", true);
   },
 
