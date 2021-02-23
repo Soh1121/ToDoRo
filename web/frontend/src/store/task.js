@@ -10,6 +10,7 @@ const state = {
 
 const getters = {
   tasks: state => state.tasks,
+  taskControlForm: state => state.taskControlForm,
   display: state => !!state.display
 };
 
@@ -42,7 +43,6 @@ const actions = {
 
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
-      console.log(response.data);
       context.commit("setTasks", response.data);
       return false;
     }
@@ -62,6 +62,7 @@ const actions = {
     if (response.status === OK) {
       context.commit("setApiStatus", true);
       context.commit("setTasks", response.data);
+      context.commit("setTaskControlForm", {})
       return false;
     }
 

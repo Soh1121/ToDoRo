@@ -62,13 +62,17 @@ export default {
             task_id: item.id,
             done: item.done,
             name: item.name,
+            context_id: item.context_id,
             context: item.context,
+            project_id: item.project_id,
             project: item.project,
             start_date: start_date[0],
             due_date: due_date[0],
             term: item.term,
             finished: item.finished,
+            repeat_id: item.repeat_id,
             repeat: item.repeat,
+            priority_id: item.priority_id,
             priority: item.priority
           };
         });

@@ -19,13 +19,12 @@ export default {
   },
 
   methods: {
-    taskOpen() {
-      this.$store.dispatch("task/open");
+    taskOpen(item) {
+      this.$store.dispatch("task/open", item);
     },
 
     edit(item) {
-      console.log(item);
-      this.taskOpen();
+      this.taskOpen(item);
     }
   }
 };
