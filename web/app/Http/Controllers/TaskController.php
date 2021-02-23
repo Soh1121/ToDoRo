@@ -104,6 +104,13 @@ class TaskController extends Controller
         return response()->json(['data' => $tasks], 200);
     }
 
+    /**
+     * タスク削除
+     *
+     * @param integer $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function delete(int $user_id, TaskRequest $request)
     {
         Task::find($request->task_id)->delete();
