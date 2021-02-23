@@ -29,7 +29,9 @@ class TaskController extends Controller
                 'id' => $task->id,
                 'name' => $task->name,
                 'user_id' => $task->user_id,
+                'project_id' => $task->project_id,
                 'project' => $task->project->name,
+                'context_id' => $task->context_id,
                 'context' => $task->context->name,
                 'start_date' => $task->start_date,
                 'due_date' => $task->due_date,
@@ -37,7 +39,9 @@ class TaskController extends Controller
                 'finished' => $task->finished,
                 'done' => $task->done,
                 'timer' => $task->timer,
+                'repeat_id' => $task->repeat_id,
                 'repeat' => $task->repeat->name,
+                'priority_id' => $task->priority_id,
                 'priority' => $task->priority->name,
             ];
         })->all();

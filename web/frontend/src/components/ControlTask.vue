@@ -30,19 +30,7 @@
               label="タスク名"
               required
               color="orange"
-              v-model="addForm.name"
-            />
-          </v-col>
-        </v-row>
-        <!-- プロジェクト名 -->
-        <v-row>
-          <v-col cols="12" sm="12" md="12">
-            <v-select
-              label="プロジェクト"
-              :items="projects.data"
-              item-text="name"
-              item-value="id"
-              v-model="addForm.project_id"
+              v-model="taskControlForm.name"
             />
           </v-col>
         </v-row>
@@ -54,24 +42,44 @@
               :items="contexts.data"
               item-text="name"
               item-value="id"
-              v-model="addForm.context_id"
+              v-model="taskControlForm.context_id"
+            />
+          </v-col>
+        </v-row>
+        <!-- プロジェクト名 -->
+        <v-row>
+          <v-col cols="12" sm="12" md="12">
+            <v-select
+              label="プロジェクト"
+              :items="projects.data"
+              item-text="name"
+              item-value="id"
+              v-model="taskControlForm.project_id"
             />
           </v-col>
         </v-row>
         <v-row>
           <!-- 開始日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field label="開始日" v-model="addForm.start_date" disable>
+            <v-text-field
+              label="開始日"
+              v-model="taskControlForm.start_date"
+              disable
+            >
               <template v-slot:append-outer>
-                <date-picker v-model="addForm.start_date" />
+                <date-picker v-model="taskControlForm.start_date" />
               </template>
             </v-text-field>
           </v-col>
           <!-- 終了日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field label="終了日" v-model="addForm.due_date" disable>
+            <v-text-field
+              label="終了日"
+              v-model="taskControlForm.due_date"
+              disable
+            >
               <template v-slot:append-outer>
-                <date-picker v-model="addForm.due_date" />
+                <date-picker v-model="taskControlForm.due_date" />
               </template>
             </v-text-field>
           </v-col>
@@ -82,7 +90,7 @@
             <v-select
               label="ポモドーロ数"
               :items="pomodoroItems"
-              v-model="addForm.term"
+              v-model="taskControlForm.term"
             />
           </v-col>
         </v-row>
@@ -94,7 +102,7 @@
               :items="repeats.data"
               item-text="name"
               item-value="id"
-              v-model="addForm.repeat_id"
+              v-model="taskControlForm.repeat_id"
             />
           </v-col>
         </v-row>
@@ -106,7 +114,7 @@
               :items="priorities.data"
               item-text="name"
               item-value="id"
-              v-model="addForm.priority_id"
+              v-model="taskControlForm.priority_id"
             />
           </v-col>
         </v-row>
@@ -117,7 +125,10 @@
       <v-btn color="orange" text @click="close">
         キャンセル
       </v-btn>
-      <v-btn color="orange" dark @click="create">
+      <v-btn v-if="isPersistedItem" color="orange" dark @click="update">
+        変更
+      </v-btn>
+      <v-btn v-else color="orange" dark @click="create">
         追加
       </v-btn>
     </v-card-actions>
@@ -138,13 +149,13 @@ export default {
 
   data() {
     return {
-      addForm: {},
       pomodoroItems: pomodoroRange
     };
   },
 
   computed: {
     ...mapState({
+      taskControlForm: state => state.task.taskControlForm,
       apiStatus: state => state.task.apiStatus,
       taskAddErrors: state => state.task.taskAddErrorMessages
     }),
@@ -155,14 +166,30 @@ export default {
       projects: "project/projects",
       repeats: "repeat/repeats",
       priorities: "priority/priorities",
+      isPersistedItem: "task/isPersistedItem",
       display: "task/display"
     })
   },
 
   methods: {
     async create() {
-      await this.$store.dispatch("task/create", [this.userId, this.addForm]);
+      await this.$store.dispatch("task/create", [
+        this.userId,
+        this.taskControlForm
+      ]);
       if (this.apiStatus) {
+        this.taskControlForm = {};
+        this.close();
+      }
+    },
+
+    async update() {
+      await this.$store.dispatch("task/update", [
+        this.userId,
+        this.taskControlForm
+      ]);
+      if (this.apiStatus) {
+        this.taskControlForm = {};
         this.close();
       }
     },

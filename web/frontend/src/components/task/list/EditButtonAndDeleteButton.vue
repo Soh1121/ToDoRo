@@ -1,6 +1,6 @@
 <template>
   <v-list-item-action>
-    <v-icon>mdi-pencil</v-icon>
+    <v-icon @click="edit(task)">mdi-pencil</v-icon>
     <v-icon>mdi-delete</v-icon>
   </v-list-item-action>
 </template>
@@ -10,6 +10,18 @@ export default {
   props: {
     task: {
       type: Object
+    }
+  },
+
+  computed: {},
+
+  methods: {
+    taskOpen(item) {
+      this.$store.dispatch("task/open", item);
+    },
+
+    edit(item) {
+      this.taskOpen(item);
     }
   }
 };

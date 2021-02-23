@@ -29,7 +29,11 @@
 
       <v-spacer />
 
-      <v-dialog v-model="taskDialog" max-width="600px">
+      <v-dialog
+        v-model="taskDialog"
+        @click:outside="taskClose"
+        max-width="600px"
+      >
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-on="on" v-bind="attrs" class="ma-2" @click="taskOpen">
             <v-icon>mdi-plus</v-icon>
@@ -90,7 +94,11 @@ export default {
   },
   methods: {
     taskOpen() {
-      this.$store.dispatch("task/open");
+      this.$store.dispatch("task/open", {});
+    },
+
+    taskClose() {
+      this.$store.dispatch("task/close");
     },
 
     loginOpen() {

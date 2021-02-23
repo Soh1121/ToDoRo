@@ -2,13 +2,17 @@ import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const state = {
   tasks: null,
+  taskControlForm: null,
   apiStatus: null,
   taskAddErrorMessages: null,
+  isPersistedItem: false,
   display: false
 };
 
 const getters = {
   tasks: state => state.tasks,
+  taskControlForm: state => state.taskControlForm,
+  isPersistedItem: state => !!state.isPersistedItem,
   display: state => !!state.display
 };
 
@@ -17,12 +21,20 @@ const mutations = {
     state.tasks = tasks;
   },
 
+  setTaskControlForm(state, task) {
+    state.taskControlForm = task;
+  },
+
   setApiStatus(state, status) {
     state.apiStatus = status;
   },
 
   setAddTaskErrorMessages(state, messages) {
     state.taskAddErrorMessages = messages;
+  },
+
+  setIsPersistedItem(state, status) {
+    state.isPersistedItem = status;
   },
 
   setDisplay(state, status) {
@@ -37,8 +49,26 @@ const actions = {
 
     if (response.status === CREATED) {
       context.commit("setApiStatus", true);
-      console.log(response.data);
       context.commit("setTasks", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setAddTaskErrorMessages", response.data.errors);
+    } else {
+      context.commit("error/setCode", response.status, { root: true });
+    }
+  },
+
+  async update(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.patch("/api/tasks/" + data[0], data[1]);
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setTasks", response.data);
+      context.commit("setTaskControlForm", {});
       return false;
     }
 
@@ -57,6 +87,7 @@ const actions = {
     if (response.status === OK) {
       context.commit("setApiStatus", true);
       context.commit("setTasks", response.data);
+      context.commit("setTaskControlForm", {});
       return false;
     }
 
@@ -64,8 +95,14 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
-  open(context) {
+  open(context, item) {
+    context.commit("setTaskControlForm", item);
     context.commit("setAddTaskErrorMessages", null);
+    if (Object.keys(item).length) {
+      context.commit("setIsPersistedItem", true);
+    } else {
+      context.commit("setIsPersistedItem", false);
+    }
     context.commit("setDisplay", true);
   },
 
