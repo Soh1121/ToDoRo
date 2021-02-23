@@ -69,3 +69,6 @@ Route::get('/tasks/{user}', 'TaskController@index')->name('task.index');
 
 // タスク変更
 Route::patch('/tasks/{user}', 'TaskController@update')->name('task.update');
+
+// タスク削除
+Route::delete('/tasks/{user}', 'TaskController@delete')->name('task.delete');

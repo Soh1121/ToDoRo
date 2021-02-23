@@ -39,7 +39,9 @@ class TaskApiTest extends TestCase
                 'id' => $task->id,
                 'name' => $task->name,
                 'user_id' => $task->user_id,
+                'project_id' => $task->project_id,
                 'project' => $task->project->name,
+                'context_id' => $task->context_id,
                 'context' => $task->context->name,
                 'start_date' => $task->start_date,
                 'due_date' => $task->due_date,
@@ -47,7 +49,9 @@ class TaskApiTest extends TestCase
                 'finished' => $task->finished,
                 'done' => $task->done,
                 'timer' => $task->timer,
+                'repeat_id' => $task->repeat_id,
                 'repeat' => $task->repeat->name,
+                'priority_id' => $task->priority_id,
                 'priority' => $task->priority->name,
             ];
         })->all();
@@ -1284,5 +1288,23 @@ class TaskApiTest extends TestCase
 
         // 処理が意図したとおりか確認
         $response->assertStatus(422);
+    }
+
+    /**
+     * @test
+     */
+    public function should_タスクを削除できる()
+    {
+        $task_id = 0;
+        $name = 'dammy';
+        $response = $this->actingAs($this->user)
+            ->json(
+                'DELETE',
+                route('task.delete', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name'])
+            );
+        $response->assertStatus(200);
     }
 }
