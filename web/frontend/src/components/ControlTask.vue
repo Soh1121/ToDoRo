@@ -61,7 +61,11 @@
         <v-row>
           <!-- 開始日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field label="開始日" v-model="taskControlForm.start_date" disable>
+            <v-text-field
+              label="開始日"
+              v-model="taskControlForm.start_date"
+              disable
+            >
               <template v-slot:append-outer>
                 <date-picker v-model="taskControlForm.start_date" />
               </template>
@@ -69,7 +73,11 @@
           </v-col>
           <!-- 終了日 -->
           <v-col cols="6" sm="6" md="6">
-            <v-text-field label="終了日" v-model="taskControlForm.due_date" disable>
+            <v-text-field
+              label="終了日"
+              v-model="taskControlForm.due_date"
+              disable
+            >
               <template v-slot:append-outer>
                 <date-picker v-model="taskControlForm.due_date" />
               </template>
@@ -117,12 +125,7 @@
       <v-btn color="orange" text @click="close">
         キャンセル
       </v-btn>
-      <v-btn
-        v-if="isPersistedItem"
-        color="orange"
-        dark
-        @click="update"
-      >
+      <v-btn v-if="isPersistedItem" color="orange" dark @click="update">
         変更
       </v-btn>
       <v-btn v-else color="orange" dark @click="create">
@@ -154,7 +157,7 @@ export default {
     ...mapState({
       taskControlForm: state => state.task.taskControlForm,
       apiStatus: state => state.task.apiStatus,
-      taskAddErrors: state => state.task.taskAddErrorMessages,
+      taskAddErrors: state => state.task.taskAddErrorMessages
     }),
 
     ...mapGetters({
@@ -170,7 +173,10 @@ export default {
 
   methods: {
     async create() {
-      await this.$store.dispatch("task/create", [this.userId, this.taskControlForm]);
+      await this.$store.dispatch("task/create", [
+        this.userId,
+        this.taskControlForm
+      ]);
       if (this.apiStatus) {
         this.taskControlForm = {};
         this.close();

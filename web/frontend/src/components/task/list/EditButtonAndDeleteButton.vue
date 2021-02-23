@@ -7,16 +7,13 @@
 
 <script>
 export default {
-
   props: {
     task: {
       type: Object
     }
   },
 
-  computed: {
-
-  },
+  computed: {},
 
   methods: {
     taskOpen(item) {

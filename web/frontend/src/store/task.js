@@ -63,10 +63,7 @@ const actions = {
 
   async update(context, data) {
     context.commit("setApiStatus", null);
-    const response = await window.axios.patch(
-      "/api/tasks/" + data[0],
-      data[1]
-    );
+    const response = await window.axios.patch("/api/tasks/" + data[0], data[1]);
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
@@ -105,7 +102,7 @@ const actions = {
       context.commit("setIsPersistedItem", true);
     } else {
       context.commit("setIsPersistedItem", false);
-    };
+    }
     context.commit("setDisplay", true);
   },
 
