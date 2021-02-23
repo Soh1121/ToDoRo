@@ -106,6 +106,8 @@ class TaskController extends Controller
 
     public function delete(int $user_id, TaskRequest $request)
     {
-        return response()->json(['data' => ''], 200);
+        Task::find($request->task_id)->delete();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
     }
 }

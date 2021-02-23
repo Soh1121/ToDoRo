@@ -1295,8 +1295,11 @@ class TaskApiTest extends TestCase
      */
     public function should_タスクを削除できる()
     {
-        $task_id = 0;
-        $name = 'dammy';
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = $target_task->name;
         $response = $this->actingAs($this->user)
             ->json(
                 'DELETE',
@@ -1305,6 +1308,21 @@ class TaskApiTest extends TestCase
                 ]),
                 compact(['task_id', 'name'])
             );
-        $response->assertStatus(200);
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy(Task::CREATED_AT, 'asc')
+            ->get();
+        // 取得したタスク一覧に削除したはずのidが含まれていなければ良い
+        foreach ($tasks as $task) {
+            $this->assertNotEquals($task_id, $task->id);
+        }
+        $expected_data = $this->createCorrect($tasks);
+
+        // 返ってきたデータが1個になっていて、意図したものが消えていれば良い
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonFragment(
+                ['data' => $expected_data]
+            );
     }
 }
