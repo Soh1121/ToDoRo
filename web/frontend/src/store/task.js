@@ -61,6 +61,28 @@ const actions = {
     }
   },
 
+  async update(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.patch(
+      "/api/tasks/" + data[0],
+      data[1]
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setTasks", response.data);
+      context.commit("setTaskControlForm", {});
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    if (response.status === UNPROCESSABLE_ENTITY) {
+      context.commit("setAddTaskErrorMessages", response.data.errors);
+    } else {
+      context.commit("error/setCode", response.status, { root: true });
+    }
+  },
+
   async index(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.get("/api/tasks/" + data[0]);
@@ -68,7 +90,7 @@ const actions = {
     if (response.status === OK) {
       context.commit("setApiStatus", true);
       context.commit("setTasks", response.data);
-      context.commit("setTaskControlForm", {})
+      context.commit("setTaskControlForm", {});
       return false;
     }
 

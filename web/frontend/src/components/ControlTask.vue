@@ -121,6 +121,7 @@
         v-if="isPersistedItem"
         color="orange"
         dark
+        @click="update"
       >
         変更
       </v-btn>
@@ -170,6 +171,17 @@ export default {
   methods: {
     async create() {
       await this.$store.dispatch("task/create", [this.userId, this.taskControlForm]);
+      if (this.apiStatus) {
+        this.taskControlForm = {};
+        this.close();
+      }
+    },
+
+    async update() {
+      await this.$store.dispatch("task/update", [
+        this.userId,
+        this.taskControlForm
+      ]);
       if (this.apiStatus) {
         this.taskControlForm = {};
         this.close();
