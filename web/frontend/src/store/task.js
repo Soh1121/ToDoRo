@@ -80,6 +80,23 @@ const actions = {
     }
   },
 
+  async remove(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.delete(
+      "/api/tasks/" + data[0],
+      data[1]
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setTasks", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
   async index(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.get("/api/tasks/" + data[0]);
@@ -96,10 +113,10 @@ const actions = {
   },
 
   open(context, item) {
-    context.commit("setTaskControlForm", item);
     context.commit("setAddTaskErrorMessages", null);
     if (Object.keys(item).length) {
       context.commit("setIsPersistedItem", true);
+      context.commit("setTaskControlForm", item);
     } else {
       context.commit("setIsPersistedItem", false);
     }
@@ -107,6 +124,9 @@ const actions = {
   },
 
   close(context) {
+    if (state.isPersistedItem) {
+      context.commit("setTaskControlForm", {});
+    }
     context.commit("setDisplay", false);
   }
 };
