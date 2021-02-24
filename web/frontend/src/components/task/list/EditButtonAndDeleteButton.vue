@@ -1,7 +1,7 @@
 <template>
   <v-list-item-action>
     <v-icon @click="edit(task)">mdi-pencil</v-icon>
-    <v-icon>mdi-delete</v-icon>
+    <v-icon @click="remove(task)">mdi-delete</v-icon>
   </v-list-item-action>
 </template>
 
@@ -22,6 +22,10 @@ export default {
 
     edit(item) {
       this.taskOpen(item);
+    },
+
+    remove(item) {
+      console.log(item);
     }
   }
 };
