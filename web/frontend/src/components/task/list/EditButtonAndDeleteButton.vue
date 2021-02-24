@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
   props: {
     task: {
@@ -13,7 +15,11 @@ export default {
     }
   },
 
-  computed: {},
+  computed: {
+    ...mapGetters({
+      userId: "auth/user_id"
+    })
+  },
 
   methods: {
     taskOpen(item) {
@@ -24,8 +30,11 @@ export default {
       this.taskOpen(item);
     },
 
-    remove(item) {
-      console.log(item);
+    async remove(item) {
+      await this.$store.dispatch("task/remove", [
+        this.userId,
+        { data: item }
+      ]);
     }
   }
 };
