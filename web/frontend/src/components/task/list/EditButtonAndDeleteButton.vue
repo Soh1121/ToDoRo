@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   props: {
@@ -31,10 +31,7 @@ export default {
     },
 
     async remove(item) {
-      await this.$store.dispatch("task/remove", [
-        this.userId,
-        { data: item }
-      ]);
+      await this.$store.dispatch("task/remove", [this.userId, { data: item }]);
     }
   }
 };

@@ -113,10 +113,10 @@ const actions = {
   },
 
   open(context, item) {
-    context.commit("setTaskControlForm", item);
     context.commit("setAddTaskErrorMessages", null);
     if (Object.keys(item).length) {
       context.commit("setIsPersistedItem", true);
+      context.commit("setTaskControlForm", item);
     } else {
       context.commit("setIsPersistedItem", false);
     }
@@ -124,6 +124,9 @@ const actions = {
   },
 
   close(context) {
+    if (state.isPersistedItem) {
+      context.commit("setTaskControlForm", {});
+    }
     context.commit("setDisplay", false);
   }
 };
