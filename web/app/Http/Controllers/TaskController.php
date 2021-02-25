@@ -117,4 +117,9 @@ class TaskController extends Controller
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
     }
+
+    public function finished(int $user_id, TaskRequest $request)
+    {
+        return response()->json(['data' => ''], 200);
+    }
 }

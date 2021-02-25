@@ -1325,4 +1325,25 @@ class TaskApiTest extends TestCase
                 ['data' => $expected_data]
             );
     }
+
+    /**
+     * @test
+     */
+    public function should_タスクを完了にできる()
+    {
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = $target_task->name;
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.finished', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name'])
+            );
+        $response->assertStatus(200);
+    }
 }

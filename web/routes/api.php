@@ -72,3 +72,6 @@ Route::patch('/tasks/{user}', 'TaskController@update')->name('task.update');
 
 // タスク削除
 Route::delete('/tasks/{user}', 'TaskController@delete')->name('task.delete');
+
+// タスクを完了に
+Route::patch('/tasks/{user}/finished', 'TaskController@finished')->name('task.finished');
