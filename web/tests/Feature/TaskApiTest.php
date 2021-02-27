@@ -1366,4 +1366,60 @@ class TaskApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonFragment(['data' => $expected_data]);
     }
+
+    /**
+     * @test
+     */
+    public function should_タスクを未完了にできる()
+    {
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = $target_task->name;
+
+        // 返却されたデータが正しいか確認するため
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+        foreach ($tasks as $task) {
+            if ($task->id === $task_id) {
+                // 本来変えずとも0だが念の為
+                $task->finished = '0';
+            }
+        }
+        $expected_data = $this->createCorrect($tasks);
+
+        // 一旦完了にする
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.finished', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name'])
+            );
+
+        // 完了になっているか
+        $result = Task::find($task_id);
+        $this->assertEquals(1, $result->finished);
+
+        // 未完了に戻す
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.unfinished', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name'])
+            );
+
+        //未完了になっているか
+        $result = Task::find($task_id);
+        $this->assertEquals(0, $result->finished);
+
+        // 返却されるデータが予想と一致しているか確認
+        $response->assertStatus(200)
+            ->assertJsonFragment(['data' => $expected_data]);
+    }
 }
