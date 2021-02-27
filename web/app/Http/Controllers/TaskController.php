@@ -136,6 +136,10 @@ class TaskController extends Controller
 
     public function unfinished(int $user_id, TaskRequest $request)
     {
-        return response()->json(['data' => ''], 200);
+        $task = Task::find($request->task_id);
+        $task->finished = 0;
+        $task->save();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
     }
 }
