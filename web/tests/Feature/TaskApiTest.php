@@ -1366,4 +1366,29 @@ class TaskApiTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonFragment(['data' => $expected_data]);
     }
+
+    /**
+     * @test
+     */
+    public function should_タスクを未完了にできる()
+    {
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = $target_task->name;
+
+        // 処理を実行
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.unfinished', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name'])
+            );
+
+        // 返却されるデータが予想と一致しているか確認
+        $response->assertStatus(200);
+    }
 }

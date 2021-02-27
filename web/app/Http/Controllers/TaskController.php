@@ -118,6 +118,13 @@ class TaskController extends Controller
         return response()->json(['data' => $tasks], 200);
     }
 
+    /**
+     * タスク完了
+     *
+     * @param integer $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function finished(int $user_id, TaskRequest $request)
     {
         $task = Task::find($request->task_id);
@@ -125,5 +132,10 @@ class TaskController extends Controller
         $task->save();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
+    }
+
+    public function unfinished(int $user_id, TaskRequest $request)
+    {
+        return response()->json(['data' => ''], 200);
     }
 }
