@@ -1336,6 +1336,19 @@ class TaskApiTest extends TestCase
             ->first();
         $task_id = $target_task->id;
         $name = $target_task->name;
+
+        // 返却されたデータが正しいか確認するため
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+        foreach ($tasks as $task) {
+            if ($task->id === $task_id) {
+                $task->finished = '1';
+            }
+        }
+        $expected_data = $this->createCorrect($tasks);
+
+        // 処理を実行
         $response = $this->actingAs($this->user)
             ->json(
                 'PATCH',
@@ -1344,6 +1357,13 @@ class TaskApiTest extends TestCase
                 ]),
                 compact(['task_id', 'name'])
             );
-        $response->assertStatus(200);
+
+        // データベースの値が書き換わっているか確認
+        $result = Task::find($task_id);
+        $this->assertEquals(1, $result->finished);
+
+        // 返却されるデータが予想と一致しているか確認
+        $response->assertStatus(200)
+            ->assertJsonFragment(['data' => $expected_data]);
     }
 }
