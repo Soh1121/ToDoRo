@@ -134,6 +134,13 @@ class TaskController extends Controller
         return response()->json(['data' => $tasks], 200);
     }
 
+    /**
+     * タスク未完了
+     *
+     * @param integer $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function unfinished(int $user_id, TaskRequest $request)
     {
         $task = Task::find($request->task_id);
