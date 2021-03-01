@@ -2,7 +2,7 @@
   <v-list two-line>
     <template v-for="(task, index) in tasks">
       <v-divider :key="`div-${index}`"></v-divider>
-      <v-list-item :key="task.id">
+      <v-list-item :key="task.id" v-show="!task.finished">
         <CheckboxAndPlayButton :task="task" />
         <NameAndPomodoro :task="task" />
         <ContextAndProject :task="task" />
