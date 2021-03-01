@@ -29,9 +29,10 @@ export default {
   methods: {
     async onChange(item) {
       this.checkboxState = !this.checkboxState;
-      console.log(this.checkboxState);
       if (this.checkboxState) {
         await this.$store.dispatch("task/finished", [this.userId, item]);
+      } else {
+        await this.$store.dispatch("task/unfinished", [this.userId, item]);
       }
     }
   }
