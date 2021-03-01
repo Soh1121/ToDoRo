@@ -1,11 +1,12 @@
 <template>
   <v-list-item-action>
-    <v-checkbox :input-value="checkboxState" @change="onChange(checkboxState)"></v-checkbox>
+    <v-checkbox :input-value="checkboxState" @change="onChange(task)"></v-checkbox>
     <v-icon>mdi-play-circle-outline</v-icon>
   </v-list-item-action>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   props: {
     task: {
@@ -19,10 +20,19 @@ export default {
     };
   },
 
+  computed: {
+    ...mapGetters({
+      userId: "auth/user_id"
+    })
+  },
+
   methods: {
-    onChange() {
+    async onChange(item) {
       this.checkboxState = !this.checkboxState;
       console.log(this.checkboxState);
+      if (this.checkboxState) {
+        await this.$store.dispatch("task/finished", [this.userId, item]);
+      }
     }
   }
 };

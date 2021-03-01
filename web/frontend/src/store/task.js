@@ -112,6 +112,23 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  async finished(context, data) {
+    context.commit("setApiStatus", null);
+    const response = await window.axios.patch(
+      "/api/tasks/" + data[0] + "/finished",
+      data[1]
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setTasks", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
   open(context, item) {
     context.commit("setAddTaskErrorMessages", null);
     if (Object.keys(item).length) {
