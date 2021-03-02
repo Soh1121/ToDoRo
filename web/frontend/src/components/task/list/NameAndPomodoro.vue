@@ -5,7 +5,7 @@
     </v-list-item-title>
     <v-list-item-subtitle>
       <v-icon>mdi-av-timer</v-icon>
-      {{ task.finished }} / {{ task.term }}
+      {{ task.done }} / {{ task.term }}
     </v-list-item-subtitle>
   </v-list-item-content>
 </template>

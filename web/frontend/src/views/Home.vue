@@ -1,21 +1,26 @@
 <template>
-  <v-list two-line>
-    <template v-for="(task, index) in tasks">
-      <v-divider :key="`div-${index}`"></v-divider>
-      <v-list-item :key="task.id" v-show="!task.finished">
-        <CheckboxAndPlayButton :task="task" />
-        <NameAndPomodoro :task="task" />
-        <ContextAndProject :task="task" />
-        <Date :task="task" />
-        <RepeatAndPriority :task="task" />
-        <EditButtonAndDeleteButton :task="task" />
-      </v-list-item>
-      <v-divider
-        v-if="tasks.length === index + 1"
-        :key="`div-${index}`"
-      ></v-divider>
-    </template>
-  </v-list>
+  <div>
+    <v-checkbox v-model="showFinishedTask" label="完了済みのタスクを表示する"></v-checkbox>
+    <v-list two-line>
+      <template v-for="(task, index) in tasks">
+        <div :key="`div-${index}`" v-show="!task.finished || showFinishedTask">
+          <v-divider :key="`div-${index}`"></v-divider>
+          <v-list-item :key="task.id">
+            <CheckboxAndPlayButton :task="task" />
+            <NameAndPomodoro :task="task" />
+            <ContextAndProject :task="task" />
+            <Date :task="task" />
+            <RepeatAndPriority :task="task" />
+            <EditButtonAndDeleteButton :task="task" />
+          </v-list-item>
+        </div>
+        <v-divider
+          v-if="tasks.length === index + 1"
+          :key="`div-${index}`"
+        ></v-divider>
+      </template>
+    </v-list>
+  </div>
 </template>
 
 <script>
@@ -39,7 +44,8 @@ export default {
 
   data() {
     return {
-      tasks: []
+      tasks: [],
+      showFinishedTask: false
     };
   },
 
