@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-checkbox v-model="showFinishedTask" label="完了済みのタスクを表示する"></v-checkbox>
+    <v-checkbox
+      v-model="showFinishedTask"
+      label="完了済みのタスクを表示する"
+    ></v-checkbox>
     <v-list two-line>
       <template v-for="(task, index) in tasks">
         <div :key="`div-${index}`" v-show="!task.finished || showFinishedTask">

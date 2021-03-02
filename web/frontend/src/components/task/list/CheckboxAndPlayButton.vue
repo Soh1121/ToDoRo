@@ -1,12 +1,15 @@
 <template>
   <v-list-item-action>
-    <v-checkbox :input-value="checkboxState" @change="onChange(task)"></v-checkbox>
+    <v-checkbox
+      :input-value="checkboxState"
+      @change="onChange(task)"
+    ></v-checkbox>
     <v-icon>mdi-play-circle-outline</v-icon>
   </v-list-item-action>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 export default {
   props: {
     task: {
