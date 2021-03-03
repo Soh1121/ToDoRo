@@ -94,7 +94,13 @@ export default {
   },
   methods: {
     taskOpen() {
-      this.$store.dispatch("task/open", {});
+      this.$store.dispatch("task/open", {
+        context_id: this.contexts.data[0].id,
+        project_id: this.projects.data[0].id,
+        term: 0,
+        repeat_id: 1,
+        priority_id: 1
+      });
     },
 
     taskClose() {
@@ -116,6 +122,8 @@ export default {
     ...mapGetters({
       isLogin: "auth/check",
       username: "auth/username",
+      contexts: "context/contexts",
+      projects: "project/projects",
       loginDialog: "auth/display",
       taskDialog: "task/display"
     })

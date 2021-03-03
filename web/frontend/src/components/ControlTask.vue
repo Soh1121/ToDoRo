@@ -64,7 +64,9 @@
             <v-text-field
               label="開始日"
               v-model="taskControlForm.start_date"
-              disable
+              disabled
+              readonly
+              required
             >
               <template v-slot:append-outer>
                 <date-picker v-model="taskControlForm.start_date" />
@@ -76,7 +78,9 @@
             <v-text-field
               label="終了日"
               v-model="taskControlForm.due_date"
-              disable
+              disabled
+              readonly
+              required
             >
               <template v-slot:append-outer>
                 <date-picker v-model="taskControlForm.due_date" />

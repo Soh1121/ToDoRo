@@ -148,12 +148,12 @@ const actions = {
 
   open(context, item) {
     context.commit("setAddTaskErrorMessages", null);
-    if (Object.keys(item).length) {
+    if (Object.keys(item).length != 5) {
       context.commit("setIsPersistedItem", true);
-      context.commit("setTaskControlForm", item);
     } else {
       context.commit("setIsPersistedItem", false);
     }
+    context.commit("setTaskControlForm", item);
     context.commit("setDisplay", true);
   },
 
