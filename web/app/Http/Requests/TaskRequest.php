@@ -28,8 +28,8 @@ class TaskRequest extends FormRequest
             'name' => 'required|max:140',
             'project_id' => 'integer',
             'context_id' => 'integer',
-            'start_date' => 'date|before_or_equal:due_date',
-            'due_date' => 'date|after_or_equal:start_date',
+            'start_date' => 'required|date|before_or_equal:due_date',
+            'due_date' => 'required|date|after_or_equal:start_date',
             'term' => 'integer|between:0,99',
             'timer' => 'integer',
             'repeat_id' => 'integer',
@@ -45,6 +45,8 @@ class TaskRequest extends FormRequest
     {
         return [
             'name.required' => 'タスク名を入力してください',
+            'start_date.required' => '開始日を入力してください',
+            'due_date.required' => '終了日を入力してください',
             'start_date.before_or_equal' => '開始日は終了日以前を選択してください',
             'due_date.after_or_equal' => '終了日は開始日以後を選択してください',
         ];
