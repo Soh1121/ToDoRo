@@ -1,9 +1,6 @@
 <template>
   <div>
-    <Drawar
-      v-bind:drawer="drawer"
-      @drawerOpenAndClose="drawerOpenAndClose"
-    />
+    <Drawar v-bind:drawer="drawer" @drawerOpenAndClose="drawerOpenAndClose" />
     <v-app-bar
       color="orange darken-1"
       app

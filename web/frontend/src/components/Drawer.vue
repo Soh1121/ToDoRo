@@ -26,7 +26,7 @@ export default {
   props: ["drawer"],
 
   methods: {
-    handleInput (e) {
+    handleInput(e) {
       this.$emit("drawerOpenAndClose", e);
     }
   }
