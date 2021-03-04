@@ -4,6 +4,7 @@
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
     width="300px"
+    @input="handleInput"
   >
     <v-card height="100%" tile class="l-sidebar">
       <Group />
@@ -21,6 +22,13 @@ export default {
     Group,
     Calendar
   },
-  props: ["drawer"]
+
+  props: ["drawer"],
+
+  methods: {
+    handleInput (e) {
+      this.$emit("drawerOpenAndClose", e);
+    }
+  }
 };
 </script>

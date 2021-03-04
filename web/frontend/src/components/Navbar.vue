@@ -1,6 +1,9 @@
 <template>
   <div>
-    <Drawar v-bind:drawer="drawer" />
+    <Drawar
+      v-bind:drawer="drawer"
+      @drawerOpenAndClose="drawerOpenAndClose"
+    />
     <v-app-bar
       color="orange darken-1"
       app
@@ -101,6 +104,10 @@ export default {
         repeat_id: 1,
         priority_id: 1
       });
+    },
+
+    drawerOpenAndClose(e) {
+      this.drawer = e;
     },
 
     taskClose() {
