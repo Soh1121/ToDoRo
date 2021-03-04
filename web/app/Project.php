@@ -19,4 +19,13 @@ class Project extends Model
     {
         return $this->belongsTo('App\User', 'user_id', 'id', 'users');
     }
+
+    /**
+     * リレーションシップ
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function tasks()
+    {
+        return $this->hasMany('App\Task');
+    }
 }

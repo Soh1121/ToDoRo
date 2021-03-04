@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,15 @@ Route::post('/login', 'Auth\LoginController@login')->name('login');
 Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 
 // ログインユーザーの確認
-Route::get('/user', function(){ return Auth::user(); })->name('user');
+Route::get('/user', function () {
+  return Auth::user();
+})->name('user');
+
+// 繰り返し一覧
+Route::get('/repeat', 'RepeatController@index')->name('repeat');
+
+// 優先度一覧
+Route::get('/priority', 'PriorityController@index')->name('priority');
 
 // プロジェクト追加
 Route::post('/projects/{user}', 'ProjectController@store')->name('project.store');
@@ -51,3 +60,21 @@ Route::patch('/contexts/{user}', 'ContextController@update')->name('context.upda
 
 // コンテキスト削除
 Route::delete('/contexts/{user}', 'ContextController@delete')->name('context.delete');
+
+// タスク追加
+Route::post('/tasks/{user}', 'TaskController@store')->name('task.store');
+
+// タスク一覧
+Route::get('/tasks/{user}', 'TaskController@index')->name('task.index');
+
+// タスク変更
+Route::patch('/tasks/{user}', 'TaskController@update')->name('task.update');
+
+// タスク削除
+Route::delete('/tasks/{user}', 'TaskController@delete')->name('task.delete');
+
+// タスクを完了に
+Route::patch('/tasks/{user}/finished', 'TaskController@finished')->name('task.finished');
+
+// タスクを未完了に
+Route::patch('/tasks/{user}/unfinished', 'TaskController@unfinished')->name('task.unfinished');

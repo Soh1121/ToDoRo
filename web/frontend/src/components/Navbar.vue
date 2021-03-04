@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Drawar v-bind:drawer="drawer" />
+    <Drawar v-bind:drawer="drawer" @drawerOpenAndClose="drawerOpenAndClose" />
     <v-app-bar
       color="orange darken-1"
       app
@@ -29,9 +29,18 @@
 
       <v-spacer />
 
-      <v-btn icon class="ma-2">
-        <v-icon>mdi-plus</v-icon>
-      </v-btn>
+      <v-dialog
+        v-model="taskDialog"
+        @click:outside="taskClose"
+        max-width="600px"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn icon v-on="on" v-bind="attrs" class="ma-2" @click="taskOpen">
+            <v-icon>mdi-plus</v-icon>
+          </v-btn>
+        </template>
+        <ControlTask />
+      </v-dialog>
 
       <v-menu left bottom v-if="isLogin">
         <template v-slot:activator="{ on, attrs }">
@@ -53,9 +62,9 @@
       </v-menu>
 
       <div class="my-2" v-else>
-        <v-dialog v-model="dialog" persistent max-width="600px">
+        <v-dialog v-model="loginDialog" persistent max-width="600px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn outlined large v-on="on" v-bind="attrs" @click="open"
+            <v-btn outlined large v-on="on" v-bind="attrs" @click="loginOpen"
               >登録／ログイン</v-btn
             >
           </template>
@@ -67,12 +76,14 @@
 </template>
 
 <script>
+import ControlTask from "./ControlTask.vue";
 import Drawar from "./Drawer.vue";
 import Login from "./Login.vue";
 import { mapState, mapGetters } from "vuex";
 
 export default {
   components: {
+    ControlTask,
     Drawar,
     Login
   },
@@ -82,7 +93,25 @@ export default {
     };
   },
   methods: {
-    open() {
+    taskOpen() {
+      this.$store.dispatch("task/open", {
+        context_id: this.contexts.data[0].id,
+        project_id: this.projects.data[0].id,
+        term: 0,
+        repeat_id: 1,
+        priority_id: 1
+      });
+    },
+
+    drawerOpenAndClose(e) {
+      this.drawer = e;
+    },
+
+    taskClose() {
+      this.$store.dispatch("task/close");
+    },
+
+    loginOpen() {
       this.$store.dispatch("auth/open");
     },
 
@@ -97,7 +126,10 @@ export default {
     ...mapGetters({
       isLogin: "auth/check",
       username: "auth/username",
-      dialog: "auth/display"
+      contexts: "context/contexts",
+      projects: "project/projects",
+      loginDialog: "auth/display",
+      taskDialog: "task/display"
     })
   }
 };
