@@ -5,9 +5,9 @@
         <Navbar />
       </header>
       <v-main>
-        <div class="container">
-          <RouterView />
-        </div>
+        <!-- <div class="container"> -->
+        <RouterView />
+        <!-- </div> -->
       </v-main>
       <footer>
         <Footer />
