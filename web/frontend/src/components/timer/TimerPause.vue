@@ -1,5 +1,7 @@
 <template>
-  <div class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column">
+  <div
+    class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
+  >
     <Timer />
     <PauseButton />
   </div>
@@ -12,7 +14,7 @@ import PauseButton from "./button/PauseButton.vue";
 export default {
   components: {
     Timer,
-    PauseButton,
+    PauseButton
   }
-}
+};
 </script>

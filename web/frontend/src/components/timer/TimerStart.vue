@@ -1,6 +1,8 @@
 <template>
-  <div class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column">
-    <Timer />
+  <div
+    class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
+  >
+    <Timer :timer="task.timer" />
     <StartButton />
   </div>
 </template>
@@ -13,6 +15,12 @@ export default {
   components: {
     Timer,
     StartButton
+  },
+
+  props: {
+    task: {
+      type: Object
+    }
   }
-}
+};
 </script>

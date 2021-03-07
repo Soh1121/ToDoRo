@@ -1,5 +1,7 @@
 <template>
-  <div class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column">
+  <div
+    class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
+  >
     <Timer />
     <div class="u-position__flexbox">
       <ContinueButton />
@@ -19,5 +21,5 @@ export default {
     ContinueButton,
     StopButton
   }
-}
+};
 </script>

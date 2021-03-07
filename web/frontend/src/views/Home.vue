@@ -70,6 +70,7 @@ export default {
           return {
             task_id: item.id,
             done: item.done,
+            timer: item.timer,
             name: item.name,
             context_id: item.context_id,
             context: item.context,
