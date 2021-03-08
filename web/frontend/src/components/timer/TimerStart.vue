@@ -21,6 +21,12 @@ export default {
     task: {
       type: Object
     }
+  },
+
+  data() {
+    return {
+      operate: false
+    }
   }
 };
 </script>
