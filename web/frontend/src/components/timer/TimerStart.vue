@@ -2,8 +2,8 @@
   <div
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
-    <Timer :timer="task.timer" />
-    <StartButton />
+    <Timer :timer="task.timer" :isStarted="isStarted" />
+    <StartButton @start="start" />
   </div>
 </template>
 
@@ -20,6 +20,18 @@ export default {
   props: {
     task: {
       type: Object
+    }
+  },
+
+  data() {
+    return {
+      isStarted: false
+    };
+  },
+
+  methods: {
+    start(e) {
+      this.isStarted = e;
     }
   }
 };

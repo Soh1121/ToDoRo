@@ -15,13 +15,16 @@ export default {
   props: {
     timer: {
       type: Number
+    },
+    isStarted: {
+      type: Boolean
     }
   },
 
   data() {
     return {
       fulltime: 1500,
-      value: 80
+      interval: {}
     };
   },
 
@@ -31,11 +34,27 @@ export default {
     },
 
     minutes: function() {
-      return ("00" + this.timer / 60).slice(-2);
+      return ("00" + Math.trunc(this.timer / 60)).slice(-2);
     },
 
     seconds: function() {
       return ("00" + (this.timer % 60)).slice(-2);
+    }
+  },
+
+  watch: {
+    isStarted: function() {
+      setInterval(() => {
+        if (!this.isStarted) {
+          return null;
+        }
+        if (this.timer === 0) {
+          this.isStarted = false;
+          this.$emit("isStarted", false);
+          return null;
+        }
+        this.timer -= 1;
+      }, 1000);
     }
   }
 };
