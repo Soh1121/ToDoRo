@@ -14,8 +14,8 @@
 <script>
 export default {
   methods: {
-    start: function() {
-      console.log("start");
+    start() {
+      this.$emit("start", true);
     }
   }
 };
