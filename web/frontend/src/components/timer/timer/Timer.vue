@@ -54,8 +54,7 @@ export default {
           return null;
         }
         this.timer -= 1;
-      },
-      1000);
+      }, 1000);
     }
   }
 };
