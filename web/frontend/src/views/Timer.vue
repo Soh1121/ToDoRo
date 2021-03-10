@@ -1,13 +1,13 @@
 <template>
-  <TimerStart :task="task" />
+  <TimerControl :task="task" />
 </template>
 
 <script>
-import TimerStart from "../components/timer/TimerStart.vue";
+import TimerControl from "../components/timer/TimerControl.vue";
 
 export default {
   components: {
-    TimerStart
+    TimerControl
   },
 
   props: {
