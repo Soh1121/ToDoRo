@@ -3,7 +3,7 @@
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
     <Timer :timer="task.timer" :isStarted="isStarted" />
-    <PauseButton v-if="isStarted" />
+    <PauseButton v-if="isStarted" @pause="pause" />
     <StartButton v-else @start="start" />
   </div>
 </template>
@@ -34,6 +34,10 @@ export default {
 
   methods: {
     start(e) {
+      this.isStarted = e;
+    },
+
+    pause(e) {
       this.isStarted = e;
     }
   }

@@ -15,7 +15,7 @@
 export default {
   methods: {
     pause() {
-      console.log("pause");
+      this.$emit("pause", false);
     }
   }
 }
