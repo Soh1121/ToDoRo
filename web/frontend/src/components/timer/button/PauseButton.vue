@@ -18,5 +18,5 @@ export default {
       this.$emit("pause", false);
     }
   }
-}
+};
 </script>
