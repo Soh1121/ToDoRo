@@ -3,9 +3,7 @@
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
     <Timer :timer="task.timer" :isStarted="isStarted" />
-    <PauseButton
-      v-if="isStarted"
-    />
+    <PauseButton v-if="isStarted" />
     <StartButton v-else @start="start" />
   </div>
 </template>
