@@ -5,7 +5,18 @@
     height="50px"
     color="primary"
     class="u-margin__margin--t50px"
+    @click="pause"
   >
     一時停止
   </v-btn>
 </template>
+
+<script>
+export default {
+  methods: {
+    pause() {
+      console.log("pause");
+    }
+  }
+}
+</script>
