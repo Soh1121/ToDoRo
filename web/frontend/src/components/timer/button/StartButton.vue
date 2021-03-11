@@ -15,7 +15,7 @@
 export default {
   methods: {
     start() {
-      this.$emit("start", true);
+      this.$emit("start");
     }
   }
 };

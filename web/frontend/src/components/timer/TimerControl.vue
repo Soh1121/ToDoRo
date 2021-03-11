@@ -4,7 +4,7 @@
   >
     <Timer :timer="task.timer" :isStarted="isStarted" />
     <PauseButton v-if="isStarted" @pause="pause" />
-    <div class="u-position__flexbox" v-else-if="!isStarted && Started">
+    <div class="u-position__flexbox" v-else-if="!isStarted && started">
       <ContinueButton />
       <StopButton />
     </div>
@@ -37,17 +37,18 @@ export default {
   data() {
     return {
       isStarted: false,
-      Started: false
+      started: false
     };
   },
 
   methods: {
-    start(e) {
-      this.isStarted = e;
+    start() {
+      this.isStarted = true;
+      this.started = true;
     },
 
-    pause(e) {
-      this.isStarted = e;
+    pause() {
+      this.isStarted = false;
     }
   }
 };
