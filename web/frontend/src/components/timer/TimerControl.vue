@@ -4,6 +4,10 @@
   >
     <Timer :timer="task.timer" :isStarted="isStarted" />
     <PauseButton v-if="isStarted" @pause="pause" />
+    <div class="u-position__flexbox" v-else-if="!isStarted && Started">
+      <ContinueButton />
+      <StopButton />
+    </div>
     <StartButton v-else @start="start" />
   </div>
 </template>
@@ -12,12 +16,16 @@
 import Timer from "./timer/Timer.vue";
 import StartButton from "./button/StartButton.vue";
 import PauseButton from "./button/PauseButton.vue";
+import ContinueButton from "./button/ContinueButton.vue";
+import StopButton from "./button/StopButton.vue";
 
 export default {
   components: {
     Timer,
     StartButton,
-    PauseButton
+    PauseButton,
+    ContinueButton,
+    StopButton
   },
 
   props: {
@@ -28,7 +36,8 @@ export default {
 
   data() {
     return {
-      isStarted: false
+      isStarted: false,
+      Started: false
     };
   },
 
