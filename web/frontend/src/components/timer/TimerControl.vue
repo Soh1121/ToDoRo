@@ -2,10 +2,10 @@
   <div
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
-    <Timer :timer="task.timer" :isStarted="isStarted" />
+    <Timer :timer="task.timer" :isStarted="isStarted" :started="started" />
     <PauseButton v-if="isStarted" @pause="pause" />
     <div class="u-position__flexbox" v-else-if="!isStarted && started">
-      <ContinueButton />
+      <ContinueButton @timerContinue="timerContinue" />
       <StopButton />
     </div>
     <StartButton v-else @start="start" />
@@ -49,6 +49,10 @@ export default {
 
     pause() {
       this.isStarted = false;
+    },
+
+    timerContinue() {
+      this.isStarted = true;
     }
   }
 };

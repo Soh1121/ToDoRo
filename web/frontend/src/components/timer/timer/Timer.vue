@@ -18,6 +18,9 @@ export default {
     },
     isStarted: {
       type: Boolean
+    },
+    started: {
+      type: Boolean
     }
   },
 
