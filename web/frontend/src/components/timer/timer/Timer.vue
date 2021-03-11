@@ -18,6 +18,9 @@ export default {
     },
     isStarted: {
       type: Boolean
+    },
+    started: {
+      type: Boolean
     }
   },
 
@@ -57,6 +60,12 @@ export default {
         }, 1000);
       } else {
         clearInterval(this.timerId);
+      }
+    },
+
+    started: function() {
+      if (!this.isStarted && !this.started) {
+        this.time = this.fulltime;
       }
     }
   }
