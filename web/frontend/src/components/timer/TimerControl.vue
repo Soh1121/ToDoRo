@@ -6,7 +6,7 @@
     <PauseButton v-if="isStarted" @pause="pause" />
     <div class="u-position__flexbox" v-else-if="!isStarted && started">
       <ContinueButton @timerContinue="timerContinue" />
-      <StopButton />
+      <StopButton @reset="reset" />
     </div>
     <StartButton v-else @start="start" />
   </div>
@@ -53,6 +53,10 @@ export default {
 
     timerContinue() {
       this.isStarted = true;
+    },
+
+    reset() {
+      this.started = false;
     }
   }
 };

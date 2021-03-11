@@ -5,7 +5,18 @@
     height="50px"
     color="primary"
     class="u-margin__margin--t50px"
+    @click="reset"
   >
     停止
   </v-btn>
 </template>
+
+<script>
+export default {
+  methods: {
+    reset() {
+      this.$emit("reset");
+    }
+  }
+};
+</script>

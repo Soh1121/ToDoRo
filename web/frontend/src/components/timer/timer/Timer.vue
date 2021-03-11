@@ -61,6 +61,12 @@ export default {
       } else {
         clearInterval(this.timerId);
       }
+    },
+
+    started: function() {
+      if (!this.isStarted && !this.started) {
+        this.time = this.fulltime;
+      }
     }
   }
 };
