@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 export default {
   props: {
     timer: {
@@ -34,16 +35,26 @@ export default {
   },
 
   computed: {
-    timerCircular: function() {
-      return ((this.fulltime - this.time) * 100) / this.fulltime;
-    },
+    ...mapGetters({
+      minutes: "pomodoro/minutes",
+      seconds: "pomodoro/seconds",
+      timerCircular: "pomodoro/timerCircular"
+    })
+  },
 
-    minutes: function() {
-      return ("00" + Math.trunc(this.time / 60)).slice(-2);
-    },
-
-    seconds: function() {
-      return ("00" + (this.time % 60)).slice(-2);
+  methods: {
+    timerReset: function() {
+      console.log(this.mode);
+      if (this.mode === "concentration") {
+        this.time = this.fulltime;
+      } else if (this.mode === "break") {
+        this.count += 1;
+        if (this.count % 4 === 0) {
+          this.time = 15;
+        } else {
+          this.time = 5;
+        }
+      }
     }
   },
 
@@ -65,7 +76,8 @@ export default {
 
     started: function() {
       if (!this.isStarted && !this.started) {
-        this.time = this.fulltime;
+        // this.time = this.fulltime;
+        this.timerReset();
       }
     }
   }
