@@ -13,12 +13,6 @@
 
 <script>
 export default {
-  props: {
-    timer: {
-      type: Number
-    }
-  },
-
   methods: {
     start() {
       this.$store.dispatch("pomodoro/start");

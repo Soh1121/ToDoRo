@@ -2,7 +2,7 @@
   <div
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
-    <Timer :isStarted="isStarted" :started="started" />
+    <Timer />
     <PauseButton v-if="playMode === 'play'" />
     <div class="u-position__flexbox" v-if="playMode === 'pause'">
       <ContinueButton />
@@ -18,7 +18,7 @@ import StartButton from "./button/StartButton.vue";
 import PauseButton from "./button/PauseButton.vue";
 import ContinueButton from "./button/ContinueButton.vue";
 import StopButton from "./button/StopButton.vue";
-import { mapGetters } from 'vuex';
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -36,8 +36,7 @@ export default {
   },
 
   data() {
-    return {
-    };
+    return {};
   },
 
   computed: {
