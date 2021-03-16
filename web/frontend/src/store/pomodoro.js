@@ -59,6 +59,11 @@ const actions = {
   pause(context) {
     context.commit("setPlayMode", "pause");
     context.commit("clearTimerId");
+  },
+
+  continueTimer(context) {
+    context.commit("setPlayMode", "play");
+    context.commit("setTimerId");
   }
 };
 

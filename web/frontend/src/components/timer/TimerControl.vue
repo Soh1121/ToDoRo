@@ -4,10 +4,10 @@
   >
     <Timer :isStarted="isStarted" :started="started" />
     <PauseButton v-if="playMode === 'play'" />
-    <!-- <div class="u-position__flexbox" v-else-if="!isStarted && started">
-      <ContinueButton @timerContinue="timerContinue" />
-      <StopButton @reset="reset" />
-    </div> -->
+    <div class="u-position__flexbox" v-if="playMode === 'pause'">
+      <ContinueButton />
+      <StopButton />
+    </div>
     <StartButton v-if="playMode === 'stop'" />
   </div>
 </template>
@@ -16,8 +16,8 @@
 import Timer from "./timer/Timer.vue";
 import StartButton from "./button/StartButton.vue";
 import PauseButton from "./button/PauseButton.vue";
-// import ContinueButton from "./button/ContinueButton.vue";
-// import StopButton from "./button/StopButton.vue";
+import ContinueButton from "./button/ContinueButton.vue";
+import StopButton from "./button/StopButton.vue";
 import { mapGetters } from 'vuex';
 
 export default {
@@ -25,8 +25,8 @@ export default {
     Timer,
     StartButton,
     PauseButton,
-    // ContinueButton,
-    // StopButton
+    ContinueButton,
+    StopButton
   },
 
   props: {
@@ -37,8 +37,6 @@ export default {
 
   data() {
     return {
-      // isStarted: false,
-      // started: false
     };
   },
 
@@ -46,20 +44,6 @@ export default {
     ...mapGetters({
       playMode: "pomodoro/playMode"
     })
-  },
-
-  // methods: {
-  //   pause() {
-  //     this.isStarted = false;
-  //   },
-
-  //   timerContinue() {
-  //     this.isStarted = true;
-  //   },
-
-  //   reset() {
-  //     this.started = false;
-  //   }
-  // }
+  }
 };
 </script>
