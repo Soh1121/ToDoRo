@@ -15,7 +15,7 @@
 export default {
   methods: {
     timerContinue() {
-      this.$emit("timerContinue");
+      this.$store.dispatch("pomodoro/continueTimer");
     }
   }
 };

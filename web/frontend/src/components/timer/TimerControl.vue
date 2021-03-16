@@ -2,13 +2,13 @@
   <div
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
-    <Timer :timer="task.timer" :isStarted="isStarted" :started="started" />
-    <PauseButton v-if="isStarted" @pause="pause" />
-    <div class="u-position__flexbox" v-else-if="!isStarted && started">
-      <ContinueButton @timerContinue="timerContinue" />
-      <StopButton @reset="reset" />
+    <Timer />
+    <PauseButton v-if="playMode === 'play'" />
+    <div class="u-position__flexbox" v-if="playMode === 'pause'">
+      <ContinueButton />
+      <StopButton />
     </div>
-    <StartButton v-else @start="start" />
+    <StartButton v-if="playMode === 'stop'" />
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import StartButton from "./button/StartButton.vue";
 import PauseButton from "./button/PauseButton.vue";
 import ContinueButton from "./button/ContinueButton.vue";
 import StopButton from "./button/StopButton.vue";
+import { mapGetters } from "vuex";
 
 export default {
   components: {
@@ -35,29 +36,13 @@ export default {
   },
 
   data() {
-    return {
-      isStarted: false,
-      started: false
-    };
+    return {};
   },
 
-  methods: {
-    start() {
-      this.isStarted = true;
-      this.started = true;
-    },
-
-    pause() {
-      this.isStarted = false;
-    },
-
-    timerContinue() {
-      this.isStarted = true;
-    },
-
-    reset() {
-      this.started = false;
-    }
+  computed: {
+    ...mapGetters({
+      playMode: "pomodoro/playMode"
+    })
   }
 };
 </script>

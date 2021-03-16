@@ -15,7 +15,7 @@
 export default {
   methods: {
     reset() {
-      this.$emit("reset");
+      this.$store.dispatch("pomodoro/reset");
     }
   }
 };
