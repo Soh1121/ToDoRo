@@ -3,7 +3,7 @@
     rounded
     width="100px"
     height="50px"
-    color="primary"
+    :color="color"
     class="u-margin__margin--t50px"
     @click="pause"
   >
@@ -12,7 +12,15 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
+  computed: {
+    ...mapGetters({
+      color: "pomodoro/color"
+    })
+  },
+
   methods: {
     pause() {
       this.$store.dispatch("pomodoro/pause");

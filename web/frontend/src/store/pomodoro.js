@@ -19,6 +19,10 @@ const getters = {
 
   timerCircular: function(state) {
     return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+  },
+
+  color: function() {
+    return "primary";
   }
 };
 

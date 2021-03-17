@@ -4,7 +4,7 @@
     :size="400"
     :width="10"
     :value="timerCircular"
-    color="primary"
+    :color="color"
   >
     <span class="u-text__font-size--4em">{{ minutes }}：{{ seconds }}</span>
   </v-progress-circular>
@@ -17,7 +17,8 @@ export default {
     ...mapGetters({
       minutes: "pomodoro/minutes",
       seconds: "pomodoro/seconds",
-      timerCircular: "pomodoro/timerCircular"
+      timerCircular: "pomodoro/timerCircular",
+      color: "pomodoro/color"
     })
   }
 };
