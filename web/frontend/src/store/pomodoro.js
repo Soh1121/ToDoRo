@@ -21,8 +21,12 @@ const getters = {
     return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
   },
 
-  color: function() {
-    return "primary";
+  color: function(state) {
+    if (state.mode === "concentration") {
+      return "error";
+    } else if (state.mode === "break") {
+      return "primary";
+    }
   }
 };
 
