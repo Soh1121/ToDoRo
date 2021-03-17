@@ -32,13 +32,6 @@ const mutations = {
   },
 
   setTimerId(state, timerId) {
-    // state.timerId = setInterval(() => {
-    //   if (state.time === 0) {
-    //     state.playMode = "stop";
-    //     return null;
-    //   }
-    //   state.time -= 1;
-    // }, 1000);
     state.timerId = timerId;
   },
 
@@ -71,7 +64,14 @@ const actions = {
 
   continueTimer(context) {
     context.commit("setPlayMode", "play");
-    context.commit("setTimerId");
+    const timerId = setInterval(() => {
+      if (state.time === 0) {
+        context.commit("setPlayMode", "stop");
+        return null;
+      }
+      context.commit("decrementTime");
+    }, 1000);
+    context.commit("setTimerId", timerId);
   },
 
   reset(context) {
