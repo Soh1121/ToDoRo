@@ -5,7 +5,7 @@
     height="50px"
     :color="color"
     class="u-margin__margin--t50px u-margin__margin--r50px"
-    @click="timerContinue"
+    @click="start"
   >
     続ける
   </v-btn>
@@ -22,8 +22,8 @@ export default {
   },
 
   methods: {
-    timerContinue() {
-      this.$store.dispatch("pomodoro/continueTimer");
+    start() {
+      this.$store.dispatch("pomodoro/start");
     }
   }
 };

@@ -81,18 +81,6 @@ const actions = {
     clearInterval(state.timerId);
   },
 
-  continueTimer(context) {
-    context.commit("setPlayMode", "play");
-    const timerId = setInterval(() => {
-      if (state.time === 0) {
-        context.commit("setPlayMode", "stop");
-        return null;
-      }
-      context.commit("decrementTime");
-    }, 1000);
-    context.commit("setTimerId", timerId);
-  },
-
   reset(context) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
