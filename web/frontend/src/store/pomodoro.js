@@ -1,5 +1,6 @@
 const state = {
-  FULLTIME: 1500,
+  // FULLTIME: 1500,
+  FULLTIME: 15,
   mode: "concentration",
   playMode: "stop",
   time: 0,
@@ -62,6 +63,12 @@ const actions = {
     const timerId = setInterval(() => {
       if (state.time === 0) {
         context.commit("setPlayMode", "stop");
+        if (state.mode === "concentration") {
+          context.commit("setMode", "break");
+        } else if (state.mode === "break") {
+          context.commit("setMode", "concentration");
+        }
+        clearInterval(state.timerId);
         return null;
       }
       context.commit("decrementTime");
