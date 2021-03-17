@@ -41,9 +41,9 @@ const mutations = {
     }, 1000);
   },
 
-  clearTimerId(state) {
-    clearInterval(state.timerId);
-  },
+  // clearTimerId(state) {
+  //   clearInterval(state.timerId);
+  // },
 
   resetTimerId(state) {
     clearInterval(state.timerId);
@@ -63,7 +63,8 @@ const actions = {
 
   pause(context) {
     context.commit("setPlayMode", "pause");
-    context.commit("clearTimerId");
+    // context.commit("clearTimerId");
+    clearInterval(state.timerId);
   },
 
   continueTimer(context) {
