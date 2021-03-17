@@ -45,6 +45,10 @@ const mutations = {
 
   decrementTime(state) {
     state.time -= 1;
+  },
+
+  setMode(state, mode) {
+    state.mode = mode;
   }
 };
 
@@ -84,6 +88,11 @@ const actions = {
 
   reset(context) {
     context.commit("setPlayMode", "stop");
+    if (state.mode === "concentration") {
+      context.commit("setMode", "break");
+    } else if (state.mode === "break") {
+      context.commit("setMode", "concentration");
+    }
     context.commit("setTime", state.FULLTIME);
   }
 };
