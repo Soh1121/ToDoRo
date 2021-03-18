@@ -20,7 +20,11 @@ const getters = {
   },
 
   timerCircular: function(state) {
-    return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+    if (state.mode === "concentration") {
+      return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+    } else if (state.mode === "break") {
+      return ((state.SHORT_BREAK - state.time) * 100) / state.SHORT_BREAK;
+    }
   },
 
   color: function(state) {
