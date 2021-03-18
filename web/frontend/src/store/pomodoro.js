@@ -1,5 +1,12 @@
 const state = {
   FULLTIME: 1500,
+  // FULLTIME: 15,
+  SHORT_BREAK: 300,
+  // SHORT_BREAK: 5,
+  LONG_BREAK: 900,
+  // LONG_BREAK: 10,
+  LONG_BREAK_COUNT: 4,
+  pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
   time: 0,
@@ -18,7 +25,19 @@ const getters = {
   },
 
   timerCircular: function(state) {
-    return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+    if (state.mode === "concentration") {
+      return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+    } else if (state.mode === "break") {
+      return ((state.SHORT_BREAK - state.time) * 100) / state.SHORT_BREAK;
+    }
+  },
+
+  color: function(state) {
+    if (state.mode === "concentration") {
+      return "error";
+    } else if (state.mode === "break") {
+      return "primary";
+    }
   }
 };
 
@@ -37,6 +56,14 @@ const mutations = {
 
   decrementTime(state) {
     state.time -= 1;
+  },
+
+  setMode(state, mode) {
+    state.mode = mode;
+  },
+
+  incrementPomodoroCount(state) {
+    state.pomodoroCount += 1;
   }
 };
 
@@ -50,6 +77,19 @@ const actions = {
     const timerId = setInterval(() => {
       if (state.time === 0) {
         context.commit("setPlayMode", "stop");
+        if (state.mode === "concentration") {
+          context.commit("incrementPomodoroCount");
+          if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
+            context.commit("setTime", state.LONG_BREAK);
+          } else {
+            context.commit("setTime", state.SHORT_BREAK);
+          }
+          context.commit("setMode", "break");
+        } else if (state.mode === "break") {
+          context.commit("setTime", state.FULLTIME);
+          context.commit("setMode", "concentration");
+        }
+        clearInterval(state.timerId);
         return null;
       }
       context.commit("decrementTime");
@@ -62,21 +102,20 @@ const actions = {
     clearInterval(state.timerId);
   },
 
-  continueTimer(context) {
-    context.commit("setPlayMode", "play");
-    const timerId = setInterval(() => {
-      if (state.time === 0) {
-        context.commit("setPlayMode", "stop");
-        return null;
-      }
-      context.commit("decrementTime");
-    }, 1000);
-    context.commit("setTimerId", timerId);
-  },
-
   reset(context) {
     context.commit("setPlayMode", "stop");
-    context.commit("setTime", state.FULLTIME);
+    if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
+      if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", state.LONG_BREAK);
+      } else {
+        context.commit("setTime", state.SHORT_BREAK);
+      }
+      context.commit("setMode", "break");
+    } else if (state.mode === "break") {
+      context.commit("setTime", state.FULLTIME);
+      context.commit("setMode", "concentration");
+    }
   }
 };
 
