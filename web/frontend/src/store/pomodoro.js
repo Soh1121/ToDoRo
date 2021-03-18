@@ -1,7 +1,12 @@
 const state = {
   // FULLTIME: 1500,
   FULLTIME: 15,
+  // SHORT_BREAK: 300,
   SHORT_BREAK: 5,
+  // LONG_BREAK: 900,
+  LONG_BREAK: 10,
+  LONG_BREAK_COUNT: 4,
+  pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
   time: 0,
@@ -55,6 +60,10 @@ const mutations = {
 
   setMode(state, mode) {
     state.mode = mode;
+  },
+
+  incrementPomodoroCount(state) {
+    state.pomodoroCount += 1;
   }
 };
 
@@ -69,7 +78,12 @@ const actions = {
       if (state.time === 0) {
         context.commit("setPlayMode", "stop");
         if (state.mode === "concentration") {
-          context.commit("setTime", state.SHORT_BREAK);
+          context.commit("incrementPomodoroCount");
+          if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
+            context.commit("setTime", state.LONG_BREAK);
+          } else {
+            context.commit("setTime", state.SHORT_BREAK);
+          }
           context.commit("setMode", "break");
         } else if (state.mode === "break") {
           context.commit("setTime", state.FULLTIME);
@@ -91,12 +105,13 @@ const actions = {
   reset(context) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
       context.commit("setTime", state.SHORT_BREAK);
       context.commit("setMode", "break");
     } else if (state.mode === "break") {
+      context.commit("setTime", state.FULLTIME);
       context.commit("setMode", "concentration");
     }
-    // context.commit("setTime", state.FULLTIME);
   },
 };
 
