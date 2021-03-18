@@ -1,6 +1,7 @@
 const state = {
   // FULLTIME: 1500,
   FULLTIME: 15,
+  SHORT_BREAK: 5,
   mode: "concentration",
   playMode: "stop",
   time: 0,
@@ -64,6 +65,7 @@ const actions = {
       if (state.time === 0) {
         context.commit("setPlayMode", "stop");
         if (state.mode === "concentration") {
+          context.commit("setTime", state.SHORT_BREAK);
           context.commit("setMode", "break");
         } else if (state.mode === "break") {
           context.commit("setMode", "concentration");
