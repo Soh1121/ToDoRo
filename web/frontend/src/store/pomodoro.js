@@ -1,10 +1,10 @@
 const state = {
-  // FULLTIME: 1500,
-  FULLTIME: 15,
-  // SHORT_BREAK: 300,
-  SHORT_BREAK: 5,
-  // LONG_BREAK: 900,
-  LONG_BREAK: 10,
+  FULLTIME: 1500,
+  // FULLTIME: 15,
+  SHORT_BREAK: 300,
+  // SHORT_BREAK: 5,
+  LONG_BREAK: 900,
+  // LONG_BREAK: 10,
   LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
@@ -106,7 +106,11 @@ const actions = {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
       context.commit("incrementPomodoroCount");
-      context.commit("setTime", state.SHORT_BREAK);
+      if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", state.LONG_BREAK);
+      } else {
+        context.commit("setTime", state.SHORT_BREAK);
+      }
       context.commit("setMode", "break");
     } else if (state.mode === "break") {
       context.commit("setTime", state.FULLTIME);
