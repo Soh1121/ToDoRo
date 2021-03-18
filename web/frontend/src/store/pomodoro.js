@@ -68,6 +68,7 @@ const actions = {
           context.commit("setTime", state.SHORT_BREAK);
           context.commit("setMode", "break");
         } else if (state.mode === "break") {
+          context.commit("setTime", state.FULLTIME);
           context.commit("setMode", "concentration");
         }
         clearInterval(state.timerId);
