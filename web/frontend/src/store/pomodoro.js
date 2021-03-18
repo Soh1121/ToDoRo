@@ -116,7 +116,7 @@ const actions = {
       context.commit("setTime", state.FULLTIME);
       context.commit("setMode", "concentration");
     }
-  },
+  }
 };
 
 export default {
