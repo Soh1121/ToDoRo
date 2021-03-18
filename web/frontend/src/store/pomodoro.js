@@ -91,12 +91,13 @@ const actions = {
   reset(context) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
+      context.commit("setTime", state.SHORT_BREAK);
       context.commit("setMode", "break");
     } else if (state.mode === "break") {
       context.commit("setMode", "concentration");
     }
-    context.commit("setTime", state.FULLTIME);
-  }
+    // context.commit("setTime", state.FULLTIME);
+  },
 };
 
 export default {
