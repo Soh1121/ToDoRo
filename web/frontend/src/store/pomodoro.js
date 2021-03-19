@@ -1,10 +1,12 @@
+const alarmPath = require("@/assets/alarm.mp3");
+
 const state = {
-  FULLTIME: 1500,
-  // FULLTIME: 15,
-  SHORT_BREAK: 300,
-  // SHORT_BREAK: 5,
-  LONG_BREAK: 900,
-  // LONG_BREAK: 10,
+  // FULLTIME: 1500,
+  FULLTIME: 15,
+  // SHORT_BREAK: 300,
+  SHORT_BREAK: 5,
+  // LONG_BREAK: 900,
+  LONG_BREAK: 10,
   LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
@@ -77,6 +79,8 @@ const actions = {
     const timerId = setInterval(() => {
       if (state.time === 0) {
         context.commit("setPlayMode", "stop");
+        const alarm = new Audio(alarmPath);
+        alarm.play();
         if (state.mode === "concentration") {
           context.commit("incrementPomodoroCount");
           if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
