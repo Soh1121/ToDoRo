@@ -40,8 +40,8 @@ export default {
     },
 
     transition(item) {
-      this.$store.dispatch("pomodoro/setStateTime", item.timer);
-      // this.$store.dispatch("pomodoro/setStateTime", 15);
+      // this.$store.dispatch("pomodoro/setStateTime", item.timer);
+      this.$store.dispatch("pomodoro/setStateTime", 15);
       this.$router.push({ name: "Timer", params: { task: item } });
     }
   }
