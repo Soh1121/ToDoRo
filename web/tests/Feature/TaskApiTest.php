@@ -1300,13 +1300,15 @@ class TaskApiTest extends TestCase
             ->first();
         $task_id = $target_task->id;
         $name = $target_task->name;
+        $start_date = $target_task->start_date;
+        $due_date = $target_task->due_date;
         $response = $this->actingAs($this->user)
             ->json(
                 'DELETE',
                 route('task.delete', [
                     $this->user->id,
                 ]),
-                compact(['task_id', 'name'])
+                compact(['task_id', 'name', 'start_date', 'due_date'])
             );
         $tasks = Task::where('user_id', $this->user->id)
             ->orderBy(Task::CREATED_AT, 'asc')
@@ -1336,6 +1338,8 @@ class TaskApiTest extends TestCase
             ->first();
         $task_id = $target_task->id;
         $name = $target_task->name;
+        $start_date = $target_task->start_date;
+        $due_date = $target_task->due_date;
 
         // 返却されたデータが正しいか確認するため
         $tasks = Task::where('user_id', $this->user->id)
@@ -1355,7 +1359,7 @@ class TaskApiTest extends TestCase
                 route('task.finished', [
                     $this->user->id,
                 ]),
-                compact(['task_id', 'name'])
+                compact(['task_id', 'name', 'start_date', 'due_date'])
             );
 
         // データベースの値が書き換わっているか確認
@@ -1377,6 +1381,8 @@ class TaskApiTest extends TestCase
             ->first();
         $task_id = $target_task->id;
         $name = $target_task->name;
+        $start_date = $target_task->start_date;
+        $due_date = $target_task->due_date;
 
         // 返却されたデータが正しいか確認するため
         $tasks = Task::where('user_id', $this->user->id)
@@ -1397,7 +1403,7 @@ class TaskApiTest extends TestCase
                 route('task.finished', [
                     $this->user->id,
                 ]),
-                compact(['task_id', 'name'])
+                compact(['task_id', 'name', 'start_date', 'due_date'])
             );
 
         // 完了になっているか
@@ -1411,7 +1417,7 @@ class TaskApiTest extends TestCase
                 route('task.unfinished', [
                     $this->user->id,
                 ]),
-                compact(['task_id', 'name'])
+                compact(['task_id', 'name', 'start_date', 'due_date'])
             );
 
         //未完了になっているか
@@ -1421,5 +1427,30 @@ class TaskApiTest extends TestCase
         // 返却されるデータが予想と一致しているか確認
         $response->assertStatus(200)
             ->assertJsonFragment(['data' => $expected_data]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_タイマーを更新できる()
+    {
+        // 必要なデータを用意
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = $target_task->name;
+        $start_date = $target_task->start_date;
+        $due_date = $target_task->due_date;
+
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.set_timer', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name', 'start_date', 'due_date'])
+            );
+        $response->assertStatus(200);
     }
 }
