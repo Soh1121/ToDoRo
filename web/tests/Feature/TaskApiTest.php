@@ -1442,15 +1442,32 @@ class TaskApiTest extends TestCase
         $name = $target_task->name;
         $start_date = $target_task->start_date;
         $due_date = $target_task->due_date;
+        $timer = 1000;
 
+        // APIを実行
         $response = $this->actingAs($this->user)
             ->json(
                 'PATCH',
                 route('task.set_timer', [
                     $this->user->id,
                 ]),
-                compact(['task_id', 'name', 'start_date', 'due_date'])
+                compact(['task_id', 'name', 'start_date', 'due_date', 'timer'])
             );
+
+        // APIの実行が成功
         $response->assertStatus(200);
+
+        // timerの値が変更されているか
+        $result = Task::find($task_id);
+        $this->assertEquals($timer, $result->timer);
+
+        // 返却データの正解
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+        $expected_data = $this->createCorrect($tasks);
+
+        // 返却されるデータが予想と一致しているか
+        $response->assertJsonFragment(['data' => $expected_data]);
     }
 }
