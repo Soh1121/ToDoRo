@@ -78,3 +78,6 @@ Route::patch('/tasks/{user}/finished', 'TaskController@finished')->name('task.fi
 
 // タスクを未完了に
 Route::patch('/tasks/{user}/unfinished', 'TaskController@unfinished')->name('task.unfinished');
+
+// タスクの時間を変更
+Route::patch('/tasks/{user}/set_timer', 'TaskController@set_timer')->name('task.set_timer');

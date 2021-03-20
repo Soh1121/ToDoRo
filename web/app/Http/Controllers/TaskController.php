@@ -149,4 +149,13 @@ class TaskController extends Controller
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
     }
+
+    public function set_timer(int $user_id, TaskRequest $request)
+    {
+        $task = Task::find($request->task_id);
+        $task->timer = $request->timer;
+        $task->save();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
+    }
 }
