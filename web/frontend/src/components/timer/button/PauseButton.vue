@@ -23,7 +23,7 @@ export default {
 
   computed: {
     ...mapGetters({
-      userId: 'auth/user_id',
+      userId: "auth/user_id",
       color: "pomodoro/color"
     })
   },

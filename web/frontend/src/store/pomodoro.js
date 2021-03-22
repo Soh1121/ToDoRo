@@ -3,12 +3,12 @@ import { OK } from "../util";
 const alarmPath = require("@/assets/alarm.mp3");
 
 const state = {
-  // FULLTIME: 1500,
-  FULLTIME: 15,
-  // SHORT_BREAK: 300,
-  SHORT_BREAK: 5,
-  // LONG_BREAK: 900,
-  LONG_BREAK: 10,
+  FULLTIME: 1500,
+  // FULLTIME: 15,
+  SHORT_BREAK: 300,
+  // SHORT_BREAK: 5,
+  LONG_BREAK: 900,
+  // LONG_BREAK: 10,
   LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
@@ -129,17 +129,18 @@ const actions = {
       return null;
     }
     context.commit("setApiStatus", null);
-    const requestTarget = [
-      "task_id", "name", "start_date", "due_date"
-    ];
+    const requestTarget = ["task_id", "name", "start_date", "due_date"];
     let request = {};
-    for(let key of Object.keys(data[1])) {
+    for (let key of Object.keys(data[1])) {
       if (0 <= requestTarget.indexOf(key)) {
         request[key] = data[1][key];
       }
     }
     request["timer"] = state.time;
-    const response = await window.axios.patch("/api/tasks/" + data[0] + "/set_timer", request);
+    const response = await window.axios.patch(
+      "/api/tasks/" + data[0] + "/set_timer",
+      request
+    );
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
@@ -155,17 +156,18 @@ const actions = {
       return null;
     }
     context.commit("setApiStatus", null);
-    const requestTarget = [
-      "task_id", "name", "start_date", "due_date"
-    ];
+    const requestTarget = ["task_id", "name", "start_date", "due_date"];
     let request = {};
-    for(let key of Object.keys(data[1])) {
+    for (let key of Object.keys(data[1])) {
       if (0 <= requestTarget.indexOf(key)) {
         request[key] = data[1][key];
       }
     }
     request["timer"] = state.FULLTIME;
-    const response = await window.axios.patch("/api/tasks/" + data[0] + "/set_timer", request);
+    const response = await window.axios.patch(
+      "/api/tasks/" + data[0] + "/set_timer",
+      request
+    );
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);

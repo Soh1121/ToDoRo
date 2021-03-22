@@ -34,7 +34,7 @@ export default {
       await this.$store.dispatch("pomodoro/resetTimer", [
         this.userId,
         this.task
-      ])
+      ]);
     }
   }
 };
