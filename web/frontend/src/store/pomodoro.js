@@ -1,3 +1,5 @@
+import { OK } from "../util";
+
 const alarmPath = require("@/assets/alarm.mp3");
 
 const state = {
@@ -120,6 +122,29 @@ const actions = {
       context.commit("setTime", state.FULLTIME);
       context.commit("setMode", "concentration");
     }
+  },
+
+  async updateTimer(context, data) {
+    context.commit("setApiStatus", null);
+    const requestTarget = [
+      "task_id", "name", "start_date", "due_date"
+    ];
+    let request = {};
+    for(let key of Object.keys(data[1])) {
+      if (0 <= requestTarget.indexOf(key)) {
+        request[key] = data[1][key];
+      }
+    }
+    request["timer"] = state.time;
+    const response = await window.axios.patch("/api/tasks/" + data[0] + "/set_timer", request);
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
   }
 };
 
