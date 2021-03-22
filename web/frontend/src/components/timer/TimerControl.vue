@@ -6,7 +6,7 @@
     <PauseButton v-if="playMode === 'play'" :task="task" />
     <div class="u-position__flexbox" v-if="playMode === 'pause'">
       <ContinueButton />
-      <StopButton />
+      <StopButton :task="task" />
     </div>
     <StartButton v-if="playMode === 'stop'" />
   </div>

@@ -125,6 +125,9 @@ const actions = {
   },
 
   async updateTimer(context, data) {
+    if (state.mode === "break") {
+      return null;
+    }
     context.commit("setApiStatus", null);
     const requestTarget = [
       "task_id", "name", "start_date", "due_date"
@@ -136,6 +139,32 @@ const actions = {
       }
     }
     request["timer"] = state.time;
+    const response = await window.axios.patch("/api/tasks/" + data[0] + "/set_timer", request);
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
+  async resetTimer(context, data) {
+    if (state.mode === "concentration") {
+      return null;
+    }
+    context.commit("setApiStatus", null);
+    const requestTarget = [
+      "task_id", "name", "start_date", "due_date"
+    ];
+    let request = {};
+    for(let key of Object.keys(data[1])) {
+      if (0 <= requestTarget.indexOf(key)) {
+        request[key] = data[1][key];
+      }
+    }
+    request["timer"] = state.FULLTIME;
     const response = await window.axios.patch("/api/tasks/" + data[0] + "/set_timer", request);
 
     if (response.status === OK) {
