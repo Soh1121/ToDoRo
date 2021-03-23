@@ -161,6 +161,9 @@ class TaskController extends Controller
 
     public function increment_done(int $user_id, TaskRequest $request)
     {
+        $task = Task::find($request->task_id);
+        $task->done += 1;
+        $task->save();
         return response()->json(['data' => ''], 200);
     }
 }

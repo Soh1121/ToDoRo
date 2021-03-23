@@ -1497,5 +1497,9 @@ class TaskApiTest extends TestCase
 
         // APIの実行が成功
         $response->assertStatus(200);
+
+        // doneの値が変更されているか
+        $result = Task::find($task_id);
+        $this->assertEquals($target_task->done + 1, $result->done);
     }
 }
