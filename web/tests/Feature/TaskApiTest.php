@@ -1501,5 +1501,14 @@ class TaskApiTest extends TestCase
         // doneの値が変更されているか
         $result = Task::find($task_id);
         $this->assertEquals($target_task->done + 1, $result->done);
+
+        // 返却データの正解
+        $tasks = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+        $expected_data = $this->createCorrect($tasks);
+
+        // 返却されるデータが予想と一致しているか
+        $response->assertJsonFragment(['data' => $expected_data]);
     }
 }

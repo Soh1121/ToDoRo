@@ -164,6 +164,7 @@ class TaskController extends Controller
         $task = Task::find($request->task_id);
         $task->done += 1;
         $task->save();
-        return response()->json(['data' => ''], 200);
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
     }
 }
