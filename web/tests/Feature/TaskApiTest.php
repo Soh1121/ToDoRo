@@ -1470,4 +1470,32 @@ class TaskApiTest extends TestCase
         // 返却されるデータが予想と一致しているか
         $response->assertJsonFragment(['data' => $expected_data]);
     }
+
+    /**
+     * @test
+     */
+    public function should_ポモドーロ数をカウントアップできる()
+    {
+        // 必要なデータを用意
+        $target_task = Task::where('user_id', $this->user->id)
+            ->orderBy('created_at', 'asc')
+            ->first();
+        $task_id = $target_task->id;
+        $name = $target_task->name;
+        $start_date = $target_task->start_date;
+        $due_date = $target_task->due_date;
+
+        // APIを実行
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('task.increment_done', [
+                    $this->user->id,
+                ]),
+                compact(['task_id', 'name', 'start_date', 'due_date'])
+            );
+
+        // APIの実行が成功
+        $response->assertStatus(200);
+    }
 }
