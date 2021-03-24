@@ -30,10 +30,7 @@ export default {
 
   methods: {
     start() {
-      this.$store.dispatch("pomodoro/start", [
-        this.userId,
-        this.task
-      ]);
+      this.$store.dispatch("pomodoro/start", [this.userId, this.task]);
     }
   }
 };
