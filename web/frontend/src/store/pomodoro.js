@@ -103,6 +103,8 @@ const actions = {
         }
         // カウントダウンを停止
         clearInterval(state.timerId);
+        // タイマーの値をDBに保存
+        context.dispatch("updateTimer", data);
         return null;
       }
       context.commit("decrementTime");
@@ -132,9 +134,6 @@ const actions = {
   },
 
   async updateTimer(context, data) {
-    if (state.mode === "break") {
-      return null;
-    }
     context.commit("setApiStatus", null);
     const requestTarget = ["task_id", "name", "start_date", "due_date"];
     let request = {};
@@ -143,7 +142,11 @@ const actions = {
         request[key] = data[1][key];
       }
     }
-    request["timer"] = state.time;
+    if (state.mode === "break") {
+      request["timer"] = state.FULLTIME;
+    } else {
+      request["timer"] = state.time;
+    }
     const response = await window.axios.patch(
       "/api/tasks/" + data[0] + "/set_timer",
       request
