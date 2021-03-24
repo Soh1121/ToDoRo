@@ -3,12 +3,12 @@ import { OK } from "../util";
 const alarmPath = require("@/assets/alarm.mp3");
 
 const state = {
-  FULLTIME: 1500,
-  // FULLTIME: 15,
-  SHORT_BREAK: 300,
-  // SHORT_BREAK: 5,
-  LONG_BREAK: 900,
-  // LONG_BREAK: 10,
+  // FULLTIME: 1500,
+  FULLTIME: 15,
+  // SHORT_BREAK: 300,
+  SHORT_BREAK: 5,
+  // LONG_BREAK: 900,
+  LONG_BREAK: 10,
   LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
@@ -76,15 +76,21 @@ const actions = {
     context.commit("setTime", time);
   },
 
-  start(context) {
+  start(context, data) {
     context.commit("setPlayMode", "play");
     const timerId = setInterval(() => {
       if (state.time === 0) {
+        // タイマーのプレイモードを変更
         context.commit("setPlayMode", "stop");
+        // アラームを鳴動
         const alarm = new Audio(alarmPath);
         alarm.play();
         if (state.mode === "concentration") {
+          // ポモドーロ数をインクリメント
           context.commit("incrementPomodoroCount");
+          // タスクのポモドーロ数をインクリメント
+          context.dispatch("incrementDone", data);
+          // タイマーを再セット
           if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
             context.commit("setTime", state.LONG_BREAK);
           } else {
@@ -95,6 +101,7 @@ const actions = {
           context.commit("setTime", state.FULLTIME);
           context.commit("setMode", "concentration");
         }
+        // カウントダウンを停止
         clearInterval(state.timerId);
         return null;
       }
@@ -171,6 +178,30 @@ const actions = {
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
+  async incrementDone(context, data) {
+    context.commit("setApiStatus", null);
+    const requestTarget = ["task_id", "name", "start_date", "due_date"];
+    let request = {};
+    for (let key of Object.keys(data[1])) {
+      if (0 <= requestTarget.indexOf(key)) {
+        request[key] = data[1][key];
+      }
+    }
+    const response = await window.axios.patch(
+      "/api/tasks/" + data[0] + "/increment_done",
+      request
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("task/setTasks", response.data);
       return false;
     }
 

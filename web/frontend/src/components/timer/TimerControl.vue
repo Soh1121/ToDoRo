@@ -5,10 +5,10 @@
     <Timer />
     <PauseButton v-if="playMode === 'play'" :task="task" />
     <div class="u-position__flexbox" v-if="playMode === 'pause'">
-      <ContinueButton />
+      <ContinueButton :task="task" />
       <StopButton :task="task" />
     </div>
-    <StartButton v-if="playMode === 'stop'" />
+    <StartButton v-if="playMode === 'stop'" :task="task" />
   </div>
 </template>
 

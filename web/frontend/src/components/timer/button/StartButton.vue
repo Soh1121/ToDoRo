@@ -15,15 +15,25 @@
 import { mapGetters } from "vuex";
 
 export default {
+  props: {
+    task: {
+      type: Object
+    }
+  },
+
   computed: {
     ...mapGetters({
+      userId: "auth/user_id",
       color: "pomodoro/color"
     })
   },
 
   methods: {
     start() {
-      this.$store.dispatch("pomodoro/start");
+      this.$store.dispatch("pomodoro/start", [
+        this.userId,
+        this.task
+      ]);
     }
   }
 };
