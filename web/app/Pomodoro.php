@@ -24,21 +24,21 @@ class Pomodoro extends Model
     /**
      * ユーザーIDで検索するスコープ
      *
-     * @param [type] $query
-     * @param [string] $str
-     * @return void
+     * @param mixed $query
+     * @param int $user_id
+     * @return mixed
      */
-    public function scopeUserIdEqual($query, $str)
+    public function scopeUserIdEqual($query, $user_id)
     {
-        return $query->where('user_id', $str);
+        return $query->where('user_id', $user_id);
     }
 
     /**
      * 日付で検索するスコープ
      *
-     * @param [type] $query
-     * @param [string] $str
-     * @return void
+     * @param mixed $query
+     * @param string $str
+     * @return mixed
      */
     public function scopeDateEqual($query, $str)
     {
