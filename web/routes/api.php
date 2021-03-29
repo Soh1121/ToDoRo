@@ -84,3 +84,6 @@ Route::patch('/tasks/{user}/set_timer', 'TaskController@set_timer')->name('task.
 
 // タスクのポモドーロ数をカウントアップ
 Route::patch('/tasks/{user}/increment_done', 'TaskController@increment_done')->name('task.increment_done');
+
+// その日のポモドーロ数を登録
+Route::post('/pomodoros/{user}', 'PomodoroController@store')->name('pomodoro.store');
