@@ -15,6 +15,21 @@ class PomodoroController extends Controller
 
     public function store(int $user_id, PomodoroRequest $request)
     {
-        return response()->json(['data' => ''], 201);
+        $excution_date = $request->date;
+        $excution_date = explode(' ', $excution_date)[0] . ' 00:00:00';
+        $item = Pomodoro::userIdEqual($user_id)
+            ->dateEqual($excution_date)
+            ->first();
+        $pomodoro = new Pomodoro();
+        $pomodoro->user_id = $user_id;
+        $pomodoro->date = $excution_date;
+        $pomodoro->count = 1;
+        $pomodoro->save();
+
+        $item = Pomodoro::userIdEqual($user_id)
+            ->dateEqual($excution_date)
+            ->first();
+
+        return response()->json(['data' => $item], 201);
     }
 }

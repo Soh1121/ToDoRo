@@ -37,6 +37,9 @@ class PomodoroApiTest extends TestCase
             );
 
         // 新規作成のためHTTPステータスは201
-        $response->assertStatus(201);
+        $response->assertStatus(201)
+            ->assertJsonFragment([
+                'data' => ['count' => '1'],
+            ]);
     }
 }
