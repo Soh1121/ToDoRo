@@ -17,9 +17,15 @@ class PomodoroController extends Controller
     {
         $excution_date = $request->date;
         $excution_date = explode(' ', $excution_date)[0] . ' 00:00:00';
+
+        // すでにその日ポモドーロを回していたら200でcountを返す
         $item = Pomodoro::userIdEqual($user_id)
             ->dateEqual($excution_date)
             ->first();
+        if (!is_null($item)) {
+            return response()->json(['data' => $item], 200);
+        }
+
         $pomodoro = new Pomodoro();
         $pomodoro->user_id = $user_id;
         $pomodoro->date = $excution_date;

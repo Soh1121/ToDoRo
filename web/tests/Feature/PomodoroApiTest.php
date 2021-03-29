@@ -42,4 +42,27 @@ class PomodoroApiTest extends TestCase
                 'data' => ['count' => '1'],
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_ポモドーロ数を登録済みだったらカウント数が返ってくる()
+    {
+        $date = '2021-03-27 08:00:00';
+        $response = $this->actingAs($this->user)
+            ->json(
+                'POST',
+                route('pomodoro.store', [
+                    'user' => $this->user->id,
+                ]),
+                compact(
+                    'date'
+                )
+            );
+
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'data' => ['count' => '2'],
+            ]);
+    }
 }
