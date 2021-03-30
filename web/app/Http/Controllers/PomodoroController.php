@@ -38,4 +38,9 @@ class PomodoroController extends Controller
 
         return response()->json(['data' => $item], 201);
     }
+
+    public function increment(int $user_id, PomodoroRequest $request)
+    {
+        return response()->json(['data' => ''], 200);
+    }
 }

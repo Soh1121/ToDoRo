@@ -87,3 +87,6 @@ Route::patch('/tasks/{user}/increment_done', 'TaskController@increment_done')->n
 
 // その日のポモドーロ数を登録
 Route::post('/pomodoros/{user}', 'PomodoroController@store')->name('pomodoro.store');
+
+// その日のポモドーロ数をインクリメント
+Route::patch('/pomodoros/{user}', 'PomodoroController@increment')->name('pomodoro.increment');
