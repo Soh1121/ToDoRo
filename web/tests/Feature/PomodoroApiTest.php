@@ -80,6 +80,9 @@ class PomodoroApiTest extends TestCase
                 ]),
                 compact('date')
             );
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'data' => ['count' => '3'],
+            ]);
     }
 }
