@@ -65,4 +65,24 @@ class PomodoroApiTest extends TestCase
                 'data' => ['count' => '2'],
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_ポモドーロ数をインクリメントしてその日のポモドーロ数を返す()
+    {
+        $date = '2021-03-27 08:00:00';
+        $response = $this->actingAs($this->user)
+            ->json(
+                'PATCH',
+                route('pomodoro.increment', [
+                    'user' => $this->user->id,
+                ]),
+                compact('date')
+            );
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'data' => ['count' => '3'],
+            ]);
+    }
 }
