@@ -1,4 +1,4 @@
-import { OK } from "../util";
+import { CREATED, OK } from "../util";
 
 const alarmPath = require("@/assets/alarm.mp3");
 
@@ -68,6 +68,10 @@ const mutations = {
 
   incrementPomodoroCount(state) {
     state.pomodoroCount += 1;
+  },
+
+  setPomodoroCount(state, count) {
+    state.pomodoroCount = count;
   }
 };
 
@@ -87,7 +91,8 @@ const actions = {
         alarm.play();
         if (state.mode === "concentration") {
           // ポモドーロ数をインクリメント
-          context.commit("incrementPomodoroCount");
+          // context.commit("incrementPomodoroCount");
+          context.dispatch("createPomodoroCount", data);
           // タスクのポモドーロ数をインクリメント
           context.dispatch("incrementDone", data);
           // タイマーを再セット
@@ -205,6 +210,48 @@ const actions = {
     if (response.status === OK) {
       context.commit("setApiStatus", true);
       context.commit("task/setTasks", response.data);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
+  async createPomodoroCount(context, data) {
+    context.commit("setApiStatus", null);
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
+    const response = await window.axios.post(
+      "/api/pomodoros/" + data[0], { "date": excutionDate }
+    );
+    if (response.status === OK) {
+      context.dispatch("incrementPomodoroCount", data);
+      return false;
+    } else if (response.status === CREATED) {
+      context.commit("setApiStatus", true);
+      context.commit("setPomodoroCount", response.data.data.count);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
+  async incrementPomodoroCount(context, data) {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
+    const response = await window.axios.patch(
+      "/api/pomodoros/" + data[0], {"date": excutionDate}
+    );
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setPomodoroCount", response.data.data.count);
       return false;
     }
 
