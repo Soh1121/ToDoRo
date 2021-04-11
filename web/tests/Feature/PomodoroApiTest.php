@@ -89,9 +89,9 @@ class PomodoroApiTest extends TestCase
     /**
      * @test
      */
-    public function should_ポモドーロ数を参照できる()
+    public function should_ポモドーロ数が登録されていれば参照できる()
     {
-        $date = '2021-03-26 00:00:00';
+        $date = '2021-03-27 00:00:00';
         $response = $this->actingAs($this->user)
             ->json(
                 'GET',
@@ -100,6 +100,29 @@ class PomodoroApiTest extends TestCase
                 ]),
                 compact('date')
             );
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'data' => ['count' => '2'],
+            ]);
+    }
+
+    /**
+     * @test
+     */
+    public function should_ポモドーロ数が登録されていなければ新たに登録して参照できる()
+    {
+        $date = '2021-04-11 00:00:00';
+        $response = $this->actingAs($this->user)
+            ->json(
+                'GET',
+                route('pomodoro.index', [
+                    'user' => $this->user->id,
+                ]),
+                compact('date')
+            );
+        $response->assertStatus(200)
+            ->assertJsonFragment([
+                'data' => ['count' => '1'],
+            ]);
     }
 }

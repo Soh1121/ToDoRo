@@ -15,7 +15,26 @@ class PomodoroController extends Controller
 
     public function index(int $user_id, PomodoroRequest $request)
     {
-        return response()->json(['data' => ''], 200);
+        $excution_date = $request->date;
+        $excution_date = explode(' ', $excution_date)[0] . ' 00:00:00';
+
+        // その日ポモドーロを回していなければカウント1で新規作成
+        $item = Pomodoro::userIdEqual($user_id)
+            ->dateEqual($excution_date)
+            ->first();
+        if (is_null($item)) {
+            $pomodoro = new Pomodoro();
+            $pomodoro->user_id = $user_id;
+            $pomodoro->date = $excution_date;
+            $pomodoro->count = 1;
+            $pomodoro->save();
+        }
+
+        $item = Pomodoro::userIdEqual($user_id)
+            ->dateEqual($excution_date)
+            ->first();
+
+        return response()->json(['data' => $item], 200);
     }
 
     /**
