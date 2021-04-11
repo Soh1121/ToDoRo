@@ -13,6 +13,11 @@ class PomodoroController extends Controller
         $this->middleware('auth');
     }
 
+    public function index(int $user_id, PomodoroRequest $request)
+    {
+        return response()->json(['data' => ''], 200);
+    }
+
     /**
      * 当日ポモドーロ数を新規登録
      *

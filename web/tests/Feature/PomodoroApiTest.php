@@ -85,4 +85,21 @@ class PomodoroApiTest extends TestCase
                 'data' => ['count' => '3'],
             ]);
     }
+
+    /**
+     * @test
+     */
+    public function should_ポモドーロ数を参照できる()
+    {
+        $date = '2021-03-26 00:00:00';
+        $response = $this->actingAs($this->user)
+            ->json(
+                'GET',
+                route('pomodoro.index', [
+                    'user' => $this->user->id,
+                ]),
+                compact('date')
+            );
+        $response->assertStatus(200);
+    }
 }
