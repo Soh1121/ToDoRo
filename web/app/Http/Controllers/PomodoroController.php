@@ -14,6 +14,37 @@ class PomodoroController extends Controller
     }
 
     /**
+     * ポモドーロ数を取得し、当日のポモドーロ数がなければ新規登録
+     *
+     * @param integer $user_id
+     * @param PomodoroRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index(int $user_id, PomodoroRequest $request)
+    {
+        $excution_date = $request->date;
+        $excution_date = explode(' ', $excution_date)[0] . ' 00:00:00';
+
+        // その日ポモドーロを回していなければカウント1で新規作成
+        $item = Pomodoro::userIdEqual($user_id)
+            ->dateEqual($excution_date)
+            ->first();
+        if (is_null($item)) {
+            $pomodoro = new Pomodoro();
+            $pomodoro->user_id = $user_id;
+            $pomodoro->date = $excution_date;
+            $pomodoro->count = 1;
+            $pomodoro->save();
+        }
+
+        $item = Pomodoro::userIdEqual($user_id)
+            ->dateEqual($excution_date)
+            ->first();
+
+        return response()->json(['data' => $item], 200);
+    }
+
+    /**
      * 当日ポモドーロ数を新規登録
      *
      * @param integer $user_id
