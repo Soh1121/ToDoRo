@@ -1,4 +1,4 @@
-import { CREATED, OK } from "../util";
+import { OK } from "../util";
 
 const alarmPath = require("@/assets/alarm.mp3");
 
@@ -81,12 +81,7 @@ const actions = {
   },
 
   async initPomodoroCount(context, userId) {
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
-    console.log(excutionDate);
+    const excutionDate = await context.dispatch("createExcutionDate");
     const response = await window.axios.get("/api/pomodoros/" + userId + "/" + excutionDate);
 
     if (response.status === OK) {
@@ -101,19 +96,19 @@ const actions = {
 
   start(context, data) {
     context.commit("setPlayMode", "play");
-    const timerId = setInterval(async () => {
+    const timerId = setInterval(() => {
       if (state.time === 0) {
+        // アラームを鳴動
+        const alarm = new Audio(alarmPath);
+        alarm.play();
         // カウントダウンを停止
         clearInterval(state.timerId);
         // タイマーのプレイモードを変更
         context.commit("setPlayMode", "stop");
-        // アラームを鳴動
-        const alarm = new Audio(alarmPath);
-        alarm.play();
         if (state.mode === "concentration") {
           // ポモドーロ数をインクリメント
           // context.commit("incrementPomodoroCount");
-          await context.dispatch("createPomodoroCount", data);
+          context.dispatch("incrementPomodoroCount", data);
           // タスクのポモドーロ数をインクリメント
           context.dispatch("incrementDone", data);
           // タイマーを再セット
@@ -237,46 +232,21 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
-  async createPomodoroCount(context, data) {
-    context.commit("setApiStatus", null);
-    const date = new Date();
-    const year = date.getFullYear();
-    const month = ("0" + (date.getMonth() + 1)).slice(-2);
-    const day = ("0" + date.getDate()).slice(-2);
-    const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
-    const response = await window.axios.post("/api/pomodoros/" + data[0], {
+  async incrementPomodoroCount(context, userId) {
+    context.commit("incrementPomodoroCount");
+    const excutionDate = await context.dispatch("createExcutionDate");
+    window.axios.patch("/api/pomodoros/" + userId, {
       date: excutionDate
     });
-    if (response.status === OK) {
-      await context.dispatch("incrementPomodoroCount", data);
-      return false;
-    } else if (response.status === CREATED) {
-      context.commit("setApiStatus", true);
-      context.commit("setPomodoroCount", response.data.data.count);
-      return false;
-    }
-
-    context.commit("setApiStatus", false);
-    context.commit("error/setCode", response.status, { root: true });
   },
 
-  async incrementPomodoroCount(context, data) {
+  createExcutionDate() {
     const date = new Date();
     const year = date.getFullYear();
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const day = ("0" + date.getDate()).slice(-2);
     const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
-    const response = await window.axios.patch("/api/pomodoros/" + data[0], {
-      date: excutionDate
-    });
-    if (response.status === OK) {
-      context.commit("setApiStatus", true);
-      context.commit("setPomodoroCount", response.data.data.count);
-      return false;
-    }
-
-    context.commit("setApiStatus", false);
-    context.commit("error/setCode", response.status, { root: true });
+    return excutionDate;
   }
 };
 
