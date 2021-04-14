@@ -33,7 +33,7 @@ class PomodoroController extends Controller
             $pomodoro = new Pomodoro();
             $pomodoro->user_id = $user_id;
             $pomodoro->date = $excution_date;
-            $pomodoro->count = 1;
+            $pomodoro->count = 0;
             $pomodoro->save();
         }
 

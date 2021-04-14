@@ -122,7 +122,7 @@ class PomodoroApiTest extends TestCase
             );
         $response->assertStatus(200)
             ->assertJsonFragment([
-                'data' => ['count' => '1'],
+                'data' => ['count' => '0'],
             ]);
     }
 }
