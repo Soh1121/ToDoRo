@@ -108,11 +108,10 @@ const actions = {
         if (state.mode === "concentration") {
           // ポモドーロ数をインクリメント
           // context.commit("incrementPomodoroCount");
-          context.dispatch("incrementPomodoroCount", data);
+          context.dispatch("incrementPomodoroCount", data[0]);
           // タスクのポモドーロ数をインクリメント
           context.dispatch("incrementDone", data);
           // タイマーを再セット
-          console.log(state.pomodoroCount);
           if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
             context.commit("setTime", state.LONG_BREAK);
           } else {
