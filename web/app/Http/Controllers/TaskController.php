@@ -149,4 +149,36 @@ class TaskController extends Controller
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
     }
+
+    /**
+     * タイマーの更新
+     *
+     * @param integer $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function set_timer(int $user_id, TaskRequest $request)
+    {
+        $task = Task::find($request->task_id);
+        $task->timer = $request->timer;
+        $task->save();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
+    }
+
+    /**
+     * タスクごとのポモドーロ数のインクリメント
+     *
+     * @param integer $user_id
+     * @param TaskRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function increment_done(int $user_id, TaskRequest $request)
+    {
+        $task = Task::find($request->task_id);
+        $task->done += 1;
+        $task->save();
+        $tasks = $this->search($user_id);
+        return response()->json(['data' => $tasks], 200);
+    }
 }

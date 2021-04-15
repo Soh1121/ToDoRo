@@ -4,7 +4,7 @@
       :input-value="checkboxState"
       @change="onChange(task)"
     ></v-checkbox>
-    <v-icon>mdi-play-circle-outline</v-icon>
+    <v-icon @click="transition(task)">mdi-play-circle-outline</v-icon>
   </v-list-item-action>
 </template>
 
@@ -37,6 +37,13 @@ export default {
       } else {
         await this.$store.dispatch("task/unfinished", [this.userId, item]);
       }
+    },
+
+    transition(item) {
+      this.$store.dispatch("pomodoro/initPomodoroCount", this.userId);
+      // this.$store.dispatch("pomodoro/setStateTime", item.timer);
+      this.$store.dispatch("pomodoro/setStateTime", 15);
+      this.$router.push({ name: "Timer", params: { task: item } });
     }
   }
 };

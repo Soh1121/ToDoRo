@@ -9,3 +9,17 @@
 .u-position__absolute--right96px {
   right: 96px;
 }
+
+.u-position__flexbox {
+  display: flex;
+}
+
+.u-position__flexbox--center {
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.u-position__flexbox--column {
+  flex-direction: column;
+}
