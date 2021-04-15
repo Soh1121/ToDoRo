@@ -30,7 +30,7 @@ export default {
 
   methods: {
     async reset() {
-      this.$store.dispatch("pomodoro/reset");
+      this.$store.dispatch("pomodoro/reset", this.userId);
       await this.$store.dispatch("pomodoro/resetTimer", [
         this.userId,
         this.task

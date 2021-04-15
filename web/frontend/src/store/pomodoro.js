@@ -111,7 +111,6 @@ const actions = {
         context.commit("setPlayMode", "stop");
         if (state.mode === "concentration") {
           // ポモドーロ数をインクリメント
-          // context.commit("incrementPomodoroCount");
           context.dispatch("incrementPomodoroCount", userId);
           // タスクのポモドーロ数をインクリメント
           context.dispatch("incrementDone", [userId, task]);
@@ -140,10 +139,10 @@ const actions = {
     clearInterval(state.timerId);
   },
 
-  reset(context) {
+  reset(context, userId) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
-      context.commit("incrementPomodoroCount");
+      context.dispatch("incrementPomodoroCount", userId);
       if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
         context.commit("setTime", state.LONG_BREAK);
       } else {
