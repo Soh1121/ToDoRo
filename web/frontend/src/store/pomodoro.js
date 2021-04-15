@@ -68,6 +68,10 @@ const mutations = {
 
   incrementPomodoroCount(state) {
     state.pomodoroCount += 1;
+  },
+
+  setPomodoroCount(state, count) {
+    state.pomodoroCount = count;
   }
 };
 
@@ -76,20 +80,40 @@ const actions = {
     context.commit("setTime", time);
   },
 
+  async initPomodoroCount(context, userId) {
+    const excutionDate = await context.dispatch("createExcutionDate");
+    const response = await window.axios.get(
+      "/api/pomodoros/" + userId + "/" + excutionDate
+    );
+
+    if (response.status === OK) {
+      context.commit("setApiStatus", true);
+      context.commit("setPomodoroCount", response.data.data.count);
+      return false;
+    }
+
+    context.commit("setApiStatus", false);
+    context.commit("error/setCode", response.status, { root: true });
+  },
+
   start(context, data) {
+    const userId = data[0];
+    const task = data[1];
     context.commit("setPlayMode", "play");
     const timerId = setInterval(() => {
       if (state.time === 0) {
-        // タイマーのプレイモードを変更
-        context.commit("setPlayMode", "stop");
         // アラームを鳴動
         const alarm = new Audio(alarmPath);
         alarm.play();
+        // カウントダウンを停止
+        clearInterval(state.timerId);
+        // タイマーのプレイモードを変更
+        context.commit("setPlayMode", "stop");
         if (state.mode === "concentration") {
           // ポモドーロ数をインクリメント
-          context.commit("incrementPomodoroCount");
+          context.dispatch("incrementPomodoroCount", userId);
           // タスクのポモドーロ数をインクリメント
-          context.dispatch("incrementDone", data);
+          context.dispatch("incrementDone", [userId, task]);
           // タイマーを再セット
           if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
             context.commit("setTime", state.LONG_BREAK);
@@ -101,10 +125,8 @@ const actions = {
           context.commit("setTime", state.FULLTIME);
           context.commit("setMode", "concentration");
         }
-        // カウントダウンを停止
-        clearInterval(state.timerId);
         // タイマーの値をDBに保存
-        context.dispatch("updateTimer", data);
+        context.dispatch("updateTimer", [userId, task]);
         return null;
       }
       context.commit("decrementTime");
@@ -117,10 +139,10 @@ const actions = {
     clearInterval(state.timerId);
   },
 
-  reset(context) {
+  reset(context, userId) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
-      context.commit("incrementPomodoroCount");
+      context.dispatch("incrementPomodoroCount", userId);
       if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
         context.commit("setTime", state.LONG_BREAK);
       } else {
@@ -134,12 +156,14 @@ const actions = {
   },
 
   async updateTimer(context, data) {
+    const userId = data[0];
+    const task = data[1];
     context.commit("setApiStatus", null);
     const requestTarget = ["task_id", "name", "start_date", "due_date"];
     let request = {};
-    for (let key of Object.keys(data[1])) {
+    for (let key of Object.keys(task)) {
       if (0 <= requestTarget.indexOf(key)) {
-        request[key] = data[1][key];
+        request[key] = task[key];
       }
     }
     if (state.mode === "break") {
@@ -148,7 +172,7 @@ const actions = {
       request["timer"] = state.time;
     }
     const response = await window.axios.patch(
-      "/api/tasks/" + data[0] + "/set_timer",
+      "/api/tasks/" + userId + "/set_timer",
       request
     );
 
@@ -162,20 +186,22 @@ const actions = {
   },
 
   async resetTimer(context, data) {
+    const userId = data[0];
+    const task = data[1];
     if (state.mode === "concentration") {
       return null;
     }
     context.commit("setApiStatus", null);
     const requestTarget = ["task_id", "name", "start_date", "due_date"];
     let request = {};
-    for (let key of Object.keys(data[1])) {
+    for (let key of Object.keys(task)) {
       if (0 <= requestTarget.indexOf(key)) {
-        request[key] = data[1][key];
+        request[key] = task[key];
       }
     }
     request["timer"] = state.FULLTIME;
     const response = await window.axios.patch(
-      "/api/tasks/" + data[0] + "/set_timer",
+      "/api/tasks/" + userId + "/set_timer",
       request
     );
 
@@ -189,16 +215,18 @@ const actions = {
   },
 
   async incrementDone(context, data) {
+    const userId = data[0];
+    const task = data[1];
     context.commit("setApiStatus", null);
     const requestTarget = ["task_id", "name", "start_date", "due_date"];
     let request = {};
-    for (let key of Object.keys(data[1])) {
+    for (let key of Object.keys(task)) {
       if (0 <= requestTarget.indexOf(key)) {
-        request[key] = data[1][key];
+        request[key] = task[key];
       }
     }
     const response = await window.axios.patch(
-      "/api/tasks/" + data[0] + "/increment_done",
+      "/api/tasks/" + userId + "/increment_done",
       request
     );
 
@@ -210,6 +238,23 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  async incrementPomodoroCount(context, userId) {
+    context.commit("incrementPomodoroCount");
+    const excutionDate = await context.dispatch("createExcutionDate");
+    window.axios.patch("/api/pomodoros/" + userId, {
+      date: excutionDate
+    });
+  },
+
+  createExcutionDate() {
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
+    return excutionDate;
   }
 };
 

@@ -97,8 +97,8 @@ class PomodoroApiTest extends TestCase
                 'GET',
                 route('pomodoro.index', [
                     'user' => $this->user->id,
-                ]),
-                compact('date')
+                    'date' => $date,
+                ])
             );
         $response->assertStatus(200)
             ->assertJsonFragment([
@@ -117,12 +117,12 @@ class PomodoroApiTest extends TestCase
                 'GET',
                 route('pomodoro.index', [
                     'user' => $this->user->id,
-                ]),
-                compact('date')
+                    'date' => $date,
+                ])
             );
         $response->assertStatus(200)
             ->assertJsonFragment([
-                'data' => ['count' => '1'],
+                'data' => ['count' => '0'],
             ]);
     }
 }
