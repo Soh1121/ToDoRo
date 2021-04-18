@@ -1,5 +1,5 @@
 <template>
-  <div style="height: 100%;">
+  <div style="height: 100%;" class="u-position__relative">
     <BackButton />
     <TimerControl :task="task" />
   </div>
