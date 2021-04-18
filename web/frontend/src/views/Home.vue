@@ -48,23 +48,29 @@ export default {
   data() {
     return {
       tasks: [],
+      storeTasks: [],
       showFinishedTask: false
     };
+  },
+
+  created() {
+    // 遷移時用
+    this.storeTasks = this.$store.getters["task/tasks"];
   },
 
   computed: {
     ...mapGetters({
       userId: "auth/user_id",
-      storeTasks: "task/tasks"
+      // 値更新時用
+      newStoreTasks: "task/tasks"
     })
   },
 
-  methods: {},
-
-  watch: {
-    storeTasks(values) {
+  methods: {
+    storeTasksToTasks: values => {
+      let tasks = [];
       if (values) {
-        this.tasks = values["data"].map(function(item) {
+        tasks = values["data"].map(function(item) {
           const start_date = item.start_date.split(" ");
           const due_date = item.due_date.split(" ");
           return {
@@ -87,6 +93,19 @@ export default {
           };
         });
       }
+      return tasks;
+    }
+  },
+
+  watch: {
+    // 遷移時用
+    storeTasks(values) {
+      this.tasks = this.storeTasksToTasks(values);
+    },
+
+    // 値更新時用
+    newStoreTasks(values) {
+      this.tasks = this.storeTasksToTasks(values);
     }
   }
 };
