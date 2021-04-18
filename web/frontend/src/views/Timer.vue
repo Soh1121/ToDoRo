@@ -1,12 +1,17 @@
 <template>
-  <TimerControl :task="task" />
+  <div style="height: 100%;" class="u-position__relative">
+    <BackButton />
+    <TimerControl :task="task" />
+  </div>
 </template>
 
 <script>
+import BackButton from "../components/timer/BackButton.vue";
 import TimerControl from "../components/timer/TimerControl.vue";
 
 export default {
   components: {
+    BackButton,
     TimerControl
   },
 

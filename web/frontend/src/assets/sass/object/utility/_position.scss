@@ -2,6 +2,10 @@
   position: relative;
 }
 
+.u-position__absolute {
+  position: absolute;
+}
+
 .u-position__absolute--right16px {
   right: 16px;
 }
@@ -22,4 +26,8 @@
 
 .u-position__flexbox--column {
   flex-direction: column;
+}
+
+.u-position__float--left {
+  float: left;
 }
