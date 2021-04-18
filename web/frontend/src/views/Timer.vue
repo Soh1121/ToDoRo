@@ -19,6 +19,13 @@ export default {
     task: {
       type: Object
     }
+  },
+
+  // タスクがセットされていなければトップへ遷移
+  created() {
+    if (this.task === undefined) {
+      this.$router.push({ path: "/" });
+    }
   }
 };
 </script>
