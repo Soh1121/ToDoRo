@@ -93,8 +93,15 @@ class PomodoroController extends Controller
         $item = Pomodoro::userIdEqual($user_id)
             ->dateEqual($excution_date)
             ->first();
+        if (!$item) {
+            $item = new Pomodoro();
+            $item->user_id = $user_id;
+            $item->date = $excution_date;
+            $item->count = 0;
+        }
         $item->count += 1;
         $item->save();
+
 
         // 保存したデータを取得
         $item = Pomodoro::userIdEqual($user_id)
