@@ -14,7 +14,8 @@ const state = {
   mode: "concentration",
   playMode: "stop",
   time: 0,
-  timerId: null
+  timerId: null,
+  excutionDate: ""
 };
 
 const getters = {
@@ -72,6 +73,10 @@ const mutations = {
 
   setPomodoroCount(state, count) {
     state.pomodoroCount = count;
+  },
+
+  setExcutionDate(state, excutionDate) {
+    state.excutionDate = excutionDate;
   }
 };
 
@@ -82,6 +87,7 @@ const actions = {
 
   async initPomodoroCount(context, userId) {
     const excutionDate = await context.dispatch("createExcutionDate");
+    context.commit("setExcutionDate", excutionDate);
     const response = await window.axios.get(
       "/api/pomodoros/" + userId + "/" + excutionDate
     );
@@ -241,8 +247,13 @@ const actions = {
   },
 
   async incrementPomodoroCount(context, userId) {
-    context.commit("incrementPomodoroCount");
     const excutionDate = await context.dispatch("createExcutionDate");
+    if (excutionDate !== this.excutionDate) {
+      context.commit("setPomodoroCount", 0);
+      context.commit("setExcutionDate", excutionDate);
+    }
+
+    context.commit("incrementPomodoroCount");
     window.axios.patch("/api/pomodoros/" + userId, {
       date: excutionDate
     });
