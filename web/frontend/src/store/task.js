@@ -6,11 +6,23 @@ const state = {
   apiStatus: null,
   taskAddErrorMessages: null,
   isPersistedItem: false,
+  keywords: [],
   display: false
 };
 
 const getters = {
-  tasks: state => state.tasks,
+  tasks: state => {
+    if (0 < state.keywords.length) {
+      const filterTasks = state.tasks["data"].filter(task => {
+        const filterResult = state.keywords.filter(keyword => {
+          return -1 < task["name"].indexOf(keyword);
+        });
+        return filterResult.length === state.keywords.length;
+      });
+      return { data: filterTasks };
+    }
+    return state.tasks;
+  },
   taskControlForm: state => state.taskControlForm,
   isPersistedItem: state => !!state.isPersistedItem,
   display: state => !!state.display
@@ -39,6 +51,10 @@ const mutations = {
 
   setDisplay(state, status) {
     state.display = status;
+  },
+
+  setKeywords(state, keywords) {
+    state.keywords = keywords;
   }
 };
 
@@ -162,6 +178,11 @@ const actions = {
       context.commit("setTaskControlForm", {});
     }
     context.commit("setDisplay", false);
+  },
+
+  inputKeywords(context, keywords) {
+    const keywordList = keywords.replaceAll("　", " ").split(" ");
+    context.commit("setKeywords", keywordList);
   }
 };
 

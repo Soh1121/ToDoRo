@@ -25,6 +25,7 @@
         label="検索"
         class="hidden-sm-and-down"
         clearable
+        v-model="keywords"
       />
 
       <v-spacer />
@@ -87,11 +88,14 @@ export default {
     Drawar,
     Login
   },
+
   data() {
     return {
-      drawer: true
+      drawer: true,
+      keywords: ""
     };
   },
+
   methods: {
     taskOpen() {
       this.$store.dispatch("task/open", {
@@ -119,6 +123,7 @@ export default {
       await this.$store.dispatch("auth/logout");
     }
   },
+
   computed: {
     ...mapState({
       apiStatus: state => state.auth.apiStatus
@@ -131,6 +136,13 @@ export default {
       loginDialog: "auth/display",
       taskDialog: "task/display"
     })
+  },
+
+  watch: {
+    keywords: function(keywords) {
+      this.$store.dispatch("task/inputKeywords", keywords);
+      console.log(keywords);
+    }
   }
 };
 </script>
