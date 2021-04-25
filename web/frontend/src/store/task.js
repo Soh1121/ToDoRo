@@ -15,16 +15,11 @@ const getters = {
     if (0 < state.keywords.length) {
       const filterTasks = state.tasks["data"].filter(task => {
         const filterResult = state.keywords.filter(keyword => {
-          console.log(`keyword ${keyword}`)
-          console.log(`index ${task["name"].indexOf(keyword)}`);
           return -1 < task["name"].indexOf(keyword);
         });
-        console.log(`filterResult ${filterResult.length}`);
         return filterResult.length === state.keywords.length;
       });
-      console.log(`filterTasks: ${filterTasks}`);
-      const result = {"data": filterTasks};
-      return result;
+      return { data: filterTasks };
     }
     return state.tasks;
   },
