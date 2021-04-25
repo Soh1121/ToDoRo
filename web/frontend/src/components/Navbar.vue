@@ -25,6 +25,7 @@
         label="検索"
         class="hidden-sm-and-down"
         clearable
+        v-model="keyword"
       />
 
       <v-spacer />
@@ -89,7 +90,8 @@ export default {
   },
   data() {
     return {
-      drawer: true
+      drawer: true,
+      keyword: ""
     };
   },
   methods: {
@@ -131,6 +133,12 @@ export default {
       loginDialog: "auth/display",
       taskDialog: "task/display"
     })
+  },
+
+  watch: {
+    keyword: (value) => {
+      console.log(value);
+    }
   }
 };
 </script>
