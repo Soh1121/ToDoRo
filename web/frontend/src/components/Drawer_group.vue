@@ -7,6 +7,7 @@
       <List
         v-for="context in contexts"
         v-bind:key="context.id"
+        v-bind:id="context.id"
         v-bind:icon="context.icon"
         v-bind:name="context.name"
         v-bind:count="context.count"

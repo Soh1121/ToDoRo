@@ -1,5 +1,5 @@
 <template>
-  <v-list-item link>
+  <v-list-item link @click="filter(id)">
     <v-list-item-icon>
       <v-icon>{{ icon }}</v-icon>
     </v-list-item-icon>
@@ -17,12 +17,13 @@
 
 <script>
 export default {
-  props: ["icon", "name", "count"],
+  props: ["id", "icon", "name", "count"],
   data() {
     return {
       menuIcon: "mdi-dots-vertical"
     };
   },
+
   computed: {
     isOver50: function() {
       return 50 < this.count;
@@ -33,6 +34,12 @@ export default {
       } else {
         return this.count;
       }
+    }
+  },
+
+  methods: {
+    filter: function(id) {
+      console.log(id);
     }
   }
 };
