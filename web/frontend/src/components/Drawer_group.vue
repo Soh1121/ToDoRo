@@ -71,7 +71,11 @@ export default {
   watch: {
     storeContexts(values) {
       if (values) {
-        let datas = [];
+        let datas = [{
+          id: 0,
+          name: "すべて",
+          icon: "mdi-moon-full"
+        }];
         values["data"].forEach(function(item) {
           datas.push({
             id: item.id,
@@ -86,7 +90,11 @@ export default {
 
     storeProjects(values) {
       if (values) {
-        let datas = [];
+        let datas = [{
+          id: 0,
+          name: "すべて",
+          icon: "mdi-moon-full"
+        }];
         values["data"].forEach(function(item) {
           datas.push({
             id: item.id,

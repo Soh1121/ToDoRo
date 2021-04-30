@@ -8,7 +8,7 @@
       <v-list-item-title class="l-sidebar__item--left">
         {{ name }}
       </v-list-item-title>
-      <v-list-item-subtitle class="l-sidebar__item--right">
+      <v-list-item-subtitle v-if="id !== 0" class="l-sidebar__item--right">
         {{ maxfifty }}件<span v-if="isOver50">+</span>
       </v-list-item-subtitle>
     </v-list-item-content>
