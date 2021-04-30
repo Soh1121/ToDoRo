@@ -11,6 +11,7 @@
         v-bind:icon="context.icon"
         v-bind:name="context.name"
         v-bind:count="context.count"
+        v-bind:category="'context'"
       />
     </v-list-group>
     <v-list-group prepend-icon="mdi-group">

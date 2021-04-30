@@ -1,5 +1,5 @@
 <template>
-  <v-list-item link @click="filter(id)">
+  <v-list-item link @click="filter(id, category)">
     <v-list-item-icon>
       <v-icon>{{ icon }}</v-icon>
     </v-list-item-icon>
@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  props: ["id", "icon", "name", "count"],
+  props: ["id", "icon", "name", "count", "category"],
   data() {
     return {
       menuIcon: "mdi-dots-vertical"
@@ -38,8 +38,11 @@ export default {
   },
 
   methods: {
-    filter: function(id) {
+    filter: function(id, category) {
       console.log(id);
+      if (category === "context") {
+        this.$store.dispatch("task/inputCategoryId", id);
+      }
     }
   }
 };
