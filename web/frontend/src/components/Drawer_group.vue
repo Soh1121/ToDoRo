@@ -4,15 +4,17 @@
       <template v-slot:activator>
         <v-list-item-title>Context</v-list-item-title>
       </template>
-      <List
-        v-for="context in contexts"
-        v-bind:key="context.id"
-        v-bind:id="context.id"
-        v-bind:icon="context.icon"
-        v-bind:name="context.name"
-        v-bind:count="context.count"
-        v-bind:category="'context'"
-      />
+      <v-list-item-group mandatory v-model="model">
+        <List
+          v-for="(context, i) in contexts"
+          :key="i"
+          v-bind:id="context.id"
+          v-bind:icon="context.icon"
+          v-bind:name="context.name"
+          v-bind:count="context.count"
+          v-bind:category="'context'"
+        />
+      </v-list-item-group>
     </v-list-group>
     <v-list-group prepend-icon="mdi-group">
       <template v-slot:activator>
@@ -50,7 +52,8 @@ export default {
         { id: 2, name: "明　日", icon: "mdi-moon-full", count: 212 },
         { id: 3, name: "近日中", icon: "mdi-moon-full", count: 334 },
         { id: 4, name: "いつか", icon: "mdi-moon-full", count: 101 }
-      ]
+      ],
+      model: 0
     };
   },
 
@@ -87,6 +90,7 @@ export default {
         });
         this.contexts = datas;
       }
+      console.log(this.contexts);
     },
 
     storeProjects(values) {
