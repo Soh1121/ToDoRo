@@ -4,7 +4,7 @@
       <template v-slot:activator>
         <v-list-item-title>Context</v-list-item-title>
       </template>
-      <v-list-item-group mandatory v-model="model">
+      <v-list-item-group mandatory v-model="contextModel">
         <List
           v-for="(context, i) in contexts"
           :key="i"
@@ -20,15 +20,17 @@
       <template v-slot:activator>
         <v-list-item-title>Project</v-list-item-title>
       </template>
-      <List
-        v-for="(project, i) in projects"
-        :key="i"
-        :id="project.id"
-        :icon="project.icon"
-        :name="project.name"
-        :count="project.count"
-        :category="'project'"
-      />
+      <v-list-item-group mandatory v-model="projectModel">
+        <List
+          v-for="(project, i) in projects"
+          :key="i"
+          :id="project.id"
+          :icon="project.icon"
+          :name="project.name"
+          :count="project.count"
+          :category="'project'"
+        />
+      </v-list-item-group>
     </v-list-group>
   </v-list>
 </template>
@@ -57,7 +59,8 @@ export default {
         { id: 3, name: "近日中", icon: "mdi-moon-full", count: 334 },
         { id: 4, name: "いつか", icon: "mdi-moon-full", count: 101 }
       ],
-      model: 0
+      contextModel: 0,
+      projectModel: 0
     };
   },
 
