@@ -21,11 +21,13 @@
         <v-list-item-title>Project</v-list-item-title>
       </template>
       <List
-        v-for="project in projects"
-        :key="project.id"
+        v-for="(project, i) in projects"
+        :key="i"
+        :id="project.id"
         :icon="project.icon"
         :name="project.name"
         :count="project.count"
+        :category="'project'"
       />
     </v-list-group>
   </v-list>
@@ -43,11 +45,13 @@ export default {
   data() {
     return {
       contexts: [
+        { id: 0, name: "すべて", icon: "mdi-moon-full", count: 500 },
         { id: 1, name: "今　日", icon: "mdi-moon-full", count: 100 },
         { id: 2, name: "明　日", icon: "mdi-moon-full", count: 212 },
         { id: 3, name: "近日中", icon: "mdi-moon-full", count: 334 }
       ],
       projects: [
+        { id: 0, name: "すべて", icon: "mdi-moon-full", count: 500 },
         { id: 1, name: "今　日", icon: "mdi-moon-full", count: 100 },
         { id: 2, name: "明　日", icon: "mdi-moon-full", count: 212 },
         { id: 3, name: "近日中", icon: "mdi-moon-full", count: 334 },

@@ -41,6 +41,8 @@ export default {
     filter: function(id, category) {
       if (category === "context") {
         this.$store.dispatch("task/inputCategoryId", id);
+      } else if (category === "project") {
+        console.log(id);
       }
     }
   }
