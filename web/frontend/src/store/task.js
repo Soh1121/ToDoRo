@@ -8,6 +8,7 @@ const state = {
   isPersistedItem: false,
   keywords: [],
   contextId: 0,
+  projectId: 0,
   display: false
 };
 
@@ -31,6 +32,13 @@ const getters = {
     if (state.contextId !== 0) {
       filterTasks = tasks["data"].filter(task => {
         return task["context_id"] === state.contextId;
+      });
+      tasks = { data: filterTasks };
+    }
+    // プロジェクトidによる絞り込み
+    if (state.projectId !== 0) {
+      filterTasks = tasks["data"].filter(task => {
+        return task["project_id"] === state.projectId;
       });
       tasks = { data: filterTasks };
     }
@@ -72,6 +80,10 @@ const mutations = {
 
   setContextId(state, id) {
     state.contextId = id;
+  },
+
+  setProjectId(state, id) {
+    state.projectId = id;
   }
 };
 
@@ -202,8 +214,12 @@ const actions = {
     context.commit("setKeywords", keywordList);
   },
 
-  inputCategoryId(context, id) {
+  inputContextId(context, id) {
     context.commit("setContextId", id);
+  },
+
+  inputProjectId(context, id) {
+    context.commit("setProjectId", id);
   }
 };
 

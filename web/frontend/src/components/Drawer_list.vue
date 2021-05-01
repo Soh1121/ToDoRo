@@ -40,7 +40,9 @@ export default {
   methods: {
     filter: function(id, category) {
       if (category === "context") {
-        this.$store.dispatch("task/inputCategoryId", id);
+        this.$store.dispatch("task/inputContextId", id);
+      } else if (category === "project") {
+        this.$store.dispatch("task/inputProjectId", id);
       }
     }
   }
