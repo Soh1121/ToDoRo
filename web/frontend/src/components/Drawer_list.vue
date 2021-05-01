@@ -39,7 +39,6 @@ export default {
 
   methods: {
     filter: function(id, category) {
-      console.log(id);
       if (category === "context") {
         this.$store.dispatch("task/inputCategoryId", id);
       }
