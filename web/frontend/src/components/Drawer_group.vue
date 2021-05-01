@@ -1,16 +1,20 @@
 <template>
-  <v-list dense width="100%">
+  <v-list dense width="100%" expand>
     <v-list-group :value="true" prepend-icon="mdi-clock-time-eight">
       <template v-slot:activator>
         <v-list-item-title>Context</v-list-item-title>
       </template>
-      <List
-        v-for="context in contexts"
-        v-bind:key="context.id"
-        v-bind:icon="context.icon"
-        v-bind:name="context.name"
-        v-bind:count="context.count"
-      />
+      <v-list-item-group mandatory v-model="model">
+        <List
+          v-for="(context, i) in contexts"
+          :key="i"
+          :id="context.id"
+          :icon="context.icon"
+          :name="context.name"
+          :count="context.count"
+          :category="'context'"
+        />
+      </v-list-item-group>
     </v-list-group>
     <v-list-group prepend-icon="mdi-group">
       <template v-slot:activator>
@@ -18,10 +22,10 @@
       </template>
       <List
         v-for="project in projects"
-        v-bind:key="project.id"
-        v-bind:icon="project.icon"
-        v-bind:name="project.name"
-        v-bind:count="project.count"
+        :key="project.id"
+        :icon="project.icon"
+        :name="project.name"
+        :count="project.count"
       />
     </v-list-group>
   </v-list>
@@ -48,7 +52,8 @@ export default {
         { id: 2, name: "明　日", icon: "mdi-moon-full", count: 212 },
         { id: 3, name: "近日中", icon: "mdi-moon-full", count: 334 },
         { id: 4, name: "いつか", icon: "mdi-moon-full", count: 101 }
-      ]
+      ],
+      model: 0
     };
   },
 
@@ -70,7 +75,13 @@ export default {
   watch: {
     storeContexts(values) {
       if (values) {
-        let datas = [];
+        let datas = [
+          {
+            id: 0,
+            name: "すべて",
+            icon: "mdi-moon-full"
+          }
+        ];
         values["data"].forEach(function(item) {
           datas.push({
             id: item.id,
@@ -85,7 +96,13 @@ export default {
 
     storeProjects(values) {
       if (values) {
-        let datas = [];
+        let datas = [
+          {
+            id: 0,
+            name: "すべて",
+            icon: "mdi-moon-full"
+          }
+        ];
         values["data"].forEach(function(item) {
           datas.push({
             id: item.id,

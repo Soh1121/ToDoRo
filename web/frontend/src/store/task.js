@@ -7,21 +7,34 @@ const state = {
   taskAddErrorMessages: null,
   isPersistedItem: false,
   keywords: [],
+  contextId: 0,
   display: false
 };
 
 const getters = {
   tasks: state => {
+    let tasks = state.tasks;
+    let filterTasks;
+    // キーワードによる絞り込み
     if (0 < state.keywords.length) {
-      const filterTasks = state.tasks["data"].filter(task => {
+      filterTasks = tasks["data"].filter(task => {
         const filterResult = state.keywords.filter(keyword => {
           return -1 < task["name"].indexOf(keyword);
         });
         return filterResult.length === state.keywords.length;
       });
-      return { data: filterTasks };
+      tasks = { data: filterTasks };
+    } else {
+      tasks = state.tasks;
     }
-    return state.tasks;
+    // コンテキストidによる絞り込み
+    if (state.contextId !== 0) {
+      filterTasks = tasks["data"].filter(task => {
+        return task["context_id"] === state.contextId;
+      });
+      tasks = { data: filterTasks };
+    }
+    return tasks;
   },
   taskControlForm: state => state.taskControlForm,
   isPersistedItem: state => !!state.isPersistedItem,
@@ -55,6 +68,10 @@ const mutations = {
 
   setKeywords(state, keywords) {
     state.keywords = keywords;
+  },
+
+  setContextId(state, id) {
+    state.contextId = id;
   }
 };
 
@@ -183,6 +200,10 @@ const actions = {
   inputKeywords(context, keywords) {
     const keywordList = keywords.replaceAll("　", " ").split(" ");
     context.commit("setKeywords", keywordList);
+  },
+
+  inputCategoryId(context, id) {
+    context.commit("setContextId", id);
   }
 };
 
