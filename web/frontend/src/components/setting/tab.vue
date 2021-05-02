@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import ContextSetting from "./Setting_context.vue";
-import ProjectSetting from "./Setting_project.vue";
+import ContextSetting from "./context.vue";
+import ProjectSetting from "./project.vue";
 
 export default {
   components: {

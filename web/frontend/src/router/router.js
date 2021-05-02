@@ -1,9 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
-import Setting from "../components/Setting.vue";
+import Setting from "../views/Setting.vue";
 import Timer from "../views/Timer.vue";
-import SystemError from "../components/System.vue";
+import SystemError from "../views/System.vue";
 
 Vue.use(VueRouter);
 

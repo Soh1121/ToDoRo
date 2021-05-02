@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import { OK } from "../util";
+import { OK } from "../../util";
 import { mapGetters, mapState } from "vuex";
 
 export default {
