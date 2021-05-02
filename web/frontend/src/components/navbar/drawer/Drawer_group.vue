@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import List from "./Drawer_list.vue";
+import List from "./list.vue";
 import { mapGetters } from "vuex";
 
 export default {

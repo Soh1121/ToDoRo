@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import Group from "./Drawer_group.vue";
-import Calendar from "./Drawer_calendar.vue";
+import Group from "./drawer/group.vue";
+import Calendar from "./drawer/calendar.vue";
 
 export default {
   components: {

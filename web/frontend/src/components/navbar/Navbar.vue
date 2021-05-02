@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import ControlTask from "./ControlTask.vue";
+import ControlTask from "../task/ControlTask.vue";
 import Drawar from "./Drawer.vue";
 import Login from "./Login.vue";
 import { mapState, mapGetters } from "vuex";
