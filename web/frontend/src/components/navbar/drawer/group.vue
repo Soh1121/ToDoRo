@@ -16,7 +16,7 @@
         />
       </v-list-item-group>
     </v-list-group>
-    <v-list-group prepend-icon="mdi-group">
+    <v-list-group prepend-icon="mdi-group" :value="true">
       <template v-slot:activator>
         <v-list-item-title>Project</v-list-item-title>
       </template>
@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import List from "./Drawer_list.vue";
+import List from "./list.vue";
 import { mapGetters } from "vuex";
 
 export default {
