@@ -16,7 +16,7 @@
         />
       </v-list-item-group>
     </v-list-group>
-    <v-list-group prepend-icon="mdi-group">
+    <v-list-group prepend-icon="mdi-group" :value="true">
       <template v-slot:activator>
         <v-list-item-title>Project</v-list-item-title>
       </template>
