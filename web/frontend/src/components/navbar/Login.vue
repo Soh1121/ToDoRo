@@ -173,6 +173,8 @@ export default {
     },
 
     async login() {
+      // ロード画面の表示
+      this.$store.dispatch("load/changeLoading", true);
       // authストアのloginアクションの呼び出し
       await this.$store.dispatch("auth/login", this.loginForm);
       if (this.apiStatus) {
@@ -183,11 +185,15 @@ export default {
           this.fetchDefaultData("repeat"),
           this.fetchDefaultData("priority")
         ];
-        Promise.all(functions);
+        await Promise.all(functions);
       }
+      // ロード画面の非表示
+      this.$store.dispatch("load/changeLoading", false);
     },
 
     async register() {
+      // ロード画面の表示
+      this.$store.dispatch("load/changeLoading", true);
       // authストアのregisterアクションの呼び出し
       await this.$store.dispatch("auth/register", this.registerForm);
       if (this.apiStatus) {
@@ -197,8 +203,10 @@ export default {
           this.fetchDefaultData("repeat"),
           this.fetchDefaultData("priority")
         ];
-        Promise.all(functions);
+        await Promise.all(functions);
       }
+      // ロード画面の非表示
+      this.$store.dispatch("load/changeLoading", false);
     },
 
     clearError() {
