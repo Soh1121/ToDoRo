@@ -51,7 +51,8 @@ class ProjectController extends Controller
                     'errors' => [
                         'name' => ['プロジェクト名が重複しています']
                     ]
-                    ], 422
+                ],
+                422
             );
         }
         // 重複していなければ追加
@@ -87,7 +88,7 @@ class ProjectController extends Controller
      */
     public function update(int $user_id, ProjectRequest $request)
     {
-        $project_id = $request->project_id;
+        $project_id = $request->id;
         $project = Project::find($project_id);
         $project->name = $request->get('name');
         // 重複していたらエラーを返す
@@ -98,7 +99,8 @@ class ProjectController extends Controller
                     'errors' => [
                         'name' => ['プロジェクト名が重複しています']
                     ]
-                    ], 422
+                ],
+                422
             );
         }
         // 重複していなければ追加
@@ -118,7 +120,7 @@ class ProjectController extends Controller
      */
     public function delete(int $user_id, ProjectRequest $request)
     {
-        Project::find($request->project_id)->delete();
+        Project::find($request->id)->delete();
         $projects = Project::where('user_id', $user_id)->get();
         return response()->json(['data' => $projects], 200);
     }
