@@ -7,7 +7,7 @@
 
 <script>
 import BackButton from "../components/timer/BackButton.vue";
-import TimerControl from "../components/timer/TimerControl.vue";
+import TimerControl from "../components/timer/TimerControle.vue";
 
 export default {
   components: {

@@ -3,12 +3,12 @@ import { OK } from "../util";
 const alarmPath = require("@/assets/alarm.mp3");
 
 const state = {
-  // FULLTIME: 1500,
-  FULLTIME: 15,
-  // SHORT_BREAK: 300,
-  SHORT_BREAK: 5,
-  // LONG_BREAK: 900,
-  LONG_BREAK: 10,
+  FULLTIME: 1500,
+  // FULLTIME: 15,
+  SHORT_BREAK: 300,
+  // SHORT_BREAK: 5,
+  LONG_BREAK: 900,
+  // LONG_BREAK: 10,
   LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
@@ -33,7 +33,11 @@ const getters = {
     if (state.mode === "concentration") {
       return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
     } else if (state.mode === "break") {
-      return ((state.SHORT_BREAK - state.time) * 100) / state.SHORT_BREAK;
+      if (state.pomodoroCount % state.LONG_BREAK_COUNT !== 0) {
+        return ((state.SHORT_BREAK - state.time) * 100) / state.SHORT_BREAK;
+      } else {
+        return ((state.LONG_BREAK - state.time) * 100) / state.LONG_BREAK;
+      }
     }
   },
 
@@ -106,7 +110,7 @@ const actions = {
     const userId = data[0];
     const task = data[1];
     context.commit("setPlayMode", "play");
-    const timerId = setInterval(() => {
+    const timerId = setInterval(async () => {
       if (state.time === 0) {
         // アラームを鳴動
         const alarm = new Audio(alarmPath);
@@ -116,9 +120,16 @@ const actions = {
         // タイマーのプレイモードを変更
         context.commit("setPlayMode", "stop");
         if (state.mode === "concentration") {
-          // ポモドーロ数をインクリメント
+          // ローカルのポモドーロ数を更新
+          const excutionDate = await context.dispatch("createExcutionDate");
+          if (excutionDate !== state.excutionDate) {
+            context.commit("setPomodoroCount", 0);
+            context.commit("setExcutionDate", excutionDate);
+          }
+          context.commit("incrementPomodoroCount");
+          // DBのポモドーロ数を更新
           context.dispatch("incrementPomodoroCount", userId);
-          // タスクのポモドーロ数をインクリメント
+          // タスクごとのポモドーロ数を更新
           context.dispatch("incrementDone", [userId, task]);
           // タイマーを再セット
           if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
@@ -248,12 +259,9 @@ const actions = {
 
   async incrementPomodoroCount(context, userId) {
     const excutionDate = await context.dispatch("createExcutionDate");
-    if (excutionDate !== this.excutionDate) {
-      context.commit("setPomodoroCount", 0);
+    if (excutionDate !== state.excutionDate) {
       context.commit("setExcutionDate", excutionDate);
     }
-
-    context.commit("incrementPomodoroCount");
     window.axios.patch("/api/pomodoros/" + userId, {
       date: excutionDate
     });
