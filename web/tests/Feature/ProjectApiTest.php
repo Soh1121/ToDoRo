@@ -28,7 +28,8 @@ class ProjectApiTest extends TestCase
     {
         $name = 'test';
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('project.store', [
                     'user' => $this->user->id,
                 ]),
@@ -57,7 +58,8 @@ class ProjectApiTest extends TestCase
             ->get();
         $name = '今日';
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('project.store', [
                     'user' => $this->user->id,
                 ]),
@@ -78,7 +80,8 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 30);
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('project.store', [
                     'user' => $this->user->id,
                 ]),
@@ -86,10 +89,10 @@ class ProjectApiTest extends TestCase
             );
 
         $response->assertStatus(201)
-        ->assertJsonFragment([
-            "user_id" => (string)$this->user->id,
-            "name" => $name,
-        ]);
+            ->assertJsonFragment([
+                "user_id" => (string)$this->user->id,
+                "name" => $name,
+            ]);
     }
 
     /**
@@ -99,7 +102,8 @@ class ProjectApiTest extends TestCase
     {
         $name = str_repeat("a", 31);
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('project.store', [
                     'user' => $this->user->id,
                 ]),
@@ -116,7 +120,8 @@ class ProjectApiTest extends TestCase
     {
         $name = '今日1';
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('project.store', [
                     'user' => $this->user->id,
                 ]),
@@ -134,15 +139,16 @@ class ProjectApiTest extends TestCase
         // データの取得
         $response = $this
             ->actingAs($this->user)
-            ->json('GET',
+            ->json(
+                'GET',
                 route('project.index', [
                     'user' => $this->user->id,
                 ])
             );
-        $projects = Project::where('user_id',$this->user->id)
+        $projects = Project::where('user_id', $this->user->id)
             ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
-        $expected_data = $projects->map(function($project) {
+        $expected_data = $projects->map(function ($project) {
             return [
                 'id' => $project->id,
                 'user_id' => $project->user_id,
@@ -167,13 +173,15 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $project_id = $target_project->id;
+        $id = $target_project->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('project_id', 'name'));
+                compact('id', 'name')
+            );
 
         $response
             ->assertStatus(201)
@@ -188,16 +196,19 @@ class ProjectApiTest extends TestCase
      */
     public function should_プロジェクト名は30文字まで変更できる()
     {
-        $name = str_repeat("a", 30);        $target_project = Project::where('user_id', $this->user->id)
+        $name = str_repeat("a", 30);
+        $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $project_id = $target_project->id;
+        $id = $target_project->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('project_id', 'name'));
+                compact('id', 'name')
+            );
 
         $response
             ->assertStatus(201)
@@ -216,13 +227,15 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $project_id = $target_project->id;
+        $id = $target_project->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('project_id', 'name'));
+                compact('id', 'name')
+            );
 
         $response->assertStatus(422);
     }
@@ -236,14 +249,15 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $project_id = $target_project->id;
+        $id = $target_project->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('project.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'project_id')
-        );
+                compact('name', 'id')
+            );
 
         $response->assertStatus(422);
     }
@@ -256,16 +270,17 @@ class ProjectApiTest extends TestCase
         $target_project = Project::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $project_id = $target_project->id;
+        $id = $target_project->id;
         $name = $target_project->name;
         $response = $this->actingAs($this->user)
-            ->json('DELETE',
+            ->json(
+                'DELETE',
                 route('project.delete', [
                     $this->user->id,
                 ]),
-                compact(['project_id', 'name'])
+                compact(['id', 'name'])
             );
         $response->assertStatus(200)
-            ->assertJsonMissing(['id' => $project_id]);
+            ->assertJsonMissing(['id' => $id]);
     }
 }

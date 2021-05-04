@@ -15,7 +15,7 @@
 
       <v-data-table
         :headers="headers"
-        :items="projects"
+        :items="projects.data"
         sort-by="project_id"
         disable-pagination="true"
         hide-default-footer="true"
@@ -87,20 +87,12 @@
 </template>
 
 <script>
-import { OK } from "../../util";
 import { mapGetters, mapState } from "vuex";
 
 export default {
   data() {
     return {
       dialog: false,
-      // 設定画面に表示するプロジェクトデータ
-      projects: [
-        {
-          project_id: 0,
-          name: ""
-        }
-      ],
       // 設定データ表示用のヘッダー
       headers: [
         {
@@ -127,35 +119,15 @@ export default {
 
     ...mapGetters({
       userId: "auth/user_id",
-      storeProjects: "project/projects"
+      projects: "project/projects"
     }),
 
     isPersistedItem() {
-      return !!this.projectSettingForm.project_id;
+      return !!this.projectSettingForm.id;
     }
   },
 
   methods: {
-    async fetch() {
-      const route = "/api/projects/" + this.userId;
-      const response = await window.axios.get(route);
-
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-
-      let datas = [];
-      response.data.data.forEach(function(item) {
-        datas.push({
-          project_id: item.id,
-          name: item.name
-        });
-      });
-
-      this.projects = datas;
-    },
-
     add() {
       this.projectSettingForm = {};
       this.clearError();
@@ -202,29 +174,6 @@ export default {
 
     clearError() {
       this.$store.commit("project/setProjectNameErrorMessages", null);
-    }
-  },
-
-  watch: {
-    $route: {
-      async handler() {
-        const functions = [this.fetch()];
-        await Promise.all(functions);
-      },
-      immediate: true
-    },
-
-    storeProjects(values) {
-      if (values) {
-        let datas = [];
-        values["data"].forEach(function(item) {
-          datas.push({
-            project_id: item.id,
-            name: item.name
-          });
-        });
-        this.projects = datas;
-      }
     }
   }
 };

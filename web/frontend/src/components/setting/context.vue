@@ -15,8 +15,8 @@
 
       <v-data-table
         :headers="headers"
-        :items="contexts"
-        sort-by="context_id"
+        :items="contexts.data"
+        sort-by="id"
         disable-pagination="true"
         hide-default-footer="true"
       >
@@ -44,7 +44,7 @@
                         hint="30文字以内"
                         required
                         color="orange"
-                        v-model="contextAddForm.name"
+                        v-model="contextSettingForm.name"
                       />
                     </v-col>
                   </v-row>
@@ -86,20 +86,12 @@
 </template>
 
 <script>
-import { OK } from "../../util";
 import { mapState, mapGetters } from "vuex";
 
 export default {
   data() {
     return {
       dialog: false,
-      // 設定画面に表示するコンテキストデータ
-      contexts: [
-        {
-          context_id: 0,
-          name: ""
-        }
-      ],
       // 設定データ表示用のヘッダー
       headers: [
         {
@@ -114,7 +106,7 @@ export default {
         }
       ],
       // 設定用のダイアログのフォームデータ
-      contextAddForm: {}
+      contextSettingForm: {}
     };
   },
 
@@ -126,37 +118,17 @@ export default {
 
     ...mapGetters({
       userId: "auth/user_id",
-      storeContexts: "context/contexts"
+      contexts: "context/contexts"
     }),
 
     isPersistedItem() {
-      return !!this.contextAddForm.context_id;
+      return !!this.contextSettingForm.id;
     }
   },
 
   methods: {
-    async fetch() {
-      const route = "/api/contexts/" + this.userId;
-      const response = await window.axios.get(route);
-
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-
-      let datas = [];
-      response.data.data.forEach(function(item) {
-        datas.push({
-          context_id: item.id,
-          name: item.name
-        });
-      });
-
-      this.contexts = datas;
-    },
-
     add() {
-      this.contextAddForm = {};
+      this.contextSettingForm = {};
       this.clearError();
       this.dialog = true;
     },
@@ -164,7 +136,7 @@ export default {
     async create() {
       await this.$store.dispatch("context/create", [
         this.userId,
-        this.contextAddForm
+        this.contextSettingForm
       ]);
       if (this.apiStatus) {
         this.close();
@@ -172,7 +144,7 @@ export default {
     },
 
     edit(item) {
-      this.contextAddForm = item;
+      this.contextSettingForm = item;
       this.clearError();
       this.dialog = true;
     },
@@ -180,7 +152,7 @@ export default {
     async update() {
       await this.$store.dispatch("context/update", [
         this.userId,
-        this.contextAddForm
+        this.contextSettingForm
       ]);
       if (this.apiStatus) {
         this.close();
@@ -188,10 +160,10 @@ export default {
     },
 
     async remove(item) {
-      this.contextAddForm = item;
+      this.contextSettingForm = item;
       await this.$store.dispatch("context/remove", [
         this.userId,
-        { data: this.contextAddForm }
+        { data: this.contextSettingForm }
       ]);
     },
 
@@ -201,28 +173,6 @@ export default {
 
     clearError() {
       this.$store.commit("context/setContextNameErrorMessages", null);
-    }
-  },
-
-  watch: {
-    $route: {
-      async handler() {
-        const functions = [this.fetch()];
-        await Promise.all(functions);
-      },
-      immediate: true
-    },
-    storeContexts(values) {
-      if (values) {
-        let datas = [];
-        values["data"].forEach(function(item) {
-          datas.push({
-            context_id: item.id,
-            name: item.name
-          });
-        });
-        this.contexts = datas;
-      }
     }
   }
 };
