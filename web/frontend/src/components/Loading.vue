@@ -5,10 +5,7 @@
     :value="loading"
     color="#fff"
   >
-    <v-progress-circular
-      indeterminate
-      color="#1976D2"
-    ></v-progress-circular>
+    <v-progress-circular indeterminate color="#1976D2" />
   </v-overlay>
 </template>
 
@@ -30,4 +27,3 @@ export default {
   }
 };
 </script>
-
