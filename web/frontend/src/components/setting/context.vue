@@ -15,8 +15,8 @@
 
       <v-data-table
         :headers="headers"
-        :items="contexts"
-        sort-by="context_id"
+        :items="contexts.data"
+        sort-by="id"
         disable-pagination="true"
         hide-default-footer="true"
       >
@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { OK } from "../../util";
+// import { OK } from "../../util";
 import { mapState, mapGetters } from "vuex";
 
 export default {
@@ -94,12 +94,12 @@ export default {
     return {
       dialog: false,
       // 設定画面に表示するコンテキストデータ
-      contexts: [
-        {
-          context_id: 0,
-          name: ""
-        }
-      ],
+      // contexts: [
+      //   {
+      //     context_id: 0,
+      //     name: ""
+      //   }
+      // ],
       // 設定データ表示用のヘッダー
       headers: [
         {
@@ -126,34 +126,36 @@ export default {
 
     ...mapGetters({
       userId: "auth/user_id",
-      storeContexts: "context/contexts"
+      // storeContexts: "context/contexts"
+      contexts: "context/contexts"
     }),
 
     isPersistedItem() {
-      return !!this.contextAddForm.context_id;
+      // return !!this.contextAddForm.context_id;
+      return !!this.contextAddForm.id;
     }
   },
 
   methods: {
-    async fetch() {
-      const route = "/api/contexts/" + this.userId;
-      const response = await window.axios.get(route);
+    // async fetch() {
+    //   const route = "/api/contexts/" + this.userId;
+    //   const response = await window.axios.get(route);
 
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
+    //   if (response.status !== OK) {
+    //     this.$store.commit("error/setCode", response.status);
+    //     return false;
+    //   }
 
-      let datas = [];
-      response.data.data.forEach(function(item) {
-        datas.push({
-          context_id: item.id,
-          name: item.name
-        });
-      });
+    //   let datas = [];
+    //   response.data.data.forEach(function(item) {
+    //     datas.push({
+    //       context_id: item.id,
+    //       name: item.name
+    //     });
+    //   });
 
-      this.contexts = datas;
-    },
+    //   this.contexts = datas;
+    // },
 
     add() {
       this.contextAddForm = {};
@@ -204,26 +206,26 @@ export default {
     }
   },
 
-  watch: {
-    $route: {
-      async handler() {
-        const functions = [this.fetch()];
-        await Promise.all(functions);
-      },
-      immediate: true
-    },
-    storeContexts(values) {
-      if (values) {
-        let datas = [];
-        values["data"].forEach(function(item) {
-          datas.push({
-            context_id: item.id,
-            name: item.name
-          });
-        });
-        this.contexts = datas;
-      }
-    }
-  }
+  // watch: {
+  //   $route: {
+  //     async handler() {
+  //       const functions = [this.fetch()];
+  //       await Promise.all(functions);
+  //     },
+  //     immediate: true
+  //   },
+  //   storeContexts(values) {
+  //     if (values) {
+  //       let datas = [];
+  //       values["data"].forEach(function(item) {
+  //         datas.push({
+  //           context_id: item.id,
+  //           name: item.name
+  //         });
+  //       });
+  //       this.contexts = datas;
+  //     }
+  //   }
+  // }
 };
 </script>

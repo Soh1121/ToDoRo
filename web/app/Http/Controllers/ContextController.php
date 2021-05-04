@@ -22,7 +22,8 @@ class ContextController extends Controller
      * @param Context $context
      * @return boolean
      */
-    private static function duplicate(Context $context) {
+    private static function duplicate(Context $context)
+    {
         $duplicate_context = Context::where('user_id', $context->user_id)
             ->where('name', $context->name)
             ->get();
@@ -52,7 +53,8 @@ class ContextController extends Controller
                     'errors' => [
                         'name' => ['コンテキスト名が重複しています']
                     ]
-                ], 422
+                ],
+                422
             );
         }
         // 重複していなければ追加
@@ -89,7 +91,7 @@ class ContextController extends Controller
      */
     public function update(int $user_id, ContextRequest $request)
     {
-        $context_id = $request->context_id;
+        $context_id = $request->id;
         $context = Context::find($context_id);
         $context->name = $request->get('name');
         // 重複していたらエラーを返す
@@ -100,7 +102,8 @@ class ContextController extends Controller
                     'errors' => [
                         'name' => 'コンテキスト名が重複しています'
                     ]
-                ], 422
+                ],
+                422
             );
         }
         // 重複していなければ保存
@@ -120,7 +123,7 @@ class ContextController extends Controller
      */
     public function delete(int $user_id, ContextRequest $request)
     {
-        Context::find($request->context_id)->delete();
+        Context::find($request->id)->delete();
         $contexts = Context::where('user_id', $user_id)
             ->orderBy(Context::CREATED_AT, 'asc')
             ->get();

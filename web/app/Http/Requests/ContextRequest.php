@@ -24,7 +24,7 @@ class ContextRequest extends FormRequest
     public function rules()
     {
         return [
-            'context_id' => 'integer',
+            'id' => 'integer',
             'name' => 'required|max:30',
         ];
     }
