@@ -3,12 +3,12 @@ import { OK } from "../util";
 const alarmPath = require("@/assets/alarm.mp3");
 
 const state = {
-  // FULLTIME: 1500,
-  FULLTIME: 15,
-  // SHORT_BREAK: 300,
-  SHORT_BREAK: 5,
-  // LONG_BREAK: 900,
-  LONG_BREAK: 10,
+  FULLTIME: 1500,
+  // FULLTIME: 15,
+  SHORT_BREAK: 300,
+  // SHORT_BREAK: 5,
+  LONG_BREAK: 900,
+  // LONG_BREAK: 10,
   LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
