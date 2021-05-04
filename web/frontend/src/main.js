@@ -33,7 +33,6 @@ const createApp = async () => {
         fetchDefaultData("priority")
       ];
       await Promise.all(functions);
-      // Promise.all(functions);
     }
   }
 
