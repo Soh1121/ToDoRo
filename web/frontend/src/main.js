@@ -17,6 +17,11 @@ const createApp = async () => {
       await store.dispatch(target + "/index", [user_id]);
     }
 
+    // ローカル利用のプロジェクト・コンテキスト・タスクを取得する
+    async function localFetch(target) {
+      await store.dispatch(target + "/localIndex");
+    }
+
     // 繰り返し・優先度を取得する
     async function fetchDefaultData(target) {
       await store.dispatch(target + "/index");
@@ -29,6 +34,13 @@ const createApp = async () => {
         fetch("task", user_id),
         fetch("context", user_id),
         fetch("project", user_id),
+        fetchDefaultData("repeat"),
+        fetchDefaultData("priority")
+      ];
+      await Promise.all(functions);
+    } else {
+      const functions = [
+        localFetch("context"),
         fetchDefaultData("repeat"),
         fetchDefaultData("priority")
       ];
