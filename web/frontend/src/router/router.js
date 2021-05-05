@@ -24,7 +24,7 @@ const routes = [
     path: "/setting",
     name: "Setting",
     component: Setting,
-    beforeEnter (to, from, next) {
+    beforeEnter(to, from, next) {
       if (store.getters["auth/check"]) {
         next();
       } else {
