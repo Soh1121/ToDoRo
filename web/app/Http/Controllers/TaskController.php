@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TaskRequest;
 use App\Task;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -70,6 +71,7 @@ class TaskController extends Controller
         $task->timer = 25 * 60; // 1ポモドーロ 25分 × 60秒で残り何秒か
         $task->repeat_id = $request->repeat_id;
         $task->priority_id = $request->priority_id;
+        $this->authorize('create', $task);
         $task->save();
 
         $new_tasks = $this->search($user_id);
@@ -86,6 +88,9 @@ class TaskController extends Controller
     public function index(int $user_id)
     {
         $data = $this->search($user_id);
+        $task = Task::where('user_id', $user_id)
+            ->first();
+        $this->authorize('view', $task);
 
         return response()->json(['data' => $data]);
     }
@@ -99,6 +104,7 @@ class TaskController extends Controller
     {
         $task_id = $request->task_id;
         $task = Task::find($task_id);
+        $this->authorize('update', $task);
         $task->fill($request->all())->save();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
@@ -113,7 +119,9 @@ class TaskController extends Controller
      */
     public function delete(int $user_id, TaskRequest $request)
     {
-        Task::find($request->task_id)->delete();
+        $task = Task::find($request->task_id);
+        $this->authorize('delete', $task);
+        $task->delete();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
     }
@@ -129,6 +137,7 @@ class TaskController extends Controller
     {
         $task = Task::find($request->task_id);
         $task->finished = 1;
+        $this->authorize('update', $task);
         $task->save();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
@@ -145,6 +154,7 @@ class TaskController extends Controller
     {
         $task = Task::find($request->task_id);
         $task->finished = 0;
+        $this->authorize('update', $task);
         $task->save();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
@@ -161,6 +171,7 @@ class TaskController extends Controller
     {
         $task = Task::find($request->task_id);
         $task->timer = $request->timer;
+        $this->authorize('update', $task);
         $task->save();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
@@ -177,6 +188,7 @@ class TaskController extends Controller
     {
         $task = Task::find($request->task_id);
         $task->done += 1;
+        $this->authorize('update', $task);
         $task->save();
         $tasks = $this->search($user_id);
         return response()->json(['data' => $tasks], 200);
