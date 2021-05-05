@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
 use App\Http\Requests\ContextRequest;
 use App\Context;
-use Illuminate\Http\Request;
 
 class ContextController extends Controller
 {
