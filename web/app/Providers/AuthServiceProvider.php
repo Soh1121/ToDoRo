@@ -6,7 +6,9 @@ use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvid
 use Illuminate\Support\Facades\Gate;
 
 use App\Task;
+use App\Context;
 use App\Policies\TaskPolicy;
+use App\Policies\ContextPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -16,8 +18,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array
      */
     protected $policies = [
-        // 'App\Model' => 'App\Policies\ModelPolicy',
         Task::class => TaskPolicy::class,
+        Context::class => ContextPolicy::class,
     ];
 
     /**

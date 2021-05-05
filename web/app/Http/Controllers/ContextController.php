@@ -45,6 +45,9 @@ class ContextController extends Controller
         $context = new Context();
         $context->user_id = $user_id;
         $context->name = $request->name;
+        if ($request->name !== '未設定') {
+            $this->authorize('create', $context);
+        }
         // 重複していたらエラーを返す
         if ($this->duplicate($context)) {
             return response()->json(
@@ -79,6 +82,9 @@ class ContextController extends Controller
         $contexts = Context::where('user_id', $user_id)
             ->orderBy(Context::CREATED_AT, 'asc')
             ->get();
+        $context = Context::where('user_id', $user_id)
+            ->first();
+        $this->authorize('view', $context);
 
         return response()->json(['data' => $contexts]);
     }
@@ -93,6 +99,7 @@ class ContextController extends Controller
     {
         $context_id = $request->id;
         $context = Context::find($context_id);
+        $this->authorize('update', $context);
         $context->name = $request->get('name');
         // 重複していたらエラーを返す
         if ($this->duplicate($context)) {
@@ -123,7 +130,9 @@ class ContextController extends Controller
      */
     public function delete(int $user_id, ContextRequest $request)
     {
-        Context::find($request->id)->delete();
+        $context = Context::find($request->id);
+        $this->authorize('delete', $context);
+        $context->delete();
         $contexts = Context::where('user_id', $user_id)
             ->orderBy(Context::CREATED_AT, 'asc')
             ->get();
