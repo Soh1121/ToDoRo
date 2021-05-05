@@ -41,6 +41,7 @@ const createApp = async () => {
     } else {
       const functions = [
         localFetch("context"),
+        localFetch("project"),
         fetchDefaultData("repeat"),
         fetchDefaultData("priority")
       ];

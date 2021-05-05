@@ -47,13 +47,7 @@ export default {
   data() {
     return {
       contexts: null,
-      projects: [
-        { id: 0, name: "すべて", icon: "mdi-moon-full", count: 500 },
-        { id: 1, name: "今　日", icon: "mdi-moon-full", count: 100 },
-        { id: 2, name: "明　日", icon: "mdi-moon-full", count: 212 },
-        { id: 3, name: "近日中", icon: "mdi-moon-full", count: 334 },
-        { id: 4, name: "いつか", icon: "mdi-moon-full", count: 101 }
-      ],
+      projects: null,
       contextModel: 0,
       projectModel: 0
     };
