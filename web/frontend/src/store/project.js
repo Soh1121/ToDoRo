@@ -96,6 +96,28 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  localIndex(context) {
+    context.commit("setProjects", {
+      data: [
+        {
+          id: 1,
+          user_id: null,
+          name: "未設定"
+        },
+        {
+          id: 2,
+          user_id: null,
+          name: "プライベート"
+        },
+        {
+          id: 3,
+          user_id: null,
+          name: "仕事"
+        }
+      ]
+    });
   }
 };
 
