@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Gate;
 
 use App\Task;
 use App\Context;
+use App\Project;
 use App\Policies\TaskPolicy;
 use App\Policies\ContextPolicy;
+use App\Policies\ProjectPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -20,6 +22,7 @@ class AuthServiceProvider extends ServiceProvider
     protected $policies = [
         Task::class => TaskPolicy::class,
         Context::class => ContextPolicy::class,
+        Project::class => ProjectPolicy::class,
     ];
 
     /**
