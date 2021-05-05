@@ -40,6 +40,7 @@ const createApp = async () => {
       await Promise.all(functions);
     } else {
       const functions = [
+        localFetch("task"),
         localFetch("context"),
         localFetch("project"),
         fetchDefaultData("repeat"),

@@ -157,6 +157,64 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localIndex(context) {
+    console.log("in");
+    const name = [
+      "ToDoRoはタスク管理アプリです",
+      "ポモドーロタイマーをあわせ持っています",
+      "再生ボタンを押してポモドーロ開始です",
+      "＋ボタンでタスクを追加できます",
+      "タスクはログインすると保存できます",
+      "ぜひタスクに集中して取り組みましょう！"
+    ];
+    const user_id = null;
+    const project_id = [...Array(3)].map((_, i) => i + 1);
+    const project = ["未設定", "プライベート", "仕事"];
+    const context_id = [...Array(5)].map((_, i) => i + 1);
+    const context_name = [
+      "未設定",
+      "0時〜6時",
+      "6時〜12時",
+      "12時〜18時",
+      "18時〜24時"
+    ];
+    const date = new Date();
+    const date_str =
+      date.getFullYear() +
+      "-" +
+      ("0" + (date.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + date.getDate()).slice(-2);
+    const start_date = date_str + " 00:00:00";
+    const due_date = date_str + " 00:00:00";
+    let tasks = {
+      data: []
+    };
+    for (let i = 0; i < name.length; i++) {
+      let data = {};
+      (data["id"] = i + 1),
+        (data["name"] = name[i]),
+        (data["user_id"] = user_id),
+        (data["project_id"] = project_id[i % 3]),
+        (data["project"] = project[i % 3]),
+        (data["context_id"] = context_id[i % 5]),
+        (data["context"] = context_name[i % 5]),
+        (data["start_date"] = start_date),
+        (data["due_date"] = due_date),
+        (data["term"] = 0),
+        (data["finished"] = 0),
+        (data["done"] = 0),
+        (data["timer"] = 1500),
+        (data["repeat_id"] = 1),
+        (data["repeat"] = "未設定"),
+        (data["priority_id"] = 1),
+        (data["priority"] = "未設定");
+      tasks["data"].push(data);
+    }
+    console.log(tasks);
+    context.commit("setTasks", tasks);
+  },
+
   async finished(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.patch(
