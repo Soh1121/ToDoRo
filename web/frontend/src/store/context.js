@@ -96,6 +96,38 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  localIndex(context) {
+    context.commit("setContexts", {
+      data: [
+        {
+          id: 1,
+          user_id: null,
+          name: "未設定"
+        },
+        {
+          id: 2,
+          user_id: null,
+          name: "0時〜6時"
+        },
+        {
+          id: 3,
+          user_id: null,
+          name: "6時〜12時"
+        },
+        {
+          id: 4,
+          user_id: null,
+          name: "12時〜18時"
+        },
+        {
+          id: 5,
+          user_id: null,
+          name: "18時〜24時"
+        }
+      ]
+    });
   }
 };
 
