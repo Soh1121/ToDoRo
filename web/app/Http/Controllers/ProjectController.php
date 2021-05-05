@@ -43,6 +43,9 @@ class ProjectController extends Controller
         $project = new Project();
         $project->user_id = $user_id;
         $project->name = $request->name;
+        if ($request->name !== '未設定') {
+            $this->authorize('create', $project);
+        }
         // 重複していたらエラーを返す
         if ($this->duplicate($project)) {
             return response()->json(
@@ -76,6 +79,9 @@ class ProjectController extends Controller
         $projects = Project::where('user_id', $user_id)
             ->orderBy(Project::CREATED_AT, 'asc')
             ->get();
+        $project = Project::where('user_id', $user_id)
+            ->first();
+        $this->authorize('view', $project);
 
         return response()->json(['data' => $projects]);
     }
@@ -90,6 +96,7 @@ class ProjectController extends Controller
     {
         $project_id = $request->id;
         $project = Project::find($project_id);
+        $this->authorize('update', $project);
         $project->name = $request->get('name');
         // 重複していたらエラーを返す
         if ($this->duplicate($project)) {
@@ -120,7 +127,9 @@ class ProjectController extends Controller
      */
     public function delete(int $user_id, ProjectRequest $request)
     {
-        Project::find($request->id)->delete();
+        $project = Project::find($request->id);
+        $this->authorize('delete', $project);
+        $project->delete();
         $projects = Project::where('user_id', $user_id)->get();
         return response()->json(['data' => $projects], 200);
     }
