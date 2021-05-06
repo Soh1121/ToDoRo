@@ -278,6 +278,38 @@ const actions = {
 
   inputProjectId(context, id) {
     context.commit("setProjectId", id);
+  },
+
+  localValidation(context, data) {
+    let errors = {};
+    if (data.name) {
+      if (140 < data.name.length) {
+        errors.name = ["タスク名には140文字以下の文字列を指定してください"];
+      }
+    } else {
+      errors.name = ["タスク名を入力してください"]
+    }
+    if (!data.start_date) {
+      errors.start_date = ["開始日を入力してください"]
+    }
+    if (!data.due_date) {
+      errors.due_date = ["終了日を入力してください"]
+    }
+    if (data.start_date && data.due_date){
+      const start = new Date(data.start_date);
+      const due = new Date(data.due_date);
+      if (due < start) {
+        errors.start_date = ["開始日は終了日以前を選択してください"];
+        errors.due_date = ["終了日は開始日以後を選択してください"];
+      }
+    }
+    if (Object.keys(errors).length) {
+      context.commit("setAddTaskErrorMessages", errors);
+      return false;
+    } else {
+      context.commit("setAddTaskErrorMessages", null);
+      return true;
+    }
   }
 };
 

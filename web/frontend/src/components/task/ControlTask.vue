@@ -177,13 +177,22 @@ export default {
 
   methods: {
     async create() {
-      await this.$store.dispatch("task/create", [
-        this.userId,
-        this.taskControlForm
-      ]);
-      if (this.apiStatus) {
-        this.taskControlForm = {};
-        this.close();
+      if (this.userId) {
+        await this.$store.dispatch("task/create", [
+          this.userId,
+          this.taskControlForm
+        ]);
+        if (this.apiStatus) {
+          this.taskControlForm = {};
+          this.close();
+        }
+      } else {
+        const errors = await this.$store.dispatch("task/localValidation", this.taskControlForm);
+        // this.$store.dispatch("task/localCreate");
+        if (errors) {
+          this.taskControlForm = {};
+          this.close();
+        }
       }
     },
 
