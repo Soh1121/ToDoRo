@@ -200,13 +200,21 @@ export default {
     },
 
     async update() {
-      await this.$store.dispatch("task/update", [
-        this.userId,
-        this.taskControlForm
-      ]);
-      if (this.apiStatus) {
-        this.taskControlForm = {};
-        this.close();
+      if (this.userId) {
+        await this.$store.dispatch("task/update", [
+          this.userId,
+          this.taskControlForm
+        ]);
+        if (this.apiStatus) {
+          this.taskControlForm = {};
+          this.close();
+        }
+      } else {
+        const errors = await this.$store.dispatch(
+          "task/localValidation",
+          this.taskControlForm
+        );
+        console.log(errors);
       }
     },
 
