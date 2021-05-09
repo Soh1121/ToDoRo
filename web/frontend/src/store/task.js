@@ -2,13 +2,7 @@ import { OK, CREATED, UNPROCESSABLE_ENTITY } from "../util";
 
 const PROJECT = ["未設定", "プライベート", "仕事"];
 
-const CONTEXT = [
-  "未設定",
-  "0時〜6時",
-  "6時〜12時",
-  "12時〜18時",
-  "18時〜24時"
-];
+const CONTEXT = ["未設定", "0時〜6時", "6時〜12時", "12時〜18時", "18時〜24時"];
 
 const state = {
   tasks: null,
@@ -129,9 +123,14 @@ const actions = {
     new_task.timer = 1500;
     new_task.finished = 0;
     new_task.done = 0;
-    new_task.id = 1 + Math.max.apply(null, tasks.map(task => task.id));
+    new_task.id =
+      1 +
+      Math.max.apply(
+        null,
+        tasks.map(task => task.id)
+      );
     tasks.push(new_task);
-    context.commit("setTasks", {"data": tasks});
+    context.commit("setTasks", { data: tasks });
   },
 
   async update(context, data) {
@@ -186,7 +185,6 @@ const actions = {
   },
 
   localIndex(context) {
-    console.log("in");
     const name = [
       "ToDoRoはタスク管理アプリです",
       "ポモドーロタイマーをあわせ持っています",
@@ -231,7 +229,6 @@ const actions = {
         (data["priority"] = "未設定");
       tasks["data"].push(data);
     }
-    console.log(tasks);
     context.commit("setTasks", tasks);
   },
 
@@ -307,15 +304,15 @@ const actions = {
         errors.name = ["タスク名には140文字以下の文字列を指定してください"];
       }
     } else {
-      errors.name = ["タスク名を入力してください"]
+      errors.name = ["タスク名を入力してください"];
     }
     if (!data.start_date) {
-      errors.start_date = ["開始日を入力してください"]
+      errors.start_date = ["開始日を入力してください"];
     }
     if (!data.due_date) {
-      errors.due_date = ["終了日を入力してください"]
+      errors.due_date = ["終了日を入力してください"];
     }
-    if (data.start_date && data.due_date){
+    if (data.start_date && data.due_date) {
       const start = new Date(data.start_date);
       const due = new Date(data.due_date);
       if (due < start) {

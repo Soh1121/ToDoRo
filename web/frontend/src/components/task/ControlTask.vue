@@ -187,7 +187,10 @@ export default {
           this.close();
         }
       } else {
-        const errors = await this.$store.dispatch("task/localValidation", this.taskControlForm);
+        const errors = await this.$store.dispatch(
+          "task/localValidation",
+          this.taskControlForm
+        );
         if (errors) {
           this.$store.dispatch("task/localCreate", this.taskControlForm);
           this.taskControlForm = {};
