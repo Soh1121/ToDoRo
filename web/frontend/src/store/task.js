@@ -152,6 +152,24 @@ const actions = {
     }
   },
 
+  localUpdate(context, data) {
+    const repeats = context.rootState.repeat.repeats.data;
+    const priorities = context.rootState.priority.priorities.data;
+    let tasks = state.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== data.task_id) {
+        return task;
+      }
+      let new_task = data;
+      new_task.context = CONTEXT[data.context_id - 1];
+      new_task.project = PROJECT[data.project_id - 1];
+      new_task.repeat = repeats[data.repeat_id - 1].name;
+      new_task.priority = priorities[data.priority_id - 1].name;
+      return new_task;
+    });
+    context.commit("setTasks", { data: tasks });
+  },
+
   async remove(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.delete(

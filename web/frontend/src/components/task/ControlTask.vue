@@ -214,7 +214,11 @@ export default {
           "task/localValidation",
           this.taskControlForm
         );
-        console.log(errors);
+        if (errors) {
+          this.$store.dispatch("task/localUpdate", this.taskControlForm);
+          this.taskControlForm = {};
+          this.close();
+        }
       }
     },
 
