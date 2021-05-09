@@ -279,6 +279,19 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localFinished(context, data) {
+    let tasks = state.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== data.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.finished = 1;
+      return new_task;
+    });
+    context.commit("setTasks", { data: tasks });
+  },
+
   async unfinished(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.patch(
