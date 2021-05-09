@@ -187,6 +187,18 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localRemove(context, data) {
+    let tasks = state.tasks.data;
+    tasks = tasks
+      .map(task => {
+        if (task.id !== data.task_id) {
+          return task;
+        }
+      })
+      .filter(v => v);
+    context.commit("setTasks", { data: tasks });
+  },
+
   async index(context, data) {
     context.commit("setApiStatus", null);
     const response = await window.axios.get("/api/tasks/" + data[0]);
