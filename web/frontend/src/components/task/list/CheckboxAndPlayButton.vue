@@ -41,6 +41,8 @@ export default {
       } else {
         if (this.checkboxState) {
           this.$store.dispatch("task/localFinished", item);
+        } else {
+          this.$store.dispatch("task/localUnfinished", item);
         }
       }
     },
