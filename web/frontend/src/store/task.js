@@ -309,6 +309,19 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localUnfinished(context, data) {
+    let tasks = state.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== data.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.finished = 0;
+      return new_task;
+    });
+    context.commit("setTasks", { data: tasks });
+  },
+
   open(context, item) {
     context.commit("setAddTaskErrorMessages", null);
     if (Object.keys(item).length != 5) {
