@@ -1,15 +1,15 @@
 import { OK } from "../util";
 
-const alarmPath = require("@/assets/alarm.mp3");
+const FULLTIME = 1500;
+// const FULLTIME = 15;
+const SHORT_BREAK = 300;
+// const SHORT_BREAK = 5;
+const LONG_BREAK = 900;
+// const LONG_BREAK = 10;
+const LONG_BREAK_COUNT = 4;
+const ALARM_PATH = require("@/assets/alarm.mp3");
 
 const state = {
-  FULLTIME: 1500,
-  // FULLTIME: 15,
-  SHORT_BREAK: 300,
-  // SHORT_BREAK: 5,
-  LONG_BREAK: 900,
-  // LONG_BREAK: 10,
-  LONG_BREAK_COUNT: 4,
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
@@ -31,12 +31,12 @@ const getters = {
 
   timerCircular: function(state) {
     if (state.mode === "concentration") {
-      return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+      return ((FULLTIME - state.time) * 100) / FULLTIME;
     } else if (state.mode === "break") {
-      if (state.pomodoroCount % state.LONG_BREAK_COUNT !== 0) {
-        return ((state.SHORT_BREAK - state.time) * 100) / state.SHORT_BREAK;
+      if (state.pomodoroCount % LONG_BREAK_COUNT !== 0) {
+        return ((SHORT_BREAK - state.time) * 100) / SHORT_BREAK;
       } else {
-        return ((state.LONG_BREAK - state.time) * 100) / state.LONG_BREAK;
+        return ((LONG_BREAK - state.time) * 100) / LONG_BREAK;
       }
     }
   },
@@ -113,7 +113,7 @@ const actions = {
     const timerId = setInterval(async () => {
       if (state.time === 0) {
         // アラームを鳴動
-        const alarm = new Audio(alarmPath);
+        const alarm = new Audio(ALARM_PATH);
         alarm.play();
         // カウントダウンを停止
         clearInterval(state.timerId);
@@ -132,14 +132,14 @@ const actions = {
           // タスクごとのポモドーロ数を更新
           context.dispatch("incrementDone", [userId, task]);
           // タイマーを再セット
-          if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
-            context.commit("setTime", state.LONG_BREAK);
+          if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+            context.commit("setTime", LONG_BREAK);
           } else {
-            context.commit("setTime", state.SHORT_BREAK);
+            context.commit("setTime", SHORT_BREAK);
           }
           context.commit("setMode", "break");
         } else if (state.mode === "break") {
-          context.commit("setTime", state.FULLTIME);
+          context.commit("setTime", FULLTIME);
           context.commit("setMode", "concentration");
         }
         // タイマーの値をDBに保存
@@ -160,14 +160,14 @@ const actions = {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
       context.dispatch("incrementPomodoroCount", userId);
-      if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
-        context.commit("setTime", state.LONG_BREAK);
+      if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", LONG_BREAK);
       } else {
-        context.commit("setTime", state.SHORT_BREAK);
+        context.commit("setTime", SHORT_BREAK);
       }
       context.commit("setMode", "break");
     } else if (state.mode === "break") {
-      context.commit("setTime", state.FULLTIME);
+      context.commit("setTime", FULLTIME);
       context.commit("setMode", "concentration");
     }
   },
@@ -184,7 +184,7 @@ const actions = {
       }
     }
     if (state.mode === "break") {
-      request["timer"] = state.FULLTIME;
+      request["timer"] = FULLTIME;
     } else {
       request["timer"] = state.time;
     }
@@ -216,7 +216,7 @@ const actions = {
         request[key] = task[key];
       }
     }
-    request["timer"] = state.FULLTIME;
+    request["timer"] = FULLTIME;
     const response = await window.axios.patch(
       "/api/tasks/" + userId + "/set_timer",
       request
