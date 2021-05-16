@@ -1,11 +1,11 @@
 import { OK } from "../util";
 
-const FULLTIME = 1500;
-// const FULLTIME = 15;
-const SHORT_BREAK = 300;
-// const SHORT_BREAK = 5;
-const LONG_BREAK = 900;
-// const LONG_BREAK = 10;
+// const FULLTIME = 1500;
+const FULLTIME = 15;
+// const SHORT_BREAK = 300;
+const SHORT_BREAK = 5;
+// const LONG_BREAK = 900;
+const LONG_BREAK = 10;
 const LONG_BREAK_COUNT = 4;
 const ALARM_PATH = require("@/assets/alarm.mp3");
 
@@ -151,6 +151,45 @@ const actions = {
     context.commit("setTimerId", timerId);
   },
 
+  localStart(context, task) {
+    context.commit("setPlayMode", "play");
+    const timerId = setInterval(async () => {
+      if (state.time === 0) {
+        // カウントダウンを停止
+        clearInterval(state.timerId);
+        // アラームを鳴動
+        const alarm = new Audio(ALARM_PATH);
+        alarm.play();
+        // タイマーのプレイモードを変更
+        context.commit("setPlayMode", "stop");
+        if (state.mode === "concentration") {
+          // ローカルのポモドーロ数を更新
+          const excutionDate = await context.dispatch("createExcutionDate");
+          if (excutionDate !== state.excutionDate) {
+            context.commit("setPomodoroCount", 0);
+            context.commit("setExcutionDate", excutionDate);
+          }
+          context.commit("incrementPomodoroCount");
+          // タスクごとのポモドーロ数を更新
+          context.dispatch("localIncrementDone", task);
+          // タイマーを再セット
+          if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+            context.commit("setTime", LONG_BREAK);
+          } else {
+            context.commit("setTime", SHORT_BREAK);
+          }
+          context.commit("setMode", "break");
+        } else if (state.mode === "break") {
+          context.commit("setTime", FULLTIME);
+          context.commit("setMode", "concentration");
+        }
+        return null;
+      }
+      context.commit("decrementTime");
+    }, 1000);
+    context.commit("setTimerId", timerId);
+  },
+
   pause(context) {
     context.commit("setPlayMode", "pause");
     clearInterval(state.timerId);
@@ -255,6 +294,19 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  localIncrementDone(context, target_task) {
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.done += 1;
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks });
   },
 
   async incrementPomodoroCount(context, userId) {
