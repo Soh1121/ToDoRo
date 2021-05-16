@@ -31,10 +31,12 @@ export default {
   methods: {
     async pause() {
       this.$store.dispatch("pomodoro/pause");
-      await this.$store.dispatch("pomodoro/updateTimer", [
-        this.userId,
-        this.task
-      ]);
+      if (this.userId) {
+        await this.$store.dispatch("pomodoro/updateTimer", [
+          this.userId,
+          this.task
+        ]);
+      }
     }
   }
 };
