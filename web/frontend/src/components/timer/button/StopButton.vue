@@ -33,9 +33,9 @@ export default {
       if (this.userId) {
         this.$store.dispatch("pomodoro/reset", this.userId);
         await this.$store.dispatch("pomodoro/resetTimer", [
-        this.userId,
-        this.task
-      ]);
+          this.userId,
+          this.task
+        ]);
       } else {
         this.$store.dispatch("pomodoro/localReset");
         this.$store.dispatch("pomodoro/localResetTimer", this.task);
