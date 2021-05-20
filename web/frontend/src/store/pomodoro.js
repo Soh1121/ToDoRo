@@ -198,7 +198,24 @@ const actions = {
   reset(context, userId) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
       context.dispatch("incrementPomodoroCount", userId);
+      if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", LONG_BREAK);
+      } else {
+        context.commit("setTime", SHORT_BREAK);
+      }
+      context.commit("setMode", "break");
+    } else if (state.mode === "break") {
+      context.commit("setTime", FULLTIME);
+      context.commit("setMode", "concentration");
+    }
+  },
+
+  localReset(context) {
+    context.commit("setPlayMode", "stop");
+    if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
       if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
         context.commit("setTime", LONG_BREAK);
       } else {
@@ -268,6 +285,22 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  localResetTimer(context, target_task) {
+    if (state.mode === "concentration") {
+      return null;
+    }
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.timer = FULLTIME;
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks });
   },
 
   async incrementDone(context, data) {
