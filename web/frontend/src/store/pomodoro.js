@@ -198,7 +198,24 @@ const actions = {
   reset(context, userId) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
       context.dispatch("incrementPomodoroCount", userId);
+      if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", LONG_BREAK);
+      } else {
+        context.commit("setTime", SHORT_BREAK);
+      }
+      context.commit("setMode", "break");
+    } else if (state.mode === "break") {
+      context.commit("setTime", FULLTIME);
+      context.commit("setMode", "concentration");
+    }
+  },
+
+  localReset(context) {
+    context.commit("setPlayMode", "stop");
+    if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
       if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
         context.commit("setTime", LONG_BREAK);
       } else {
