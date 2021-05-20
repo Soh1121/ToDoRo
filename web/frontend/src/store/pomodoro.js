@@ -287,6 +287,22 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localResetTimer(context, target_task) {
+    if (state.mode === "concentration") {
+      return null;
+    }
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.timer = FULLTIME;
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks });
+  },
+
   async incrementDone(context, data) {
     const userId = data[0];
     const task = data[1];

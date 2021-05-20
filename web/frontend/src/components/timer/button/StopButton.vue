@@ -32,13 +32,14 @@ export default {
     async reset() {
       if (this.userId) {
         this.$store.dispatch("pomodoro/reset", this.userId);
-      } else {
-        this.$store.dispatch("pomodoro/localReset");
-      }
-      await this.$store.dispatch("pomodoro/resetTimer", [
+        await this.$store.dispatch("pomodoro/resetTimer", [
         this.userId,
         this.task
       ]);
+      } else {
+        this.$store.dispatch("pomodoro/localReset");
+        this.$store.dispatch("pomodoro/localResetTimer", this.task);
+      }
     }
   }
 };
