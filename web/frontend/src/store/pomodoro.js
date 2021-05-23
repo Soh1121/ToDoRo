@@ -258,6 +258,23 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localUpdateTimer(context, target_task) {
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      if (state.mode === "break") {
+        new_task.timer = FULLTIME;
+      } else {
+        new_task.timer = state.time;
+      }
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks });
+  },
+
   async resetTimer(context, data) {
     const userId = data[0];
     const task = data[1];

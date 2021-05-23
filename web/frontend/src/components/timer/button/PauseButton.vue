@@ -36,6 +36,8 @@ export default {
           this.userId,
           this.task
         ]);
+      } else {
+        this.$store.dispatch("pomodoro/localUpdateTimer", this.task);
       }
     }
   }
