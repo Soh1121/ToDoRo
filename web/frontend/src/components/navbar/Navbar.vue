@@ -122,6 +122,7 @@ export default {
     async logout() {
       await this.$store.dispatch("auth/logout");
       await this.$store.dispatch("task/localIndex");
+      await this.$store.dispatch("context/localIndex");
     }
   },
 
