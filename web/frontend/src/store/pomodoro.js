@@ -89,6 +89,12 @@ const actions = {
     context.commit("setTime", time);
   },
 
+  async initConcentration(context) {
+    clearInterval(state.timerId);
+    context.commit("setPlayMode", "stop");
+    context.commit("setMode", "concentration");
+  },
+
   async initPomodoroCount(context, userId) {
     const excutionDate = await context.dispatch("createExcutionDate");
     context.commit("setExcutionDate", excutionDate);

@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapState, mapGetters } from "vuex";
 export default {
   props: {
     task: {
@@ -24,6 +24,10 @@ export default {
   },
 
   computed: {
+    ...mapState({
+      mode: state => state.pomodoro.mode
+    }),
+
     ...mapGetters({
       userId: "auth/user_id"
     })
@@ -48,6 +52,9 @@ export default {
     },
 
     transition(item) {
+      if (this.mode === "break") {
+        this.$store.dispatch("pomodoro/initConcentration");
+      }
       if (this.userId) {
         this.$store.dispatch("pomodoro/initPomodoroCount", this.userId);
       }
