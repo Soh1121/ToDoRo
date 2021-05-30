@@ -2,12 +2,12 @@
   <div>
     <v-progress-circular
       :rotate="-90"
-      :size=size
+      :size="size"
       :width="10"
       :value="timerCircular"
       :color="color"
     >
-      <span :class=fontSizeClass>{{ minutes }}：{{ seconds }}</span>
+      <span :class="fontSizeClass">{{ minutes }}：{{ seconds }}</span>
     </v-progress-circular>
   </div>
 </template>
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       windowSize: 0
-    }
+    };
   },
 
   created() {
