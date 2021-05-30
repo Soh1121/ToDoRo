@@ -2,7 +2,7 @@
   <div
     class="u-position__flexbox u-position__flexbox--center u-position__flexbox--column"
   >
-      <h2 class="u-margin__margin--10px u-text__text-align-center u-size__max-width--85per">{{ task.name }}</h2>
+      <h2 class="u-margin__margin--10px u-text__text-align-center u-size__max-width--80per">{{ task.name }}</h2>
     <Timer :task="task" />
     <PauseButton v-if="playMode === 'play'" :task="task" />
     <div class="u-position__flexbox" v-if="playMode === 'pause'">
