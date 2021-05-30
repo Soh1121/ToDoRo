@@ -92,6 +92,7 @@ const actions = {
   async initConcentration(context) {
     clearInterval(state.timerId);
     context.commit("setPlayMode", "stop");
+    context.commit("setMode", "concentration");
   },
 
   async initPomodoroCount(context, userId) {
