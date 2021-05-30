@@ -4,7 +4,7 @@
     width="100px"
     height="50px"
     :color="color"
-    class="u-margin__margin--t50px"
+    class="u-margin__margin--10px0"
     @click="pause"
   >
     一時停止
