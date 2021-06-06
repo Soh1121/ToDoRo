@@ -4,13 +4,23 @@
       :input-value="checkboxState"
       @change="onChange(task)"
     ></v-checkbox>
-    <v-icon @click="transition(task)">mdi-play-circle-outline</v-icon>
+    <v-dialog v-model="confirmationDialog" persistent max-width="600px">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn icon v-on="on" v-bind="attrs" @click="transition(task)">mdi-play-circle-outline</v-btn>
+      </template>
+      <TaskConfirmation />
+    </v-dialog>
   </v-list-item-action>
 </template>
 
 <script>
+import TaskConfirmation from "../TaskConfirmation.vue";
 import { mapState, mapGetters } from "vuex";
 export default {
+  components: {
+    TaskConfirmation
+  },
+
   props: {
     task: {
       type: Object
