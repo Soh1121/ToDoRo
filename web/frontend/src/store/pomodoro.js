@@ -53,6 +53,10 @@ const getters = {
 };
 
 const mutations = {
+  setDisplay(state, bool) {
+    state.display = bool;
+  },
+
   setTaskId(state, id) {
     state.taskId = id;
   },
@@ -400,6 +404,10 @@ const actions = {
     const day = ("0" + date.getDate()).slice(-2);
     const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
     return excutionDate;
+  },
+
+  open(context) {
+    context.commit("setDisplay", true);
   }
 };
 
