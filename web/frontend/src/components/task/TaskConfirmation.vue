@@ -36,6 +36,7 @@
           color="primary"
           class="u-margin__margin--lrauto"
           outlined
+          @click="close"
           >キャンセル</v-btn
         >
       </v-card-actions>
@@ -51,6 +52,12 @@ export default {
     ...mapState({
       taskName: state => state.pomodoro.taskName
     })
+  },
+
+  methods: {
+    close() {
+      this.$store.dispatch("pomodoro/close");
+    }
   }
 };
 </script>

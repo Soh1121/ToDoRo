@@ -10,6 +10,7 @@ const LONG_BREAK_COUNT = 4;
 const ALARM_PATH = require("@/assets/alarm.mp3");
 
 const state = {
+  display: false,
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
@@ -21,6 +22,8 @@ const state = {
 };
 
 const getters = {
+  display: state => !!state.display,
+
   playMode: state => state.playMode,
 
   minutes: function(state) {
@@ -408,6 +411,10 @@ const actions = {
 
   open(context) {
     context.commit("setDisplay", true);
+  },
+
+  close(context) {
+    context.commit("setDisplay", false);
   }
 };
 

@@ -144,7 +144,6 @@ export default {
   watch: {
     keywords: function(keywords) {
       this.$store.dispatch("task/inputKeywords", keywords);
-      console.log(keywords);
     }
   }
 };
