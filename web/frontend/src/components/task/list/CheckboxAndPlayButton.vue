@@ -6,7 +6,14 @@
     ></v-checkbox>
     <v-dialog v-model="confirmationDialog" persistent max-width="600px">
       <template v-slot:activator="{ on, attrs }">
-        <v-btn icon v-on="on" v-bind="attrs" @click="transition(task)" class="u-margin__margin---6px"><v-icon>mdi-play-circle-outline</v-icon></v-btn>
+        <v-btn
+          icon
+          v-on="on"
+          v-bind="attrs"
+          @click="transition(task)"
+          class="u-margin__margin---6px"
+          ><v-icon>mdi-play-circle-outline</v-icon></v-btn
+        >
       </template>
       <TaskConfirmation />
     </v-dialog>
