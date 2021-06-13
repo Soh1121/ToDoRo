@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-dialog v-model="confirmationDialog" persistent max-width="600px">
+    <v-dialog v-model="confirmationDialog" max-width="600px" @click:outside="confirmationClose">
       <TaskConfirmation />
     </v-dialog>
     <v-checkbox
@@ -100,6 +100,10 @@ export default {
         });
       }
       return tasks;
+    },
+
+    confirmationClose: function() {
+      this.$store.dispatch("pomodoro/close");
     }
   },
 
