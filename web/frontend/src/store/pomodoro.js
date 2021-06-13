@@ -14,8 +14,7 @@ const state = {
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
-  taskId: null,
-  taskName: null,
+  nowTask: null,
   time: 0,
   timerId: null,
   excutionDate: ""
@@ -60,12 +59,8 @@ const mutations = {
     state.display = bool;
   },
 
-  setTaskId(state, id) {
-    state.taskId = id;
-  },
-
-  setTaskName(state, name) {
-    state.taskName = name;
+  setTask(state, task) {
+    state.nowTask = task;
   },
 
   setTime(state, time) {
@@ -106,14 +101,6 @@ const actions = {
     context.commit("setTime", time);
   },
 
-  setTaskId(context, id) {
-    context.commit("setTaskId", id);
-  },
-
-  setTaskName(context, name) {
-    context.commit("setTaskName", name);
-  },
-
   async initConcentration(context) {
     clearInterval(state.timerId);
     context.commit("setPlayMode", "stop");
@@ -141,6 +128,7 @@ const actions = {
     const userId = data[0];
     const task = data[1];
     context.commit("setPlayMode", "play");
+    context.commit("setTask", task);
     const timerId = setInterval(async () => {
       if (state.time === 0) {
         // アラームを鳴動
@@ -184,6 +172,7 @@ const actions = {
 
   localStart(context, task) {
     context.commit("setPlayMode", "play");
+    context.commit("setTask", task);
     const timerId = setInterval(async () => {
       if (state.time === 0) {
         // カウントダウンを停止

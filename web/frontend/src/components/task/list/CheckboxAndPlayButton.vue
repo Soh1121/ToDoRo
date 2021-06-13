@@ -30,12 +30,13 @@ export default {
 
   computed: {
     ...mapState({
-      mode: state => state.pomodoro.mode,
-      taskId: state => state.pomodoro.taskId
+      pomodoroMode: state => state.pomodoro.mode,
+      nowTask: state => state.pomodoro.nowTask
     }),
 
     ...mapGetters({
-      userId: "auth/user_id"
+      userId: "auth/user_id",
+      playMode: "pomodoro/playMode"
     })
   },
 
@@ -58,17 +59,23 @@ export default {
     },
 
     transition(item) {
-      if (this.mode === "break") {
+      if (this.pomodoroMode === "break") {
         this.$store.dispatch("pomodoro/initConcentration");
       }
       if (this.userId) {
         this.$store.dispatch("pomodoro/initPomodoroCount", this.userId);
       }
-      if (this.taskId) {
-        if (this.taskId === item.task_id) {
+      if (this.nowTask) {
+        if (this.nowTask.task_id === item.task_id) {
           this.$router.push({ name: "Timer", params: { task: item } });
         } else {
-          this.$store.dispatch("pomodoro/open");
+          if (this.playMode === "play") {
+            this.$store.dispatch("pomodoro/open");
+          } else {
+            // this.$store.dispatch("pomodoro/setStateTime", item.timer);
+            this.$store.dispatch("pomodoro/setStateTime", 15);
+            this.$router.push({ name: "Timer", params: { task: item } });
+          }
         }
       } else {
         // this.$store.dispatch("pomodoro/setStateTime", item.timer);

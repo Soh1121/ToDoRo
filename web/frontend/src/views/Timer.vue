@@ -29,9 +29,6 @@ export default {
   created() {
     if (this.task === undefined) {
       this.$router.push({ path: "/" });
-    } else {
-      this.$store.dispatch("pomodoro/setTaskId", this.task.task_id);
-      this.$store.dispatch("pomodoro/setTaskName", this.task.name);
     }
   }
 };
