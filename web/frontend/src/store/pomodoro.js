@@ -13,6 +13,8 @@ const state = {
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
+  taskId: null,
+  taskName: null,
   time: 0,
   timerId: null,
   excutionDate: ""
@@ -51,6 +53,18 @@ const getters = {
 };
 
 const mutations = {
+  setDisplay(state, bool) {
+    state.display = bool;
+  },
+
+  setTaskId(state, id) {
+    state.taskId = id;
+  },
+
+  setTaskName(state, name) {
+    state.taskName = name;
+  },
+
   setTime(state, time) {
     state.time = time;
   },
@@ -87,6 +101,14 @@ const mutations = {
 const actions = {
   setStateTime(context, time) {
     context.commit("setTime", time);
+  },
+
+  setTaskId(context, id) {
+    context.commit("setTaskId", id);
+  },
+
+  setTaskName(context, name) {
+    context.commit("setTaskName", name);
   },
 
   async initConcentration(context) {
@@ -382,6 +404,10 @@ const actions = {
     const day = ("0" + date.getDate()).slice(-2);
     const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
     return excutionDate;
+  },
+
+  open(context) {
+    context.commit("setDisplay", true);
   }
 };
 

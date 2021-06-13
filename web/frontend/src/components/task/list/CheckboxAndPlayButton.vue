@@ -4,13 +4,30 @@
       :input-value="checkboxState"
       @change="onChange(task)"
     ></v-checkbox>
-    <v-icon @click="transition(task)">mdi-play-circle-outline</v-icon>
+    <v-dialog v-model="confirmationDialog" persistent max-width="600px">
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          icon
+          v-on="on"
+          v-bind="attrs"
+          @click="transition(task)"
+          class="u-margin__margin---6px"
+          ><v-icon>mdi-play-circle-outline</v-icon></v-btn
+        >
+      </template>
+      <TaskConfirmation />
+    </v-dialog>
   </v-list-item-action>
 </template>
 
 <script>
+import TaskConfirmation from "../TaskConfirmation.vue";
 import { mapState, mapGetters } from "vuex";
 export default {
+  components: {
+    TaskConfirmation
+  },
+
   props: {
     task: {
       type: Object
@@ -25,7 +42,8 @@ export default {
 
   computed: {
     ...mapState({
-      mode: state => state.pomodoro.mode
+      mode: state => state.pomodoro.mode,
+      taskId: state => state.pomodoro.taskId
     }),
 
     ...mapGetters({
@@ -58,9 +76,17 @@ export default {
       if (this.userId) {
         this.$store.dispatch("pomodoro/initPomodoroCount", this.userId);
       }
-      // this.$store.dispatch("pomodoro/setStateTime", item.timer);
-      this.$store.dispatch("pomodoro/setStateTime", 15);
-      this.$router.push({ name: "Timer", params: { task: item } });
+      if (this.taskId) {
+        if (this.taskId === item.task_id) {
+          this.$router.push({ name: "Timer", params: { task: item } });
+        } else {
+          this.$store.dispatch("pomodoro/open");
+        }
+      } else {
+        // this.$store.dispatch("pomodoro/setStateTime", item.timer);
+        this.$store.dispatch("pomodoro/setStateTime", 15);
+        this.$router.push({ name: "Timer", params: { task: item } });
+      }
     }
   }
 };
