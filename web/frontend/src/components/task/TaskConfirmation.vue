@@ -26,6 +26,7 @@
           large
           color="primary"
           class="u-margin__margin--lrauto"
+          @click="newTask"
           >新しいタスクを行う</v-btn
         >
       </v-card-actions>
@@ -46,12 +47,22 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 
 export default {
+  props: {
+    task: {
+      type: Object
+    }
+  },
+
   computed: {
     ...mapState({
       task: state => state.pomodoro.nowTask
+    }),
+
+    ...mapGetters({
+      userId: "auth/user_id"
     })
   },
 
@@ -59,6 +70,18 @@ export default {
     nowTask() {
       this.$store.dispatch("pomodoro/close");
       this.$router.push({ name: "Timer", params: { task: this.task } });
+    },
+
+    async newTask() {
+      this.$store.dispatch("pomodoro/pause");
+      if (this.userId) {
+        await this.$store.dispatch("pomodoro/updateTimer", [
+          this.userId,
+          this.task
+        ]);
+      } else {
+        this.$store.dispatch("pomodoro/localUpdateTimer", this.task);
+      }
     },
 
     close() {

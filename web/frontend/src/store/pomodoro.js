@@ -292,7 +292,7 @@ const actions = {
       }
       return new_task;
     });
-    context.commit("task/setTasks", { data: tasks });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async resetTimer(context, data) {
@@ -337,7 +337,7 @@ const actions = {
       new_task.timer = FULLTIME;
       return new_task;
     });
-    context.commit("task/setTasks", { data: tasks });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async incrementDone(context, data) {
@@ -358,7 +358,7 @@ const actions = {
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
-      context.commit("task/setTasks", response.data);
+      context.commit("task/setTasks", response.data, { root: true });
       return false;
     }
 
@@ -376,7 +376,7 @@ const actions = {
       new_task.done += 1;
       return new_task;
     });
-    context.commit("task/setTasks", { data: tasks });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async incrementPomodoroCount(context, userId) {

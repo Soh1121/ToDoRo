@@ -59,27 +59,38 @@ export default {
     },
 
     transition(item) {
+      // 休憩モードだったら集中モードで初期スタート
       if (this.pomodoroMode === "break") {
         this.$store.dispatch("pomodoro/initConcentration");
       }
+      // ログインしていれば、ポモドーロ数を初期化
       if (this.userId) {
         this.$store.dispatch("pomodoro/initPomodoroCount", this.userId);
       }
+      // すでにポモドーロタイマーをスタートしたことがあれば
       if (this.nowTask) {
+        // 選択したタスクがスタートしているポモドーロタイマーと一緒だったら
         if (this.nowTask.task_id === item.task_id) {
+          // モードがプレイでなければ、保存されているタイマー値をセット
+          if (this.playMode !== "play") {
+            this.$store.dispatch("pomodoro/setStateTime", item.timer);
+          }
+          // タイマー画面に遷移
           this.$router.push({ name: "Timer", params: { task: item } });
         } else {
+          // 選択したタスクがスタートしているポモドーロタイマーと異なってプレイ中なら
           if (this.playMode === "play") {
+            // 確認画面を表示
             this.$store.dispatch("pomodoro/open");
           } else {
-            // this.$store.dispatch("pomodoro/setStateTime", item.timer);
-            this.$store.dispatch("pomodoro/setStateTime", 15);
+            // その他の状態であれば新しいタイマー値をセット
+            this.$store.dispatch("pomodoro/setStateTime", item.timer);
             this.$router.push({ name: "Timer", params: { task: item } });
           }
         }
       } else {
-        // this.$store.dispatch("pomodoro/setStateTime", item.timer);
-        this.$store.dispatch("pomodoro/setStateTime", 15);
+        this.$store.dispatch("pomodoro/setStateTime", item.timer);
+        // this.$store.dispatch("pomodoro/setStateTime", 15);
         this.$router.push({ name: "Timer", params: { task: item } });
       }
     }
