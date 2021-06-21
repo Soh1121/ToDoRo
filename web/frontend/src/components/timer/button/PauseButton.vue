@@ -31,16 +31,13 @@ export default {
   methods: {
     async pause() {
       this.$store.dispatch("pomodoro/pause");
-      console.log("if mae");
       if (this.userId) {
         await this.$store.dispatch("pomodoro/updateTimer", [
           this.userId,
           this.task
         ]);
       } else {
-        console.log("if go")
         this.$store.dispatch("pomodoro/localUpdateTimer", this.task);
-        console.log("update timer");
       }
     }
   }

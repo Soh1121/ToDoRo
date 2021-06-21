@@ -81,6 +81,7 @@ export default {
           // 選択したタスクがスタートしているポモドーロタイマーと異なってプレイ中なら
           if (this.playMode === "play") {
             // 確認画面を表示
+            this.$store.dispatch("pomodoro/setNewTask", item);
             this.$store.dispatch("pomodoro/open");
           } else {
             // その他の状態であれば新しいタイマー値をセット

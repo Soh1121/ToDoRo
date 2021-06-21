@@ -14,6 +14,7 @@ const state = {
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
+  newTask: null,
   nowTask: null,
   time: 0,
   timerId: null,
@@ -61,6 +62,10 @@ const mutations = {
 
   setTask(state, task) {
     state.nowTask = task;
+  },
+
+  setNewTask(state, task) {
+    state.newTask = task;
   },
 
   setTime(state, time) {
@@ -396,6 +401,10 @@ const actions = {
     const day = ("0" + date.getDate()).slice(-2);
     const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
     return excutionDate;
+  },
+
+  setNewTask(context, task) {
+    context.commit("setNewTask", task);
   },
 
   open(context) {

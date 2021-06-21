@@ -4,7 +4,7 @@
       ポモドーロタイマーが動いているタスクがあります
     </v-card-title>
     <v-card-text>
-      現在「{{ task.name }}」のタスクでポモドーロタイマーが動いています。<br />
+      現在「{{ nowTask.name }}」のタスクでポモドーロタイマーが動いています。<br />
       新しくタスクをセットしてタイマー画面に移りますか？
     </v-card-text>
     <div class="u-margin__padding--b28px">
@@ -15,7 +15,7 @@
           large
           color="primary"
           class="u-margin__margin--lrauto"
-          @click="nowTask"
+          @click="nowTaskPlay"
           >現在のタスクを進める</v-btn
         >
       </v-card-actions>
@@ -26,7 +26,7 @@
           large
           color="primary"
           class="u-margin__margin--lrauto"
-          @click="newTask"
+          @click="newTaskPlay"
           >新しいタスクを行う</v-btn
         >
       </v-card-actions>
@@ -51,14 +51,15 @@ import { mapState, mapGetters } from "vuex";
 
 export default {
   props: {
-    task: {
+    newTask: {
       type: Object
     }
   },
 
   computed: {
     ...mapState({
-      task: state => state.pomodoro.nowTask
+      nowTask: state => state.pomodoro.nowTask,
+      newTask: state => state.pomodoro.newTask
     }),
 
     ...mapGetters({
@@ -67,21 +68,24 @@ export default {
   },
 
   methods: {
-    nowTask() {
+    nowTaskPlay() {
       this.$store.dispatch("pomodoro/close");
-      this.$router.push({ name: "Timer", params: { task: this.task } });
+      this.$router.push({ name: "Timer", params: { task: this.nowTask } });
     },
 
-    async newTask() {
+    async newTaskPlay() {
+      this.$store.dispatch("pomodoro/close");
       this.$store.dispatch("pomodoro/pause");
       if (this.userId) {
         await this.$store.dispatch("pomodoro/updateTimer", [
           this.userId,
-          this.task
+          this.nowTask
         ]);
       } else {
-        this.$store.dispatch("pomodoro/localUpdateTimer", this.task);
+        this.$store.dispatch("pomodoro/localUpdateTimer", this.nowTask);
       }
+      this.$store.dispatch("pomodoro/setStateTime", this.newTask.timer);
+      this.$router.push({ name: "Timer", params: { task: this.newTask }});
     },
 
     close() {
