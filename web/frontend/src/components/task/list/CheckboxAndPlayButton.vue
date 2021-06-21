@@ -4,10 +4,7 @@
       :input-value="checkboxState"
       @change="onChange(task)"
     ></v-checkbox>
-    <v-btn
-      icon
-      @click="transition(task)"
-      class="u-margin__margin---6px"
+    <v-btn icon @click="transition(task)" class="u-margin__margin---6px"
       ><v-icon>mdi-play-circle-outline</v-icon></v-btn
     >
   </v-list-item-action>

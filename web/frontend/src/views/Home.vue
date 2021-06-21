@@ -1,6 +1,10 @@
 <template>
   <div>
-    <v-dialog v-model="confirmationDialog" max-width="600px" @click:outside="confirmationClose">
+    <v-dialog
+      v-model="confirmationDialog"
+      max-width="600px"
+      @click:outside="confirmationClose"
+    >
       <TaskConfirmation />
     </v-dialog>
     <v-checkbox

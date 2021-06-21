@@ -4,7 +4,9 @@
       ポモドーロタイマーが動いているタスクがあります
     </v-card-title>
     <v-card-text>
-      現在「{{ nowTask.name }}」のタスクでポモドーロタイマーが動いています。<br />
+      現在「{{
+        nowTask.name
+      }}」のタスクでポモドーロタイマーが動いています。<br />
       新しくタスクをセットしてタイマー画面に移りますか？
     </v-card-text>
     <div class="u-margin__padding--b28px">
@@ -85,7 +87,7 @@ export default {
         this.$store.dispatch("pomodoro/localUpdateTimer", this.nowTask);
       }
       this.$store.dispatch("pomodoro/setStateTime", this.newTask.timer);
-      this.$router.push({ name: "Timer", params: { task: this.newTask }});
+      this.$router.push({ name: "Timer", params: { task: this.newTask } });
     },
 
     close() {
