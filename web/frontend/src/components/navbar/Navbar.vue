@@ -91,9 +91,15 @@ export default {
 
   data() {
     return {
-      drawer: true,
+      drawer: false,
       keywords: ""
     };
+  },
+
+  created: function() {
+    if (1264 < window.innerWidth) {
+      this.drawer = true;
+    }
   },
 
   methods: {
