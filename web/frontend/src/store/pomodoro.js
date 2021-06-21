@@ -10,17 +10,20 @@ const LONG_BREAK_COUNT = 4;
 const ALARM_PATH = require("@/assets/alarm.mp3");
 
 const state = {
+  display: false,
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
-  taskId: null,
-  taskName: null,
+  newTask: null,
+  nowTask: null,
   time: 0,
   timerId: null,
   excutionDate: ""
 };
 
 const getters = {
+  display: state => !!state.display,
+
   playMode: state => state.playMode,
 
   minutes: function(state) {
@@ -57,12 +60,12 @@ const mutations = {
     state.display = bool;
   },
 
-  setTaskId(state, id) {
-    state.taskId = id;
+  setTask(state, task) {
+    state.nowTask = task;
   },
 
-  setTaskName(state, name) {
-    state.taskName = name;
+  setNewTask(state, task) {
+    state.newTask = task;
   },
 
   setTime(state, time) {
@@ -103,14 +106,6 @@ const actions = {
     context.commit("setTime", time);
   },
 
-  setTaskId(context, id) {
-    context.commit("setTaskId", id);
-  },
-
-  setTaskName(context, name) {
-    context.commit("setTaskName", name);
-  },
-
   async initConcentration(context) {
     clearInterval(state.timerId);
     context.commit("setPlayMode", "stop");
@@ -138,6 +133,7 @@ const actions = {
     const userId = data[0];
     const task = data[1];
     context.commit("setPlayMode", "play");
+    context.commit("setTask", task);
     const timerId = setInterval(async () => {
       if (state.time === 0) {
         // アラームを鳴動
@@ -181,6 +177,7 @@ const actions = {
 
   localStart(context, task) {
     context.commit("setPlayMode", "play");
+    context.commit("setTask", task);
     const timerId = setInterval(async () => {
       if (state.time === 0) {
         // カウントダウンを停止
@@ -300,7 +297,7 @@ const actions = {
       }
       return new_task;
     });
-    context.commit("task/setTasks", { data: tasks });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async resetTimer(context, data) {
@@ -345,7 +342,7 @@ const actions = {
       new_task.timer = FULLTIME;
       return new_task;
     });
-    context.commit("task/setTasks", { data: tasks });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async incrementDone(context, data) {
@@ -366,7 +363,7 @@ const actions = {
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
-      context.commit("task/setTasks", response.data);
+      context.commit("task/setTasks", response.data, { root: true });
       return false;
     }
 
@@ -384,7 +381,7 @@ const actions = {
       new_task.done += 1;
       return new_task;
     });
-    context.commit("task/setTasks", { data: tasks });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async incrementPomodoroCount(context, userId) {
@@ -406,8 +403,16 @@ const actions = {
     return excutionDate;
   },
 
+  setNewTask(context, task) {
+    context.commit("setNewTask", task);
+  },
+
   open(context) {
     context.commit("setDisplay", true);
+  },
+
+  close(context) {
+    context.commit("setDisplay", false);
   }
 };
 

@@ -4,30 +4,15 @@
       :input-value="checkboxState"
       @change="onChange(task)"
     ></v-checkbox>
-    <v-dialog v-model="confirmationDialog" persistent max-width="600px">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          icon
-          v-on="on"
-          v-bind="attrs"
-          @click="transition(task)"
-          class="u-margin__margin---6px"
-          ><v-icon>mdi-play-circle-outline</v-icon></v-btn
-        >
-      </template>
-      <TaskConfirmation />
-    </v-dialog>
+    <v-btn icon @click="transition(task)" class="u-margin__margin---6px"
+      ><v-icon>mdi-play-circle-outline</v-icon></v-btn
+    >
   </v-list-item-action>
 </template>
 
 <script>
-import TaskConfirmation from "../TaskConfirmation.vue";
 import { mapState, mapGetters } from "vuex";
 export default {
-  components: {
-    TaskConfirmation
-  },
-
   props: {
     task: {
       type: Object
@@ -42,12 +27,13 @@ export default {
 
   computed: {
     ...mapState({
-      mode: state => state.pomodoro.mode,
-      taskId: state => state.pomodoro.taskId
+      pomodoroMode: state => state.pomodoro.mode,
+      nowTask: state => state.pomodoro.nowTask
     }),
 
     ...mapGetters({
-      userId: "auth/user_id"
+      userId: "auth/user_id",
+      playMode: "pomodoro/playMode"
     })
   },
 
@@ -70,21 +56,39 @@ export default {
     },
 
     transition(item) {
-      if (this.mode === "break") {
+      // 休憩モードだったら集中モードで初期スタート
+      if (this.pomodoroMode === "break") {
         this.$store.dispatch("pomodoro/initConcentration");
       }
+      // ログインしていれば、ポモドーロ数を初期化
       if (this.userId) {
         this.$store.dispatch("pomodoro/initPomodoroCount", this.userId);
       }
-      if (this.taskId) {
-        if (this.taskId === item.task_id) {
+      // すでにポモドーロタイマーをスタートしたことがあれば
+      if (this.nowTask) {
+        // 選択したタスクがスタートしているポモドーロタイマーと一緒だったら
+        if (this.nowTask.task_id === item.task_id) {
+          // モードがプレイでなければ、保存されているタイマー値をセット
+          if (this.playMode !== "play") {
+            this.$store.dispatch("pomodoro/setStateTime", item.timer);
+          }
+          // タイマー画面に遷移
           this.$router.push({ name: "Timer", params: { task: item } });
         } else {
-          this.$store.dispatch("pomodoro/open");
+          // 選択したタスクがスタートしているポモドーロタイマーと異なってプレイ中なら
+          if (this.playMode === "play") {
+            // 確認画面を表示
+            this.$store.dispatch("pomodoro/setNewTask", item);
+            this.$store.dispatch("pomodoro/open");
+          } else {
+            // その他の状態であれば新しいタイマー値をセット
+            this.$store.dispatch("pomodoro/setStateTime", item.timer);
+            this.$router.push({ name: "Timer", params: { task: item } });
+          }
         }
       } else {
-        // this.$store.dispatch("pomodoro/setStateTime", item.timer);
-        this.$store.dispatch("pomodoro/setStateTime", 15);
+        this.$store.dispatch("pomodoro/setStateTime", item.timer);
+        // this.$store.dispatch("pomodoro/setStateTime", 15);
         this.$router.push({ name: "Timer", params: { task: item } });
       }
     }
