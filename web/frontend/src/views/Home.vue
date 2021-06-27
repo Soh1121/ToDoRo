@@ -1,5 +1,12 @@
 <template>
   <div>
+    <v-dialog
+      v-model="confirmationDialog"
+      max-width="600px"
+      @click:outside="confirmationClose"
+    >
+      <TaskConfirmation />
+    </v-dialog>
     <v-checkbox
       v-model="showFinishedTask"
       label="完了済みのタスクを表示する"
@@ -34,6 +41,7 @@ import ContextAndProject from "../components/task/list/ContextAndProject.vue";
 import Date from "../components/task/list/Date.vue";
 import RepeatAndPriority from "../components/task/list/RepeatAndPriority.vue";
 import EditButtonAndDeleteButton from "../components/task/list/EditButtonAndDeleteButton.vue";
+import TaskConfirmation from "../components/task/TaskConfirmation";
 
 export default {
   components: {
@@ -42,7 +50,8 @@ export default {
     ContextAndProject,
     Date,
     RepeatAndPriority,
-    EditButtonAndDeleteButton
+    EditButtonAndDeleteButton,
+    TaskConfirmation
   },
 
   data() {
@@ -62,7 +71,8 @@ export default {
     ...mapGetters({
       userId: "auth/user_id",
       // 値更新時用
-      newStoreTasks: "task/tasks"
+      newStoreTasks: "task/tasks",
+      confirmationDialog: "pomodoro/display"
     })
   },
 
@@ -94,6 +104,10 @@ export default {
         });
       }
       return tasks;
+    },
+
+    confirmationClose: function() {
+      this.$store.dispatch("pomodoro/close");
     }
   },
 

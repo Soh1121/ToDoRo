@@ -4,7 +4,7 @@
     width="100px"
     height="50px"
     :color="color"
-    class="u-margin__margin--t50px"
+    class="u-margin__margin--10px0"
     @click="reset"
   >
     停止
@@ -30,11 +30,16 @@ export default {
 
   methods: {
     async reset() {
-      this.$store.dispatch("pomodoro/reset", this.userId);
-      await this.$store.dispatch("pomodoro/resetTimer", [
-        this.userId,
-        this.task
-      ]);
+      if (this.userId) {
+        this.$store.dispatch("pomodoro/reset", this.userId);
+        await this.$store.dispatch("pomodoro/resetTimer", [
+          this.userId,
+          this.task
+        ]);
+      } else {
+        this.$store.dispatch("pomodoro/localReset");
+        this.$store.dispatch("pomodoro/localResetTimer", this.task);
+      }
     }
   }
 };

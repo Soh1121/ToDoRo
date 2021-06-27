@@ -31,7 +31,14 @@ export default {
     },
 
     async remove(item) {
-      await this.$store.dispatch("task/remove", [this.userId, { data: item }]);
+      if (this.userId) {
+        await this.$store.dispatch("task/remove", [
+          this.userId,
+          { data: item }
+        ]);
+      } else {
+        this.$store.dispatch("task/localRemove", item);
+      }
     }
   }
 };

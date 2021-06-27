@@ -4,7 +4,7 @@
     width="100px"
     height="50px"
     :color="color"
-    class="u-margin__margin--t50px"
+    class="u-margin__margin--10px0"
     @click="start"
   >
     開始
@@ -30,7 +30,11 @@ export default {
 
   methods: {
     start() {
-      this.$store.dispatch("pomodoro/start", [this.userId, this.task]);
+      if (this.userId) {
+        this.$store.dispatch("pomodoro/start", [this.userId, this.task]);
+      } else {
+        this.$store.dispatch("pomodoro/localStart", this.task);
+      }
     }
   }
 };

@@ -4,7 +4,7 @@
     width="100px"
     height="50px"
     :color="color"
-    class="u-margin__margin--t50px"
+    class="u-margin__margin--10px0"
     @click="pause"
   >
     一時停止
@@ -31,10 +31,14 @@ export default {
   methods: {
     async pause() {
       this.$store.dispatch("pomodoro/pause");
-      await this.$store.dispatch("pomodoro/updateTimer", [
-        this.userId,
-        this.task
-      ]);
+      if (this.userId) {
+        await this.$store.dispatch("pomodoro/updateTimer", [
+          this.userId,
+          this.task
+        ]);
+      } else {
+        this.$store.dispatch("pomodoro/localUpdateTimer", this.task);
+      }
     }
   }
 };

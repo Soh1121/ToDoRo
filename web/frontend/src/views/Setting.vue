@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Tab from "./Setting_tab.vue";
+import Tab from "../components/setting/tab.vue";
 
 export default {
   components: {

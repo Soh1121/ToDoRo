@@ -25,6 +25,7 @@
         label="検索"
         class="hidden-sm-and-down"
         clearable
+        v-model="keywords"
       />
 
       <v-spacer />
@@ -76,7 +77,7 @@
 </template>
 
 <script>
-import ControlTask from "./ControlTask.vue";
+import ControlTask from "../task/ControlTask.vue";
 import Drawar from "./Drawer.vue";
 import Login from "./Login.vue";
 import { mapState, mapGetters } from "vuex";
@@ -87,11 +88,20 @@ export default {
     Drawar,
     Login
   },
+
   data() {
     return {
-      drawer: true
+      drawer: false,
+      keywords: ""
     };
   },
+
+  created: function() {
+    if (1264 < window.innerWidth) {
+      this.drawer = true;
+    }
+  },
+
   methods: {
     taskOpen() {
       this.$store.dispatch("task/open", {
@@ -117,8 +127,12 @@ export default {
 
     async logout() {
       await this.$store.dispatch("auth/logout");
+      await this.$store.dispatch("task/localIndex");
+      await this.$store.dispatch("context/localIndex");
+      await this.$store.dispatch("project/localIndex");
     }
   },
+
   computed: {
     ...mapState({
       apiStatus: state => state.auth.apiStatus
@@ -131,6 +145,12 @@ export default {
       loginDialog: "auth/display",
       taskDialog: "task/display"
     })
+  },
+
+  watch: {
+    keywords: function(keywords) {
+      this.$store.dispatch("task/inputKeywords", keywords);
+    }
   }
 };
 </script>

@@ -1,3 +1,7 @@
+.u-margin__margin---6px {
+  margin: -6px;
+}
+
 .u-margin__margin--10px {
   margin: 10px;
 }
@@ -14,6 +18,11 @@
   margin-right: 50px;
 }
 
+.u-margin__margin--lrauto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .u-margin__padding--10px0 {
   padding: 10px 0;
 }
@@ -21,4 +30,8 @@
 .u-margin__padding--r16l16 {
   padding-right: 16px;
   padding-left: 16px;
+}
+
+.u-margin__padding--b28px {
+  padding-bottom: 28px;
 }

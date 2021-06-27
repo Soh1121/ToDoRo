@@ -3,6 +3,7 @@ import Vuex from "vuex";
 import auth from "./auth";
 import context from "./context";
 import error from "./error";
+import load from "./load";
 import pomodoro from "./pomodoro";
 import priority from "./priority";
 import project from "./project";
@@ -17,6 +18,7 @@ export default new Vuex.Store({
     auth,
     context,
     error,
+    load,
     pomodoro,
     priority,
     project,

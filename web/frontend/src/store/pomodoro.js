@@ -1,24 +1,29 @@
 import { OK } from "../util";
 
-const alarmPath = require("@/assets/alarm.mp3");
+// const FULLTIME = 1500;
+const FULLTIME = 15;
+// const SHORT_BREAK = 300;
+const SHORT_BREAK = 5;
+// const LONG_BREAK = 900;
+const LONG_BREAK = 10;
+const LONG_BREAK_COUNT = 4;
+const ALARM_PATH = require("@/assets/alarm.mp3");
 
 const state = {
-  // FULLTIME: 1500,
-  FULLTIME: 15,
-  // SHORT_BREAK: 300,
-  SHORT_BREAK: 5,
-  // LONG_BREAK: 900,
-  LONG_BREAK: 10,
-  LONG_BREAK_COUNT: 4,
+  display: false,
   pomodoroCount: 0,
   mode: "concentration",
   playMode: "stop",
+  newTask: null,
+  nowTask: null,
   time: 0,
   timerId: null,
   excutionDate: ""
 };
 
 const getters = {
+  display: state => !!state.display,
+
   playMode: state => state.playMode,
 
   minutes: function(state) {
@@ -31,9 +36,13 @@ const getters = {
 
   timerCircular: function(state) {
     if (state.mode === "concentration") {
-      return ((state.FULLTIME - state.time) * 100) / state.FULLTIME;
+      return ((FULLTIME - state.time) * 100) / FULLTIME;
     } else if (state.mode === "break") {
-      return ((state.SHORT_BREAK - state.time) * 100) / state.SHORT_BREAK;
+      if (state.pomodoroCount % LONG_BREAK_COUNT !== 0) {
+        return ((SHORT_BREAK - state.time) * 100) / SHORT_BREAK;
+      } else {
+        return ((LONG_BREAK - state.time) * 100) / LONG_BREAK;
+      }
     }
   },
 
@@ -47,6 +56,18 @@ const getters = {
 };
 
 const mutations = {
+  setDisplay(state, bool) {
+    state.display = bool;
+  },
+
+  setTask(state, task) {
+    state.nowTask = task;
+  },
+
+  setNewTask(state, task) {
+    state.newTask = task;
+  },
+
   setTime(state, time) {
     state.time = time;
   },
@@ -85,6 +106,12 @@ const actions = {
     context.commit("setTime", time);
   },
 
+  async initConcentration(context) {
+    clearInterval(state.timerId);
+    context.commit("setPlayMode", "stop");
+    context.commit("setMode", "concentration");
+  },
+
   async initPomodoroCount(context, userId) {
     const excutionDate = await context.dispatch("createExcutionDate");
     context.commit("setExcutionDate", excutionDate);
@@ -106,33 +133,81 @@ const actions = {
     const userId = data[0];
     const task = data[1];
     context.commit("setPlayMode", "play");
-    const timerId = setInterval(() => {
+    context.commit("setTask", task);
+    const timerId = setInterval(async () => {
       if (state.time === 0) {
         // アラームを鳴動
-        const alarm = new Audio(alarmPath);
+        const alarm = new Audio(ALARM_PATH);
         alarm.play();
         // カウントダウンを停止
         clearInterval(state.timerId);
         // タイマーのプレイモードを変更
         context.commit("setPlayMode", "stop");
         if (state.mode === "concentration") {
-          // ポモドーロ数をインクリメント
+          // ローカルのポモドーロ数を更新
+          const excutionDate = await context.dispatch("createExcutionDate");
+          if (excutionDate !== state.excutionDate) {
+            context.commit("setPomodoroCount", 0);
+            context.commit("setExcutionDate", excutionDate);
+          }
+          context.commit("incrementPomodoroCount");
+          // DBのポモドーロ数を更新
           context.dispatch("incrementPomodoroCount", userId);
-          // タスクのポモドーロ数をインクリメント
+          // タスクごとのポモドーロ数を更新
           context.dispatch("incrementDone", [userId, task]);
           // タイマーを再セット
-          if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
-            context.commit("setTime", state.LONG_BREAK);
+          if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+            context.commit("setTime", LONG_BREAK);
           } else {
-            context.commit("setTime", state.SHORT_BREAK);
+            context.commit("setTime", SHORT_BREAK);
           }
           context.commit("setMode", "break");
         } else if (state.mode === "break") {
-          context.commit("setTime", state.FULLTIME);
+          context.commit("setTime", FULLTIME);
           context.commit("setMode", "concentration");
         }
         // タイマーの値をDBに保存
         context.dispatch("updateTimer", [userId, task]);
+        return null;
+      }
+      context.commit("decrementTime");
+    }, 1000);
+    context.commit("setTimerId", timerId);
+  },
+
+  localStart(context, task) {
+    context.commit("setPlayMode", "play");
+    context.commit("setTask", task);
+    const timerId = setInterval(async () => {
+      if (state.time === 0) {
+        // カウントダウンを停止
+        clearInterval(state.timerId);
+        // アラームを鳴動
+        const alarm = new Audio(ALARM_PATH);
+        alarm.play();
+        // タイマーのプレイモードを変更
+        context.commit("setPlayMode", "stop");
+        if (state.mode === "concentration") {
+          // ローカルのポモドーロ数を更新
+          const excutionDate = await context.dispatch("createExcutionDate");
+          if (excutionDate !== state.excutionDate) {
+            context.commit("setPomodoroCount", 0);
+            context.commit("setExcutionDate", excutionDate);
+          }
+          context.commit("incrementPomodoroCount");
+          // タスクごとのポモドーロ数を更新
+          context.dispatch("localIncrementDone", task);
+          // タイマーを再セット
+          if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+            context.commit("setTime", LONG_BREAK);
+          } else {
+            context.commit("setTime", SHORT_BREAK);
+          }
+          context.commit("setMode", "break");
+        } else if (state.mode === "break") {
+          context.commit("setTime", FULLTIME);
+          context.commit("setMode", "concentration");
+        }
         return null;
       }
       context.commit("decrementTime");
@@ -148,15 +223,32 @@ const actions = {
   reset(context, userId) {
     context.commit("setPlayMode", "stop");
     if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
       context.dispatch("incrementPomodoroCount", userId);
-      if (state.pomodoroCount % state.LONG_BREAK_COUNT === 0) {
-        context.commit("setTime", state.LONG_BREAK);
+      if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", LONG_BREAK);
       } else {
-        context.commit("setTime", state.SHORT_BREAK);
+        context.commit("setTime", SHORT_BREAK);
       }
       context.commit("setMode", "break");
     } else if (state.mode === "break") {
-      context.commit("setTime", state.FULLTIME);
+      context.commit("setTime", FULLTIME);
+      context.commit("setMode", "concentration");
+    }
+  },
+
+  localReset(context) {
+    context.commit("setPlayMode", "stop");
+    if (state.mode === "concentration") {
+      context.commit("incrementPomodoroCount");
+      if (state.pomodoroCount % LONG_BREAK_COUNT === 0) {
+        context.commit("setTime", LONG_BREAK);
+      } else {
+        context.commit("setTime", SHORT_BREAK);
+      }
+      context.commit("setMode", "break");
+    } else if (state.mode === "break") {
+      context.commit("setTime", FULLTIME);
       context.commit("setMode", "concentration");
     }
   },
@@ -173,7 +265,7 @@ const actions = {
       }
     }
     if (state.mode === "break") {
-      request["timer"] = state.FULLTIME;
+      request["timer"] = FULLTIME;
     } else {
       request["timer"] = state.time;
     }
@@ -191,6 +283,23 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localUpdateTimer(context, target_task) {
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      if (state.mode === "break") {
+        new_task.timer = FULLTIME;
+      } else {
+        new_task.timer = state.time;
+      }
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
+  },
+
   async resetTimer(context, data) {
     const userId = data[0];
     const task = data[1];
@@ -205,7 +314,7 @@ const actions = {
         request[key] = task[key];
       }
     }
-    request["timer"] = state.FULLTIME;
+    request["timer"] = FULLTIME;
     const response = await window.axios.patch(
       "/api/tasks/" + userId + "/set_timer",
       request
@@ -218,6 +327,22 @@ const actions = {
 
     context.commit("setApiStatus", false);
     context.commit("error/setCode", response.status, { root: true });
+  },
+
+  localResetTimer(context, target_task) {
+    if (state.mode === "concentration") {
+      return null;
+    }
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.timer = FULLTIME;
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
   },
 
   async incrementDone(context, data) {
@@ -238,7 +363,7 @@ const actions = {
 
     if (response.status === OK) {
       context.commit("setApiStatus", true);
-      context.commit("task/setTasks", response.data);
+      context.commit("task/setTasks", response.data, { root: true });
       return false;
     }
 
@@ -246,14 +371,24 @@ const actions = {
     context.commit("error/setCode", response.status, { root: true });
   },
 
+  localIncrementDone(context, target_task) {
+    let tasks = context.rootState.task.tasks.data;
+    tasks = tasks.map(task => {
+      if (task.id !== target_task.task_id) {
+        return task;
+      }
+      let new_task = task;
+      new_task.done += 1;
+      return new_task;
+    });
+    context.commit("task/setTasks", { data: tasks }, { root: true });
+  },
+
   async incrementPomodoroCount(context, userId) {
     const excutionDate = await context.dispatch("createExcutionDate");
-    if (excutionDate !== this.excutionDate) {
-      context.commit("setPomodoroCount", 0);
+    if (excutionDate !== state.excutionDate) {
       context.commit("setExcutionDate", excutionDate);
     }
-
-    context.commit("incrementPomodoroCount");
     window.axios.patch("/api/pomodoros/" + userId, {
       date: excutionDate
     });
@@ -266,6 +401,18 @@ const actions = {
     const day = ("0" + date.getDate()).slice(-2);
     const excutionDate = year + "-" + month + "-" + day + " 00:00:00";
     return excutionDate;
+  },
+
+  setNewTask(context, task) {
+    context.commit("setNewTask", task);
+  },
+
+  open(context) {
+    context.commit("setDisplay", true);
+  },
+
+  close(context) {
+    context.commit("setDisplay", false);
   }
 };
 

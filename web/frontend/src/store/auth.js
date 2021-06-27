@@ -48,6 +48,8 @@ const actions = {
       context.commit("setApiStatus", true);
       context.commit("setUser", response.data);
       context.commit("reverseDisplay", false);
+      context.commit("setLoginErrorMessages", null);
+      context.commit("setRegisterErrorMessages", null);
       return false;
     }
 
@@ -70,6 +72,8 @@ const actions = {
       context.commit("setApiStatus", true);
       context.commit("setUser", response.data);
       context.commit("reverseDisplay", false);
+      context.commit("setLoginErrorMessages", null);
+      context.commit("setRegisterErrorMessages", null);
       return false;
     }
 

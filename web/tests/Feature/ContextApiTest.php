@@ -29,7 +29,8 @@ class ContextApiTest extends TestCase
     {
         $name = 'test';
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('context.store', [
                     'user' => $this->user->id,
                 ]),
@@ -58,7 +59,8 @@ class ContextApiTest extends TestCase
             ->get();
         $name = 'X_深夜（22:00-24:00）';
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('context.store', [
                     'user' => $this->user->id,
                 ]),
@@ -80,14 +82,15 @@ class ContextApiTest extends TestCase
         $name = str_repeat("a", 30);
         $response = $this
             ->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('context.store', [
                     'user' => $this->user->id,
                 ]),
                 compact('name')
             );
 
-            $response->assertStatus(201)
+        $response->assertStatus(201)
             ->assertJsonFragment([
                 'user_id' => (string)$this->user->id,
                 'name' => $name,
@@ -101,7 +104,8 @@ class ContextApiTest extends TestCase
     {
         $name = str_repeat("a", 31);
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('context.store', [
                     'user' => $this->user->id,
                 ]),
@@ -118,7 +122,8 @@ class ContextApiTest extends TestCase
     {
         $name = 'A_早朝（4:00-6:00）';
         $response = $this->actingAs($this->user)
-            ->json('POST',
+            ->json(
+                'POST',
                 route('context.store', [
                     'user' => $this->user->id,
                 ]),
@@ -136,7 +141,8 @@ class ContextApiTest extends TestCase
         // データの取得
         $response = $this
             ->actingAs($this->user)
-            ->json('GET',
+            ->json(
+                'GET',
                 route('context.index', [
                     'user' => $this->user->id,
                 ])
@@ -144,7 +150,7 @@ class ContextApiTest extends TestCase
         $contexts = Context::where('user_id', $this->user->id)
             ->orderBy(Context::CREATED_AT, 'asc')
             ->get();
-        $expected_data = $contexts->map(function($context) {
+        $expected_data = $contexts->map(function ($context) {
             return [
                 'id' => $context->id,
                 'user_id' => $context->user_id,
@@ -169,13 +175,14 @@ class ContextApiTest extends TestCase
         $target_context = Context::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $context_id = $target_context->id;
+        $id = $target_context->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('context.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'context_id')
+                compact('name', 'id')
             );
 
         $response
@@ -195,13 +202,14 @@ class ContextApiTest extends TestCase
         $target_context = Context::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $context_id = $target_context->id;
+        $id = $target_context->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('context.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'context_id')
+                compact('name', 'id')
             );
 
         $response
@@ -221,13 +229,14 @@ class ContextApiTest extends TestCase
         $target_context = Context::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $context_id = $target_context->id;
+        $id = $target_context->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('context.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'context_id')
+                compact('name', 'id')
             );
 
         $response->assertStatus(422);
@@ -242,13 +251,14 @@ class ContextApiTest extends TestCase
         $target_context = Context::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $context_id = $target_context->id;
+        $id = $target_context->id;
         $response = $this->actingAs($this->user)
-            ->json('PATCH',
+            ->json(
+                'PATCH',
                 route('context.update', [
                     $this->user->id,
                 ]),
-                compact('name', 'context_id')
+                compact('name', 'id')
             );
 
         $response->assertStatus(422);
@@ -262,16 +272,17 @@ class ContextApiTest extends TestCase
         $target_context = Context::where('user_id', $this->user->id)
             ->orderBy('created_at', 'asc')
             ->first();
-        $context_id = $target_context->id;
+        $id = $target_context->id;
         $name = $target_context->name;
         $response = $this->actingAs($this->user)
-            ->json('DELETE',
+            ->json(
+                'DELETE',
                 route('context.delete', [
                     $this->user->id,
                 ]),
-                compact(['context_id', 'name'])
+                compact(['id', 'name'])
             );
         $response->assertStatus(200)
-            ->assertJsonMissing(['id' => $context_id]);
+            ->assertJsonMissing(['id' => $id]);
     }
 }

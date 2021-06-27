@@ -15,8 +15,8 @@
 
       <v-data-table
         :headers="headers"
-        :items="contexts"
-        sort-by="context_id"
+        :items="projects.data"
+        sort-by="project_id"
         disable-pagination="true"
         hide-default-footer="true"
       >
@@ -27,11 +27,11 @@
                 <v-container>
                   <!-- エラーメッセージ表示部分 -->
                   <v-row
-                    v-if="contextNameErrors"
+                    v-if="projectNameErrors"
                     class="font-weight-bold red--text text--darken-3"
                   >
-                    <ul v-if="contextNameErrors.name">
-                      <li v-for="msg in contextNameErrors.name" :key="msg">
+                    <ul v-if="projectNameErrors.name">
+                      <li v-for="msg in projectNameErrors.name" :key="msg">
                         {{ msg }}
                       </li>
                     </ul>
@@ -40,11 +40,11 @@
                   <v-row>
                     <v-col cols="12" sm="12" md="12">
                       <v-text-field
-                        label="コンテキスト名"
+                        label="プロジェクト名"
                         hint="30文字以内"
                         required
                         color="orange"
-                        v-model="contextAddForm.name"
+                        v-model="projectSettingForm.name"
                       />
                     </v-col>
                   </v-row>
@@ -70,6 +70,7 @@
             </v-card>
           </v-dialog>
         </template>
+
         <template v-slot:item.actions="{ item }">
           <div v-if="item.name !== '未設定'">
             <v-icon @click="edit(item)">
@@ -86,24 +87,16 @@
 </template>
 
 <script>
-import { OK } from "../util";
-import { mapState, mapGetters } from "vuex";
+import { mapGetters, mapState } from "vuex";
 
 export default {
   data() {
     return {
       dialog: false,
-      // 設定画面に表示するコンテキストデータ
-      contexts: [
-        {
-          context_id: 0,
-          name: ""
-        }
-      ],
       // 設定データ表示用のヘッダー
       headers: [
         {
-          text: "コンテキスト名",
+          text: "プロジェクト名",
           value: "name"
         },
         {
@@ -114,57 +107,37 @@ export default {
         }
       ],
       // 設定用のダイアログのフォームデータ
-      contextAddForm: {}
+      projectSettingForm: {}
     };
   },
 
   computed: {
     ...mapState({
-      apiStatus: state => state.context.apiStatus,
-      contextNameErrors: state => state.context.contextNameErrorMessages
+      apiStatus: state => state.project.apiStatus,
+      projectNameErrors: state => state.project.projectNameErrorMessages
     }),
 
     ...mapGetters({
       userId: "auth/user_id",
-      storeContexts: "context/contexts"
+      projects: "project/projects"
     }),
 
     isPersistedItem() {
-      return !!this.contextAddForm.context_id;
+      return !!this.projectSettingForm.id;
     }
   },
 
   methods: {
-    async fetch() {
-      const route = "/api/contexts/" + this.userId;
-      const response = await window.axios.get(route);
-
-      if (response.status !== OK) {
-        this.$store.commit("error/setCode", response.status);
-        return false;
-      }
-
-      let datas = [];
-      response.data.data.forEach(function(item) {
-        datas.push({
-          context_id: item.id,
-          name: item.name
-        });
-      });
-
-      this.contexts = datas;
-    },
-
     add() {
-      this.contextAddForm = {};
+      this.projectSettingForm = {};
       this.clearError();
       this.dialog = true;
     },
 
     async create() {
-      await this.$store.dispatch("context/create", [
+      await this.$store.dispatch("project/create", [
         this.userId,
-        this.contextAddForm
+        this.projectSettingForm
       ]);
       if (this.apiStatus) {
         this.close();
@@ -172,15 +145,15 @@ export default {
     },
 
     edit(item) {
-      this.contextAddForm = item;
+      this.projectSettingForm = item;
       this.clearError();
       this.dialog = true;
     },
 
     async update() {
-      await this.$store.dispatch("context/update", [
+      await this.$store.dispatch("project/update", [
         this.userId,
-        this.contextAddForm
+        this.projectSettingForm
       ]);
       if (this.apiStatus) {
         this.close();
@@ -188,10 +161,10 @@ export default {
     },
 
     async remove(item) {
-      this.contextAddForm = item;
-      await this.$store.dispatch("context/remove", [
+      this.projectSettingForm = item;
+      await this.$store.dispatch("project/remove", [
         this.userId,
-        { data: this.contextAddForm }
+        { data: this.projectSettingForm }
       ]);
     },
 
@@ -200,29 +173,7 @@ export default {
     },
 
     clearError() {
-      this.$store.commit("context/setContextNameErrorMessages", null);
-    }
-  },
-
-  watch: {
-    $route: {
-      async handler() {
-        const functions = [this.fetch()];
-        await Promise.all(functions);
-      },
-      immediate: true
-    },
-    storeContexts(values) {
-      if (values) {
-        let datas = [];
-        values["data"].forEach(function(item) {
-          datas.push({
-            context_id: item.id,
-            name: item.name
-          });
-        });
-        this.contexts = datas;
-      }
+      this.$store.commit("project/setProjectNameErrorMessages", null);
     }
   }
 };

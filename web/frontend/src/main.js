@@ -11,27 +11,43 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 const createApp = async () => {
-  // プロジェクト・コンテキスト・タスクを取得する
-  async function fetch(target, user_id) {
-    await store.dispatch(target + "/index", [user_id]);
-  }
+  async function loadData() {
+    // プロジェクト・コンテキスト・タスクを取得する
+    async function fetch(target, user_id) {
+      await store.dispatch(target + "/index", [user_id]);
+    }
 
-  // 繰り返し・優先度を取得する
-  async function fetchDefaultData(target) {
-    await store.dispatch(target + "/index");
-  }
+    // ローカル利用のプロジェクト・コンテキスト・タスクを取得する
+    async function localFetch(target) {
+      await store.dispatch(target + "/localIndex");
+    }
 
-  await store.dispatch("auth/currentUser");
-  const user_id = store.getters["auth/user_id"];
-  if (user_id) {
-    const functions = [
-      fetch("task", user_id),
-      fetch("context", user_id),
-      fetch("project", user_id),
-      fetchDefaultData("repeat"),
-      fetchDefaultData("priority")
-    ];
-    Promise.all(functions);
+    // 繰り返し・優先度を取得する
+    async function fetchDefaultData(target) {
+      await store.dispatch(target + "/index");
+    }
+
+    await store.dispatch("auth/currentUser");
+    const user_id = store.getters["auth/user_id"];
+    if (user_id) {
+      const functions = [
+        fetch("task", user_id),
+        fetch("context", user_id),
+        fetch("project", user_id),
+        fetchDefaultData("repeat"),
+        fetchDefaultData("priority")
+      ];
+      await Promise.all(functions);
+    } else {
+      const functions = [
+        localFetch("task"),
+        localFetch("context"),
+        localFetch("project"),
+        fetchDefaultData("repeat"),
+        fetchDefaultData("priority")
+      ];
+      await Promise.all(functions);
+    }
   }
 
   new Vue({
@@ -40,6 +56,12 @@ const createApp = async () => {
     vuetify,
     render: h => h(App)
   }).$mount("#app");
+
+  // ロード画面の表示
+  store.dispatch("load/changeLoading", true);
+  await loadData();
+  // ロード画面の非表示
+  store.dispatch("load/changeLoading", false);
 };
 
 createApp();

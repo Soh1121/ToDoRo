@@ -8,19 +8,19 @@
   >
     <v-card height="100%" tile class="l-sidebar">
       <Group />
-      <Calendar class="l-sidebar__inner--bottom" />
+      <!-- <Calendar class="l-sidebar__inner--bottom" /> -->
     </v-card>
   </v-navigation-drawer>
 </template>
 
 <script>
-import Group from "./Drawer_group.vue";
-import Calendar from "./Drawer_calendar.vue";
+import Group from "./drawer/group.vue";
+// import Calendar from "./drawer/calendar.vue";
 
 export default {
   components: {
-    Group,
-    Calendar
+    Group
+    // Calendar
   },
 
   props: ["drawer"],

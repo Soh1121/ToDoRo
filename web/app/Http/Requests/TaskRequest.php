@@ -47,6 +47,7 @@ class TaskRequest extends FormRequest
             'name.required' => 'タスク名を入力してください',
             'start_date.required' => '開始日を入力してください',
             'due_date.required' => '終了日を入力してください',
+            'name.max' => 'タスク名には140文字以下の文字列を指定してください',
             'start_date.before_or_equal' => '開始日は終了日以前を選択してください',
             'due_date.after_or_equal' => '終了日は開始日以後を選択してください',
         ];
