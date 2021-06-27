@@ -5,13 +5,16 @@ services:
     ports:
       - 80:80
     volumes:
+      - ./web:/var/www
       - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web
   web:
     build: .
     environment:
       - "TZ=Asia/Tokyo"
     volumes:
-      - ./web:/var/www/html/ToDoRo
+      - ./web:/var/www
     ports:
       - 8081:8081
       - 3000:3000
