@@ -1,11 +1,11 @@
 import { OK } from "../util";
 
-// const FULLTIME = 1500;
-const FULLTIME = 15;
-// const SHORT_BREAK = 300;
-const SHORT_BREAK = 5;
-// const LONG_BREAK = 900;
-const LONG_BREAK = 10;
+const FULLTIME = 1500;
+// const FULLTIME = 15;
+const SHORT_BREAK = 300;
+// const SHORT_BREAK = 5;
+const LONG_BREAK = 900;
+// const LONG_BREAK = 10;
 const LONG_BREAK_COUNT = 4;
 const ALARM_PATH = require("@/assets/alarm.mp3");
 
