@@ -3,9 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.4.1-node-browsers
-      - working_directory: ~/todoro
-      - steps:
-        - cechkout
+    working_directory: ~/todoro
+    steps:
+      - checkout
       - run:
           name: Update apt-get
           command: sudo apt-get update
