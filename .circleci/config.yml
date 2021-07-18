@@ -24,3 +24,4 @@ jobs:
       - run:
           name: Run PHPUnit
           command: vendor/bin/phpunit
+          working_directory: ~/todoro/web
