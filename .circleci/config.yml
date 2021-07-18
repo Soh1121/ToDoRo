@@ -16,6 +16,7 @@ jobs:
       - run:
           name: Install PHP libraries
           command: composer install -n --prefer-dist
+          working_directory: ~/todoro/web
       - save_cache:
           paths:
             - ./vendor
