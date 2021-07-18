@@ -11,7 +11,7 @@ jobs:
           command: sudo apt-get update
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
             - v1-dependencies-
       - run:
           name: Install PHP libraries
@@ -19,7 +19,7 @@ jobs:
       - save_cache:
           paths:
             - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+          key: v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
       - run:
           name: Run PHPUnit
           command: vendor/bin/phpunit
