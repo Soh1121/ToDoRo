@@ -17,4 +17,4 @@ RUN apt-get update \
   && npm install -g @vue/cli \
   && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /var/www/html/ToDoRo
+WORKDIR /var/www
