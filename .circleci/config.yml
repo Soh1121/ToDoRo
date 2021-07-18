@@ -3,23 +3,25 @@ jobs:
   build:
     docker:
       - image: circleci/php:7.4.1-node-browsers
-      - working_directory: ~/todoro
-      - steps:
-        - cechkout
+    working_directory: ~/todoro
+    steps:
+      - checkout
       - run:
           name: Update apt-get
           command: sudo apt-get update
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
             - v1-dependencies-
       - run:
           name: Install PHP libraries
           command: composer install -n --prefer-dist
+          working_directory: ~/todoro/web
       - save_cache:
           paths:
             - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+          key: v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
       - run:
           name: Run PHPUnit
           command: vendor/bin/phpunit
+          working_directory: ~/todoro/web
