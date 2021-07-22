@@ -1,6 +1,8 @@
-version: 2
+version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@6.15.3
 jobs:
-  build:
+  test:
     docker:
       - image: circleci/php:7.4.1-node-browsers
     working_directory: ~/todoro
@@ -25,3 +27,32 @@ jobs:
           name: Run PHPUnit
           command: vendor/bin/phpunit
           working_directory: ~/todoro/web
+
+  build_and_push_image:
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - checkout
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ACCOUNT_URL
+          aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+          aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+          repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          # path:
+          # dockerfile:
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - test
+      - build_and_push_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+                - feature/pushForECRByCircleCI
