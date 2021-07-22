@@ -52,7 +52,7 @@ commands:
             echo "export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SecretAccessKey')" >> ${BASH_ENV}
             echo "export AWS_SESSION_TOKEN=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SessionToken')"  >> ${BASH_ENV}
 
-            cat <<EOT > "aws-env.sh"
+            cat \<<EOT > "aws-env.sh"
             export AWS_ACCESS_KEY_ID="$(echo $AWS_STS_CREDENTIALS | jq -r '.AccessKeyId')"
             export AWS_SECRET_ACCESS_KEY="$(echo $AWS_STS_CREDENTIALS | jq -r '.SecretAccessKey')"
             export AWS_SESSION_TOKEN="$(echo $AWS_STS_CREDENTIALS | jq -r '.SessionToken')"
