@@ -1,7 +1,4 @@
 version: 2.1
-orbs:
-  aws-ecr: circleci/aws-ecr@6.15.3
-
 executors:
   my-executor:
     docker:
@@ -61,6 +58,11 @@ commands:
             export AWS_SESSION_TOKEN="$(echo $AWS_STS_CREDENTIALS | jq -r '.SessionToken')"
             EOT
             source aws-env.sh
+      - run:
+          name: Set env vars for prod
+          command: |
+            echo "ENV_NAME=prod" >> $BASH_ENV
+      - run: docker-compose up -d --build web nginx
 
 jobs:
   test:
