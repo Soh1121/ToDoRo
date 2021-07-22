@@ -58,11 +58,6 @@ commands:
             export AWS_SESSION_TOKEN="$(echo $AWS_STS_CREDENTIALS | jq -r '.SessionToken')"
             EOT
             source aws-env.sh
-      - run:
-          name: Set env vars for prod
-          command: |
-            echo "ENV_NAME=prod" >> $BASH_ENV
-      - run: docker-compose up -d --build web nginx
 
 jobs:
   test:
@@ -99,13 +94,17 @@ jobs:
       - install
       - save
       - assume_role
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ACCOUNT_URL
-          aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-          aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-          repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - run:
+          name: Set env vars for prod
+          command: echo "ENV_NAME=prod" >> $BASH_ENV
+      - run: docker-compose up -d --build web nginx
+      # - aws-ecr/build-and-push-image:
+      #     account-url: AWS_ACCOUNT_URL
+      #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+      #     aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+      #     repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
+      #     region: AWS_REGION
+      #     tag: "${CIRCLE_SHA1}"
           # path:
           # dockerfile:
 
