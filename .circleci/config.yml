@@ -1,6 +1,24 @@
 version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@6.15.3
+
+commands:
+  assume_role:
+    steps:
+      - run:
+          name: Assume Role
+          command: |
+            AWS_STS_CREDENTIALS="$(aws sts assume-role \
+              --role-arn=${PROD_AWS_ASSUME_ROLE_ARN} \
+              --role-session-name "CircleCI" \
+              --external-id 00001 \
+              --duration-seconds 1800 \
+              --query "Credentials" \
+              --output "json")"
+            echo "export AWS_ACCESS_KEY_ID=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.AccessKeyId')" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SecretAccessKey')" >> ${BASH_ENV}
+            echo "export AWS_SESSION_TOKEN=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SessionToken')"  >> ${BASH_ENV}
+
 jobs:
   test:
     docker:
@@ -33,11 +51,12 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
+      - assume_role
       - aws-ecr/build-and-push-image:
           account-url: AWS_ACCOUNT_URL
           aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
           aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-          repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
+          # repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
           region: AWS_REGION
           tag: "${CIRCLE_SHA1}"
           # path:
@@ -55,4 +74,4 @@ workflows:
             branches:
               only:
                 - master
-                - feature/pushForECRByCircleCI
+                - feature/AssumeRoleAtCicleCI
