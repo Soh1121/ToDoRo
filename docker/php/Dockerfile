@@ -1,5 +1,7 @@
 FROM php:7.4.6-fpm
 
+ENV TZ=Asia/Tokyo
+
 COPY install-composer.sh /
 RUN apt-get update \
   && apt-get install --no-install-recommends -y wget git unzip libpq-dev \
@@ -16,5 +18,7 @@ RUN apt-get update \
   && : 'Install Vue CLI' \
   && npm install -g @vue/cli \
   && rm -rf /var/lib/apt/lists/*
+
+COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /var/www
