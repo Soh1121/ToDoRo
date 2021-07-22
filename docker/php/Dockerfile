@@ -2,7 +2,7 @@ FROM php:7.4.6-fpm
 
 ENV TZ=Asia/Tokyo
 
-COPY install-composer.sh /
+COPY ./docker/php/install-composer.sh /
 RUN apt-get update \
   && apt-get install --no-install-recommends -y wget git unzip libpq-dev \
   && : 'Install Node.js' \
