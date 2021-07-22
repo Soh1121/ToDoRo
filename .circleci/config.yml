@@ -32,17 +32,6 @@ commands:
               sudo ./aws/install --install-dir ~/work/aws-cli
             fi
 
-  access:
-    steps:
-      - run:
-          name: access
-          command: |
-
-
-
-
-            ./assume_role.sh
-
   assume_role:
     steps:
       - run:
