@@ -97,6 +97,7 @@ jobs:
       - run:
           name: Set env vars for prod
           command: echo "ENV_NAME=prod" >> $BASH_ENV
+      - run: ls -la
       - run: docker-compose up -d --build web nginx
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
