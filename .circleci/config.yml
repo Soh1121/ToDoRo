@@ -2,16 +2,60 @@ version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@6.15.3
 
+executors:
+  my-executor:
+    docker:
+      - image: circleci/python:3.8.5
+    working_directory: ~/work
+
 commands:
+  restore:
+    steps:
+      - restore_cache:
+          key: work-v1-{{ .Revision }}
+
+  save:
+    steps:
+      - save_cache:
+          paths:
+            - "aws-cli"
+          key: work-v1-{{ .Revision }}
+
+  install:
+    steps:
+      - run:
+          name: install
+          command: |
+            if [[ ! -d aws-cli ]]; then
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install --install-dir ~/work/aws-cli
+            fi
+
+  access:
+    steps:
+      - run:
+          name: access
+          command: |
+
+
+
+
+            ./assume_role.sh
+
   assume_role:
     steps:
       - run:
           name: Assume Role
           command: |
+            export PATH=$PATH:$HOME/work/aws-cli/v2/current/bin
+
+            aws --version
+
             AWS_STS_CREDENTIALS="$(aws sts assume-role \
               --role-arn=${PROD_AWS_ASSUME_ROLE_ARN} \
               --role-session-name "CircleCI" \
-              --external-id 00001 \
+              --external-id ${AWS_DEPLOY_IAM_ROLE_EXTERNAL_ID} \
               --duration-seconds 1800 \
               --query "Credentials" \
               --output "json")"
@@ -51,6 +95,9 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
+      - restore
+      - install
+      - save
       - assume_role
       - aws-ecr/build-and-push-image:
           account-url: AWS_ACCOUNT_URL
