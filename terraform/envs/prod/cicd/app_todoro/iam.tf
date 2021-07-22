@@ -31,3 +31,12 @@ resource "aws_iam_role" "deployer" {
     Name = "${local.name_prefix}-${local.service_name}-deployer"
   }
 }
+
+data "aws_iam_policy" "ecr_power_user" {
+  arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPowerUser"
+}
+
+resource "aws_iam_role_policy_attachment" "role_deployer_policy_ecr_power_user" {
+  role = aws_iam_role.deployer.name
+  policy_arn = data.aws_iam_policy.ecr_power_user.arn
+}
