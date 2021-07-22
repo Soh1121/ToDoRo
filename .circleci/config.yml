@@ -33,14 +33,13 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - aws-ecr/build_and_push_image:
-        account-url: "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}
-          .amazonaws.com"
-        repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
-        region: ${AWS_REGION}
-        tag: "${CIRCLE_SHA1}"
-        # path:
-        # dockerfile:
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ACCOUNT_URL
+          repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
+          region: AWS_REGION
+          tag: "${CIRCLE_SHA1}"
+          # path:
+          # dockerfile:
 
 workflows:
   version: 2
@@ -48,10 +47,10 @@ workflows:
     jobs:
       - test
       - build_and_push_image:
-        requires:
-          - test
-        filters:
-          branches:
-            only:
-              - master
-              - feature/pushForECRByCircleCI
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+                - feature/pushForECRByCircleCI
