@@ -56,7 +56,7 @@ jobs:
           account-url: AWS_ACCOUNT_URL
           aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
           aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-          # repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
+          repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
           region: AWS_REGION
           tag: "${CIRCLE_SHA1}"
           # path:
