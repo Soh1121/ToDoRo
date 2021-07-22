@@ -2,7 +2,7 @@ version: 2.1
 executors:
   my-executor:
     docker:
-      - image: circleci/php:7.4.1-node-browsers
+      - image: circleci/classic:edge
     working_directory: ~/todoro
 
 commands:
@@ -98,7 +98,7 @@ jobs:
           name: Set env vars for prod
           command: echo "ENV_NAME=prod" >> $BASH_ENV
       - run: ls -la
-      - run: docker compose up -d --build web nginx
+      - run: docker-compose up -d --build web nginx
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
