@@ -20,6 +20,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
-COPY --chown=www-data:www-data ./web /work/web
+COPY --chown=www-data:www-data ./web /var/www
 
-WORKDIR /work/web
+WORKDIR /var/www

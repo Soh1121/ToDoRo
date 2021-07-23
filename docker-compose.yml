@@ -7,7 +7,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./web:/work/web
+      - ./web:/var/www
     depends_on:
       - web
   web:
@@ -15,7 +15,7 @@ services:
       context: .
       dockerfile: ./docker/php/Dockerfile
     volumes:
-      - ./web:/work/web
+      - ./web:/var/www
     ports:
       - 8081:8081
       - 3000:3000
