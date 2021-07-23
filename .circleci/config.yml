@@ -133,6 +133,9 @@ jobs:
           name: Install JavaScript packages
           command: docker-compose exec -T web bash -c "cd ./frontend && npm ci"
       - save_npm
+      - run:
+          name: JavaScript transpile
+          command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
