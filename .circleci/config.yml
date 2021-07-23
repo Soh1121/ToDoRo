@@ -1,6 +1,67 @@
 version: 2.1
 orbs:
   aws-ecr: circleci/aws-ecr@6.15.3
+
+executors:
+  my-executor:
+    docker:
+      - image: circleci/python:3.8.5
+    working_directory: ~/work
+
+commands:
+  restore:
+    steps:
+      - restore_cache:
+          key: work-v1-{{ .Revision }}
+
+  save:
+    steps:
+      - save_cache:
+          paths:
+            - "aws-cli"
+          key: work-v1-{{ .Revision }}
+
+  install:
+    steps:
+      - run:
+          name: install
+          command: |
+            if [[ ! -d aws-cli ]]; then
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install --install-dir ~/work/aws-cli
+            fi
+
+  assume_role:
+    steps:
+      - run:
+          name: Assume Role
+          command: |
+            export PATH=$PATH:$HOME/work/aws-cli/v2/current/bin
+
+            aws --version
+
+            aws configure set aws_access_key_id ${PROD_AWS_ACCESS_KEY_ID}
+            aws configure set aws_secret_access_key ${PROD_AWS_SECRET_ACCESS_KEY}
+
+            AWS_STS_CREDENTIALS="$(aws sts assume-role \
+              --role-arn "${PROD_AWS_ASSUME_ROLE_ARN}" \
+              --role-session-name "CircleCI" \
+              --external-id ${AWS_DEPLOY_IAM_ROLE_EXTERNAL_ID} \
+              --duration-seconds 1800 \
+              --query "Credentials" \
+              --output "json")"
+            echo "export AWS_ACCESS_KEY_ID=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.AccessKeyId')" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SecretAccessKey')" >> ${BASH_ENV}
+            echo "export AWS_SESSION_TOKEN=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SessionToken')"  >> ${BASH_ENV}
+
+            cat \<<EOT > "aws-env.sh"
+            export AWS_ACCESS_KEY_ID="$(echo $AWS_STS_CREDENTIALS | jq -r '.AccessKeyId')"
+            export AWS_SECRET_ACCESS_KEY="$(echo $AWS_STS_CREDENTIALS | jq -r '.SecretAccessKey')"
+            export AWS_SESSION_TOKEN="$(echo $AWS_STS_CREDENTIALS | jq -r '.SessionToken')"
+            EOT
+            source aws-env.sh
+
 jobs:
   test:
     docker:
@@ -29,10 +90,13 @@ jobs:
           working_directory: ~/todoro/web
 
   build_and_push_image:
-    machine:
-      image: ubuntu-1604:201903-01
+    executor: my-executor
     steps:
       - checkout
+      - restore
+      - install
+      - save
+      - assume_role
       - aws-ecr/build-and-push-image:
           account-url: AWS_ACCOUNT_URL
           aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
@@ -55,4 +119,4 @@ workflows:
             branches:
               only:
                 - master
-                - feature/pushForECRByCircleCI
+                - feature/AssumeRoleAtCircleCI
