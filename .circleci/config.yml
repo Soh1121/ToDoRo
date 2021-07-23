@@ -99,10 +99,11 @@ jobs:
           command: echo "ENV_NAME=prod" >> $BASH_ENV
       - setup_remote_docker
       - run: docker-compose up -d --build web nginx
-      - run: ls -la /var/www
       - run:
           name: Install PHP related packages
-          command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
+          command: |
+            docker-compose exec -T web ls -la
+            docker-compose exec -T web composer install -n --prefer-dist --no-dev
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
@@ -117,10 +118,10 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - test
+      # - test
       - build_and_push_image:
-          requires:
-            - test
+          # requires:
+          #   - test
           filters:
             branches:
               only:
