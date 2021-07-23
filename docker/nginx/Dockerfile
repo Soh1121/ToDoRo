@@ -15,4 +15,4 @@ COPY --from=node /opt /opt
 # nginx config file
 COPY ./docker/nginx/*.conf /etc/nginx/conf.d/default.conf
 
-WORKDIR /var/www
+WORKDIR /work/web

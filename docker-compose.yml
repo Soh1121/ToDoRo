@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 services:
   nginx:
     build:
@@ -7,7 +7,9 @@ services:
     ports:
       - 80:80
     volumes:
-      - ./web:/var/www
+      - type: bind
+        source: ./web
+        target: /work/web
     depends_on:
       - web
   web:
