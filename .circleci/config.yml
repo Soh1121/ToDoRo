@@ -105,6 +105,8 @@ jobs:
             echo "pwd"
             docker-compose exec -T web pwd
             echo "ls"
+            ls
+            echo "dc ls"
             docker-compose exec -T web ls
             docker-compose exec -T web composer install -n --prefer-dist --no-dev
       # - aws-ecr/build-and-push-image:
