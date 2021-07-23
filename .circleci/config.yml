@@ -99,6 +99,7 @@ jobs:
           command: echo "ENV_NAME=prod" >> $BASH_ENV
       - setup_remote_docker
       - run: docker-compose up -d --build web nginx
+      - run: ls -la /var/www
       - run:
           name: Install PHP related packages
           command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
