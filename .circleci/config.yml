@@ -6,17 +6,29 @@ executors:
     working_directory: ~/todoro
 
 commands:
-  restore:
+  restore_aws:
     steps:
       - restore_cache:
           key: work-v1-{{ .Revision }}
 
-  save:
+  save_aws:
     steps:
       - save_cache:
           paths:
             - "aws-cli"
           key: work-v1-{{ .Revision }}
+
+  restore_composer:
+    steps:
+      - restore_cache:
+          key: composer-v1-{{ .Revision }}
+
+  save_composer:
+    steps:
+      - save_cache:
+          paths:
+            - "web/vendor"
+          key: composer-v1-{{ .Revision }}
 
   install:
     steps:
@@ -90,25 +102,20 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - restore
+      - restore_aws
       - install
-      - save
+      - save_aws
       - assume_role
       - run:
           name: Set env vars for prod
           command: echo "ENV_NAME=prod" >> $BASH_ENV
       - setup_remote_docker
       - run: docker-compose up -d --build web nginx
+      - restore_composer
       - run:
           name: Install PHP related packages
-          command: |
-            echo "pwd"
-            docker-compose exec -T web pwd
-            echo "ls"
-            ls
-            echo "dc ls /var/www"
-            docker-compose exec -T web ls /var/www
-            docker-compose exec -T web composer install -n --prefer-dist --no-dev
+          command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
+      - save_composer
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
