@@ -30,6 +30,18 @@ commands:
             - "web/vendor"
           key: composer-v1-{{ .Revision }}
 
+  restore_npm:
+    steps:
+      - restore_cache:
+          key: npm-v1-{{ .Revision }}
+
+  save_npm:
+    steps:
+      - save_cache:
+          paths:
+            - "web/frontend/node_modules"
+          key: npm-v1-{{ .Revision }}
+
   install:
     steps:
       - run:
@@ -116,6 +128,11 @@ jobs:
           name: Install PHP related packages
           command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
       - save_composer
+      - restore_npm
+      - run:
+          name: Install JavaScript packages
+          command: docker-compose exec -T web bash -c "cd ./frontend && npm ci"
+      - save_npm
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
