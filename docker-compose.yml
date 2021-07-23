@@ -15,7 +15,9 @@ services:
       context: .
       dockerfile: ./docker/php/Dockerfile
     volumes:
-      - ./web:/var/www
+      - type: bind
+        source: ./web
+        target: /work/web
     ports:
       - 8081:8081
       - 3000:3000
