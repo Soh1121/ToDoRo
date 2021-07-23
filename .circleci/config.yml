@@ -1,25 +1,46 @@
 version: 2.1
-orbs:
-  aws-ecr: circleci/aws-ecr@6.15.3
-
 executors:
   my-executor:
     docker:
-      - image: circleci/python:3.8.5
-    working_directory: ~/work
+      - image: circleci/php:7.4.1-node-browsers
+    working_directory: ~/todoro
 
 commands:
-  restore:
+  restore_aws:
     steps:
       - restore_cache:
           key: work-v1-{{ .Revision }}
 
-  save:
+  save_aws:
     steps:
       - save_cache:
           paths:
             - "aws-cli"
           key: work-v1-{{ .Revision }}
+
+  restore_composer:
+    steps:
+      - restore_cache:
+          key: composer-v1-{{ .Revision }}
+
+  save_composer:
+    steps:
+      - save_cache:
+          paths:
+            - "web/vendor"
+          key: composer-v1-{{ .Revision }}
+
+  restore_npm:
+    steps:
+      - restore_cache:
+          key: npm-v1-{{ .Revision }}
+
+  save_npm:
+    steps:
+      - save_cache:
+          paths:
+            - "web/frontend/node_modules"
+          key: npm-v1-{{ .Revision }}
 
   install:
     steps:
@@ -93,17 +114,35 @@ jobs:
     executor: my-executor
     steps:
       - checkout
-      - restore
+      - restore_aws
       - install
-      - save
+      - save_aws
       - assume_role
-      - aws-ecr/build-and-push-image:
-          account-url: AWS_ACCOUNT_URL
-          aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-          aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-          repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
-          region: AWS_REGION
-          tag: "${CIRCLE_SHA1}"
+      - run:
+          name: Set env vars for prod
+          command: echo "ENV_NAME=prod" >> $BASH_ENV
+      - setup_remote_docker
+      - run: docker-compose up -d --build web nginx
+      - restore_composer
+      - run:
+          name: Install PHP related packages
+          command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
+      - save_composer
+      - restore_npm
+      - run:
+          name: Install JavaScript packages
+          command: docker-compose exec -T web bash -c "cd ./frontend && npm ci"
+      - save_npm
+      - run:
+          name: JavaScript transpile
+          command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
+      # - aws-ecr/build-and-push-image:
+      #     account-url: AWS_ACCOUNT_URL
+      #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
+      #     aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
+      #     repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
+      #     region: AWS_REGION
+      #     tag: "${CIRCLE_SHA1}"
           # path:
           # dockerfile:
 
@@ -119,4 +158,3 @@ workflows:
             branches:
               only:
                 - master
-                - feature/AssumeRoleAtCircleCI

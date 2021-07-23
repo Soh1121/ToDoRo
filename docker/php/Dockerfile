@@ -2,7 +2,7 @@ FROM php:7.4.6-fpm
 
 ENV TZ=Asia/Tokyo
 
-COPY install-composer.sh /
+COPY ./docker/php/install-composer.sh /
 RUN apt-get update \
   && apt-get install --no-install-recommends -y wget git unzip libpq-dev \
   && : 'Install Node.js' \
@@ -20,5 +20,6 @@ RUN apt-get update \
   && rm -rf /var/lib/apt/lists/*
 
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
+COPY --chown=www-data:www-data ./web /var/www
 
 WORKDIR /var/www
