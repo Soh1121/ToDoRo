@@ -104,10 +104,8 @@ jobs:
           command: |
             echo "pwd"
             docker-compose exec -T web pwd
-            echo "ls /work/web"
-            docker-compose exec -T web ls /work/web
-            echo "ls ~/"
-            docker-compose exec -T web ls ~/
+            echo "ls"
+            docker-compose exec -T web ls
             docker-compose exec -T web composer install -n --prefer-dist --no-dev
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
