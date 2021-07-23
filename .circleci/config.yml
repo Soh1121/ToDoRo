@@ -80,6 +80,23 @@ commands:
           name: Login to ECR
           command: aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
 
+  push_nginx_image_to_ecr:
+    steps:
+      - run:
+          name: Push nginx image to ECR
+          env:
+            DOCKER_BUILDKIT: 1
+            ECR_REPOSITORY: ${SERVICE_NAME}-${ENV_NAME}-nginx
+          command: |
+            echo "export ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r '[.repositories[].registryId] | unique | .[]')" >> ${BASH_ENV}
+            docker build \
+              --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE-1 . \
+              -f docker/nginx/Dockerfile \
+              -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
+              -t $ECR_REGISTRY/$ECR_REPOSITORY:${CIRCLE_SHA1}
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:${CIRCLE_SHA1}
+
 jobs:
   test:
     docker:
@@ -134,6 +151,7 @@ jobs:
           name: JavaScript transpile
           command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
       - login_to_ecr
+      - push_nginx_image_to_ecr
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
