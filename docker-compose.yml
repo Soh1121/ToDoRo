@@ -6,8 +6,6 @@ services:
       dockerfile: ./docker/nginx/Dockerfile
     ports:
       - 80:80
-    volumes:
-      - ./web:/var/www
     depends_on:
       - web
   web:
