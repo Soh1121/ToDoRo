@@ -150,12 +150,11 @@ workflows:
   version: 2
   deploy:
     jobs:
-      # - test
+      - test
       - build_and_push_image:
-          # requires:
-          #   - test
+          requires:
+            - test
           filters:
             branches:
               only:
                 - master
-                - feature/deployWithCircleCI
