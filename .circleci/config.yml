@@ -84,12 +84,11 @@ commands:
     steps:
       - run:
           name: Push nginx image to ECR
-          environment:
-            ECR_REPOSITORY: ${SERVICE_NAME}-${ENV_NAME}-nginx
           command: |
-            echo "export ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r '[.repositories[].registryId] | unique | .[]')" >> ${BASH_ENV}
-            echo ${ECR_REGISTRY}
-            echo ${ECR_REPOSITORY}
+            ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r "[.repositories[].registryId] | unique | .[]")'
+            ECR_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx'
+            echo $ECR_REGISTRY
+            echo $ECR_REPOSITORY
             docker build \
               --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE-1 . \
               -f docker/nginx/Dockerfile \
