@@ -77,6 +77,24 @@ commands:
   login_and_push_nginx_image_to_ecr:
     steps:
       - run:
+          name: Assume Role
+          command: |
+            export PATH=$PATH:$HOME/work/aws-cli/v2/current/bin
+
+            aws configure set aws_access_key_id ${PROD_AWS_ACCESS_KEY_ID}
+            aws configure set aws_secret_access_key ${PROD_AWS_SECRET_ACCESS_KEY}
+
+            AWS_STS_CREDENTIALS="$(aws sts assume-role \
+              --role-arn "${PROD_AWS_ASSUME_ROLE_ARN}" \
+              --role-session-name "CircleCI" \
+              --external-id ${AWS_DEPLOY_IAM_ROLE_EXTERNAL_ID} \
+              --duration-seconds 1800 \
+              --query "Credentials" \
+              --output "json")"
+            echo "export AWS_ACCESS_KEY_ID=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.AccessKeyId')" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SecretAccessKey')" >> ${BASH_ENV}
+            echo "export AWS_SESSION_TOKEN=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SessionToken')"  >> ${BASH_ENV}
+      - run:
           name: Login nginx image to ECR
           command: |
             aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
