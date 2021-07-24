@@ -85,7 +85,7 @@ commands:
       - run:
           name: Push nginx image to ECR
           command: |
-            ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r "[.repositories[].registryId] | unique | .[]")'
+            ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r "[.repositories[].registryId] | unique | .[]")
             ECR_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx
             echo $ECR_REGISTRY
             echo $ECR_REPOSITORY
