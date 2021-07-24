@@ -74,21 +74,13 @@ commands:
             echo "export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SecretAccessKey')" >> ${BASH_ENV}
             echo "export AWS_SESSION_TOKEN=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SessionToken')"  >> ${BASH_ENV}
 
-  login_to_ecr:
+  login_and_push_nginx_image_to_ecr:
     steps:
       - run:
-          name: Login to ECR
-          command: aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
-
-  push_nginx_image_to_ecr:
-    steps:
-      - run:
-          name: Push nginx image to ECR
+          name: Login and push nginx image to ECR
           command: |
-            ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r "[.repositories[].registryId] | unique | .[]")
-            ECR_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx
-            echo $ECR_REGISTRY
-            echo $ECR_REPOSITORY
+            aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
+            ECR_REGISTRY=$(aws ecr describe-repositories --region ${AWS_REGION} | jq -r "[.repositories[].registryId] | unique | .[]") ECR_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx
             docker build \
               --cache-from=$ECR_REGISTRY/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE-1 . \
               -f docker/nginx/Dockerfile \
@@ -150,8 +142,7 @@ jobs:
       - run:
           name: JavaScript transpile
           command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
-      - login_to_ecr
-      - push_nginx_image_to_ecr
+      - login_and_push_nginx_image_to_ecr
       # - aws-ecr/build-and-push-image:
       #     account-url: AWS_ACCOUNT_URL
       #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
