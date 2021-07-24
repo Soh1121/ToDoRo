@@ -95,8 +95,8 @@ commands:
               -f docker/nginx/Dockerfile \
               -t $ECR_REGISTRY/$ECR_REPOSITORY:latest \
               -t $ECR_REGISTRY/$ECR_REPOSITORY:${CIRCLE_SHA1}
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-            docker push $ECR_REGISTRY/$ECR_REPOSITORY:${CIRCLE_SHA1}
+            docker push $ECR_REGISTRY.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:latest
+            docker push $ECR_REGISTRY.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPOSITORY:${CIRCLE_SHA1}
 
 jobs:
   test:
