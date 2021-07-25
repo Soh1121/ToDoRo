@@ -7,7 +7,7 @@ resource "aws_lb" "this" {
   load_balancer_type = "application"
 
   access_logs {
-    bucket = data.terraform_remote_state.log_alb.s3_bucket_this_id
+    bucket = data.terraform_remote_state.log_alb.outputs.s3_bucket_this_id
     enabled = true
     prefix = "todoro-tokyo"
   }
