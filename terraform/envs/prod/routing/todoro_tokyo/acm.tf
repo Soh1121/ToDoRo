@@ -4,11 +4,11 @@ resource "aws_acm_certificate" "root" {
   validation_method = "DNS"
 
   tags = {
-	  Name = "${local.name_prefix}-todoro-tokyo"
+    Name = "${local.name_prefix}-todoro-tokyo"
   }
 
   lifecycle {
-	  create_before_destroy = true
+    create_before_destroy = true
   }
 }
 
