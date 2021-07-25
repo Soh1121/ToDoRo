@@ -83,19 +83,36 @@ commands:
   push_nginx_image_to_ecr:
     steps:
       - run:
-          name: Set Environment
+          name: Setup custom environment variables
           command: |
-            echo "export ECR_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx" >> ${BASH_ENV}
+            echo "export ECR_NGINX_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx" >> ${BASH_ENV}
       - run:
           name: Push nginx image to ECR
           command: |
             docker build \
-              --cache-from=$AWS_ACCOUNT_URL/$ECR_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
+              --cache-from=$AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
               -f docker/nginx/Dockerfile \
-              -t $AWS_ACCOUNT_URL/$ECR_REPOSITORY:latest \
-              -t $AWS_ACCOUNT_URL/$ECR_REPOSITORY:${CIRCLE_SHA1}
-            docker push $AWS_ACCOUNT_URL/$ECR_REPOSITORY:latest
-            docker push $AWS_ACCOUNT_URL/$ECR_REPOSITORY:${CIRCLE_SHA1}
+              -t $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest \
+              -t $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
+            docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest
+            docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
+
+  push_php_image_to_ecr:
+    steps:
+      - run:
+          name: Setup custom environment variables
+          command: |
+            echo "export ECR_PHP_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-php" >> ${BASH_ENV}
+      - run:
+          name: Push php image to ECR
+          command: |
+            docker build \
+              --cache-from=$AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
+              -f docker/php/Dockerfile \
+              -t $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest \
+              -t $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
+            docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest
+            docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
 
 jobs:
   test:
@@ -152,15 +169,7 @@ jobs:
           command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
       - login_to_ecr
       - push_nginx_image_to_ecr
-      # - aws-ecr/build-and-push-image:
-      #     account-url: AWS_ACCOUNT_URL
-      #     aws-access-key-id: PROD_AWS_ACCESS_KEY_ID
-      #     aws-secret-access-key: PROD_AWS_SECRET_ACCESS_KEY
-      #     repo: "${AWS_RESOURCE_NAME_PREFIX}-php"
-      #     region: AWS_REGION
-      #     tag: "${CIRCLE_SHA1}"
-          # path:
-          # dockerfile:
+      - push_php_image_to_ecr
 
 workflows:
   version: 2
