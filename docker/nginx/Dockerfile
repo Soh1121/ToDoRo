@@ -15,4 +15,6 @@ COPY --from=node /opt /opt
 # nginx config file
 COPY ./docker/nginx/*.conf /etc/nginx/conf.d/default.conf
 
+COPY ./web/public /var/www/public
+
 WORKDIR /var/www
