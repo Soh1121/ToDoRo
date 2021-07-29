@@ -130,9 +130,7 @@ jobs:
             - v1-dependencies-
       - run:
           name: Install PHP libraries
-          command: |
-            composer install -n --prefer-dist
-            ls
+          command: composer install -n --prefer-dist
           working_directory: ~/todoro/web
       - save_cache:
           paths:
@@ -159,7 +157,9 @@ jobs:
       - restore_composer
       - run:
           name: Install PHP related packages
-          command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
+          command: |
+            docker-compose exec -T web composer install -n --prefer-dist --no-dev
+            docker-compose exec web ls
       - save_composer
       - restore_npm
       - run:
