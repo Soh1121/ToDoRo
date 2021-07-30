@@ -80,7 +80,6 @@ commands:
           name: Login to ECR
           command: |
             aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
-            ls ./web
 
   push_nginx_image_to_ecr:
     steps:
@@ -98,7 +97,6 @@ commands:
               -t $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
             docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest
             docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
-            ls ./web
 
   push_php_image_to_ecr:
     steps:
@@ -109,7 +107,6 @@ commands:
       - run:
           name: Push php image to ECR
           command: |
-            ls ./web
             docker build \
               --cache-from=$AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
               -f docker/php/Dockerfile \
@@ -158,25 +155,6 @@ jobs:
           command: echo "ENV_NAME=prod" >> $BASH_ENV
       - setup_remote_docker
       - run: docker-compose up -d --build web nginx
-      # - restore_composer
-      # - run:
-      #     name: Install PHP related packages
-      #     command: |
-      #       docker-compose exec -T web composer install -n --prefer-dist --no-dev
-      #       ls ./web
-      # - save_composer
-      # - restore_npm
-      # - run:
-      #     name: Install JavaScript packages
-      #     command: |
-      #       docker-compose exec -T web bash -c "cd ./frontend && npm ci"
-      #       ls ./web
-      # - save_npm
-      # - run:
-      #     name: JavaScript transpile
-      #     command: |
-      #       docker-compose exec -T web bash -c "cd ./frontend && npm run build"
-      #       ls ./web
       - login_to_ecr
       - push_nginx_image_to_ecr
       - push_php_image_to_ecr
@@ -185,12 +163,11 @@ workflows:
   version: 2
   deploy:
     jobs:
-      # - test
+      - test
       - build_and_push_image:
-          # requires:
-          #   - test
+          requires:
+            - test
           filters:
             branches:
               only:
                 - master
-                - feature/buildingECS
