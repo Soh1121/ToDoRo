@@ -23,3 +23,8 @@ COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 COPY --chown=www-data:www-data ./web /var/www
 
 WORKDIR /var/www
+
+RUN composer install -n --prefer-dist --no-dev \
+  && cd ./frontend \
+  && npm ci \
+  && npm run build

@@ -78,7 +78,8 @@ commands:
     steps:
       - run:
           name: Login to ECR
-          command: aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
+          command: |
+            aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
 
   push_nginx_image_to_ecr:
     steps:
@@ -154,19 +155,6 @@ jobs:
           command: echo "ENV_NAME=prod" >> $BASH_ENV
       - setup_remote_docker
       - run: docker-compose up -d --build web nginx
-      - restore_composer
-      - run:
-          name: Install PHP related packages
-          command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
-      - save_composer
-      - restore_npm
-      - run:
-          name: Install JavaScript packages
-          command: docker-compose exec -T web bash -c "cd ./frontend && npm ci"
-      - save_npm
-      - run:
-          name: JavaScript transpile
-          command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
       - login_to_ecr
       - push_nginx_image_to_ecr
       - push_php_image_to_ecr
