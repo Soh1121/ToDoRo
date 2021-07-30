@@ -78,7 +78,9 @@ commands:
     steps:
       - run:
           name: Login to ECR
-          command: aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
+          command: |
+            aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
+            ls ./web
 
   push_nginx_image_to_ecr:
     steps:
@@ -96,6 +98,7 @@ commands:
               -t $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
             docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest
             docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
+            ls ./web
 
   push_php_image_to_ecr:
     steps:
@@ -158,16 +161,22 @@ jobs:
       - restore_composer
       - run:
           name: Install PHP related packages
-          command: docker-compose exec -T web composer install -n --prefer-dist --no-dev
+          command: |
+            docker-compose exec -T web composer install -n --prefer-dist --no-dev
+            ls ./web
       - save_composer
       - restore_npm
       - run:
           name: Install JavaScript packages
-          command: docker-compose exec -T web bash -c "cd ./frontend && npm ci"
+          command: |
+            docker-compose exec -T web bash -c "cd ./frontend && npm ci"
+            ls ./web
       - save_npm
       - run:
           name: JavaScript transpile
-          command: docker-compose exec -T web bash -c "cd ./frontend && npm run build"
+          command: |
+            docker-compose exec -T web bash -c "cd ./frontend && npm run build"
+            ls ./web
       - login_to_ecr
       - push_nginx_image_to_ecr
       - push_php_image_to_ecr
