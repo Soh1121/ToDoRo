@@ -26,4 +26,5 @@ WORKDIR /var/www
 
 RUN composer install -n --prefer-dist --no-dev \
   && cd ./frontend \
+  && npm ci \
   && npm run build

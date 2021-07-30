@@ -156,8 +156,8 @@ jobs:
       - run:
           name: Set env vars for prod
           command: echo "ENV_NAME=prod" >> $BASH_ENV
-      # - setup_remote_docker
-      # - run: docker-compose up -d --build web nginx
+      - setup_remote_docker
+      - run: docker-compose up -d --build web nginx
       # - restore_composer
       # - run:
       #     name: Install PHP related packages
