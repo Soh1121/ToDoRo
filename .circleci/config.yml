@@ -106,7 +106,7 @@ commands:
       - run:
           name: Push php image to ECR
           command: |
-            ls
+            ls ./web
             docker build \
               --cache-from=$AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
               -f docker/php/Dockerfile \
