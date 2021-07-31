@@ -17,7 +17,7 @@ data "aws_ecr_repository" "php" {
 }
 
 data "aws_iam_role" "ecs_task_execution" {
-  name = "${local.name_prefix}-${local.service_name}-ecs-task-execution"
+  arn = "${local.name_prefix}-${local.service_name}-ecs-task-execution.arn"
 }
 
 data "aws_iam_role" "ecs_task" {
