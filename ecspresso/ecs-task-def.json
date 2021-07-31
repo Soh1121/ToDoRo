@@ -10,7 +10,7 @@
       ],
       "environment": [],
       "essential": true,
-      "image": "{{ tfstate `data.aws_ecr_repository.nginx.repository_url }}:{{ must_env `IMAGE_TAG`}}",
+      "image": "{{ tfstate `data.aws_ecr_repository.nginx.repository_url` }}:{{ must_env `IMAGE_TAG`}}",
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {
