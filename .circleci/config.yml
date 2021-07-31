@@ -199,5 +199,5 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                # - master
                 - feature/deployToFargateByCircleCI
