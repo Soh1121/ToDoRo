@@ -178,6 +178,10 @@ jobs:
     executor: general
     steps:
       - checkout
+      - restore_aws
+      - install
+      - save_aws
+      - assume_role
       - ecspresso/install
       - ecspresso_deploy
 
@@ -199,5 +203,5 @@ workflows:
           filters:
             branches:
               only:
-                # - master
+                - master
                 - feature/deployToFargateByCircleCI
