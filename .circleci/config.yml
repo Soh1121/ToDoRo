@@ -1,8 +1,15 @@
 version: 2.1
+orbs:
+  ecspresso: fujiwara/ecspresso@0.0.14
+
 executors:
-  my-executor:
+  docker-build:
     docker:
       - image: circleci/php:7.4.1-node-browsers
+    working_directory: ~/todoro
+  general:
+    docker:
+      - image: cimg/base:stable
     working_directory: ~/todoro
 
 commands:
@@ -115,6 +122,14 @@ commands:
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
 
+  ecspresso_deploy:
+    steps:
+      - run:
+          name: Deploy by ecspresso
+          command: |
+            cd ecspresso
+            ecspresso deploy --config config_$ENV_NAME.yaml
+
 jobs:
   test:
     docker:
@@ -143,7 +158,7 @@ jobs:
           working_directory: ~/todoro/web
 
   build_and_push_image:
-    executor: my-executor
+    executor: docker-build
     steps:
       - checkout
       - restore_aws
@@ -159,15 +174,30 @@ jobs:
       - push_nginx_image_to_ecr
       - push_php_image_to_ecr
 
+  deploy_by_ecspresso:
+    executor: general
+    steps:
+      - checkout
+      - ecspresso/install
+      - ecspresso_deploy
+
 workflows:
   version: 2
   deploy:
     jobs:
-      - test
-      - build_and_push_image:
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
+      # - test
+      # - build_and_push_image:
+          # requires:
+            # - test
+          # filters:
+          #   branches:
+          #     only:
+          #       - master
+      - deploy_by_ecspresso
+        # requires:
+        #   - build_and_push_image
+        filters:
+          branches:
+            only:
+              - master
+              - feature/deployToFargateByCircleCI
