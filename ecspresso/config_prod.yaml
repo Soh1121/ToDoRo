@@ -1,0 +1,10 @@
+region: ap-northeast-1
+cluster: todoro-prod-todoro
+service: todoro-prod-todoro
+service_definition: ecs-service-def.json
+task_definition: ecs-task-def.json
+timeout: 10m0s
+plugins:
+  - name: tfstate
+    config:
+      url: s3://todoro-tfstate/todoro/prod/cicd/app_todoro_v1.0.1.tfstate
