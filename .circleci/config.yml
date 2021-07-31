@@ -189,19 +189,18 @@ workflows:
   version: 2
   deploy:
     jobs:
-      # - test
-      # - build_and_push_image:
-      #     requires:
-      #       - test
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
-      - deploy_by_ecspresso:
-          # requires:
-          #   - build_and_push_image
+      - test
+      - build_and_push_image:
+          requires:
+            - test
           filters:
             branches:
               only:
                 - master
-                - feature/deployToFargateByCircleCI
+      - deploy_by_ecspresso:
+          requires:
+            - build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
