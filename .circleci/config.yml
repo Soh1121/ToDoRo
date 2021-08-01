@@ -140,7 +140,7 @@ commands:
           name: Upload env file
           command: |
             cd web
-            aws s3 cp .env.$ENV_NAME s3:///SERVICE_NAME-$ENV_NAME-$SERVICE_NAME-env-file/$IMAGE_TAG/.env
+            aws s3 cp .env.$ENV_NAME s3:///$SERVICE_NAME-$ENV_NAME-$SERVICE_NAME-env-file/$IMAGE_TAG/.env
             cd ../
 
   ecspresso_deploy:
