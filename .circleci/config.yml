@@ -194,7 +194,7 @@ jobs:
       - push_php_image_to_ecr
 
   deploy_by_ecspresso:
-    executor: general
+    executor: docker-build
     steps:
       - checkout
       - restore_aws
@@ -209,18 +209,19 @@ workflows:
   version: 2
   deploy:
     jobs:
-      - test
-      - build_and_push_image:
-          requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
+      # - test
+      # - build_and_push_image:
+      #     requires:
+      #       - test
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
       - deploy_by_ecspresso:
-          requires:
-            - build_and_push_image
+          # requires:
+          #   - build_and_push_image
           filters:
             branches:
               only:
                 - master
+                - feature/configureForProductionEnvironment
