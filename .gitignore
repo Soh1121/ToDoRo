@@ -1,5 +1,4 @@
+/Scripts
 /SystemDesign
 .DS_Store
 /database
-
-get-session-token.py
