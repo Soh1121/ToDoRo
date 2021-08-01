@@ -122,6 +122,21 @@ commands:
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
 
+  set_image_tag:
+    steps:
+      - run:
+          name: Setup custom environment variable "IMAGE_TAG"
+          command: echo "export ${CIRCLE_SHA1}" >> ${BASH_ENV}
+
+  upload_env_file:
+    steps:
+      - run:
+          name: Upload env file
+          command: |
+            cd web
+            aws s3 cp .env.$ENV_NAME s3:///SERVICE_NAME-$ENV_NAME-$SERVICE_NAME-env-file/$IMAGE_TAG/.env
+            cd ../
+
   ecspresso_deploy:
     steps:
       - run:
@@ -181,6 +196,7 @@ jobs:
       - restore_aws
       - install
       - save_aws
+      - set_image_tag
       - assume_role
       - ecspresso/install
       - ecspresso_deploy
