@@ -219,8 +219,8 @@ workflows:
                 - master
                 - feature/configureForProductionEnvironment
       - deploy_by_ecspresso:
-          # requires:
-          #   - build_and_push_image
+          requires:
+            - build_and_push_image
           filters:
             branches:
               only:
