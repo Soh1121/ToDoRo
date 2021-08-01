@@ -129,7 +129,7 @@ commands:
           command: echo "export ENV_NAME=prod" >> $BASH_ENV
       - run:
           name: Set env vars for "IMAGE_TAG"
-          command: echo "export ${CIRCLE_SHA1}" >> ${BASH_ENV}
+          command: echo "export IMAGE_TAG=${CIRCLE_SHA1}" >> ${BASH_ENV}
       - run:
           name: Set env vars for VPC CIDR
           command: echo "export VPC_CIDR=172.32.0.0/16" >> ${BASH_ENV}
