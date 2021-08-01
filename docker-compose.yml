@@ -9,7 +9,7 @@ services:
     depends_on:
       - web
     environment:
-      - VPC_CIDER=${VPC_CIDER:-172.32.0.0/16}
+      - VPC_CIDR=${VPC_CIDR:-172.32.0.0/16}
   web:
     build:
       context: .
@@ -35,4 +35,4 @@ networks:
   default:
     ipam:
       config:
-        - subnet: ${VPC_CIDER:-172.32.0.0/16}
+        - subnet: ${VPC_CIDR:-172.32.0.0/16}
