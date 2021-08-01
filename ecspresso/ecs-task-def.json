@@ -68,14 +68,14 @@
       "secrets": [
         {
           "name": "APP_KEY",
-          "valueFrom": "/{{ must_env `SERVICE_NAME` }}/{{ must_env `ENV_NAME` }}/{{ must_env `SERVICE_NAME`}}/APP_KEY"
+          "valueFrom": "/{{ must_env `SERVICE_NAME` }}/{{ must_env `ENV_NAME` }}/{{ must_env `SERVICE_NAME` }}/APP_KEY"
         }
       ],
       "volumesFrom": []
     }
   ],
   "cpu": "256",
-  "executionRoleArn": "{{ tfstate `data.aws_iam_role.ecs_task_execution.arn` }}",
+  "executionRoleArn": "{{ must_env `ECS_TASK_EXECUTION_ARN` }}",
   "family": "{{ must_env `SERVICE_NAME` }}-{{ must_env `ENV_NAME` }}-{{ must_env `SERVICE_NAME`}}",
   "memory": "512",
   "networkMode": "awsvpc",
