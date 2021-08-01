@@ -132,7 +132,7 @@ commands:
           command: echo "export ${CIRCLE_SHA1}" >> ${BASH_ENV}
       - run:
           name: Set env vars for VPC CIDR
-          command: echo "export VPC_CIDER=172.32.0.0/16" >> ${BASH_ENV}
+          command: echo "export VPC_CIDR=172.32.0.0/16" >> ${BASH_ENV}
 
   upload_env_file:
     steps:
@@ -210,17 +210,17 @@ workflows:
   deploy:
     jobs:
       # - test
-      - build_and_push_image:
+      # - build_and_push_image:
       #     requires:
       #       - test
-          filters:
-            branches:
-              only:
-                - master
-                - feature/configureForProductionEnvironment
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #           - feature/configureForProductionEnvironment
       - deploy_by_ecspresso:
-          requires:
-            - build_and_push_image
+          # requires:
+          #   - build_and_push_image
           filters:
             branches:
               only:
