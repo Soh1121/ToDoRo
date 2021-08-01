@@ -122,11 +122,17 @@ commands:
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
 
-  set_image_tag:
+  set_env_vars:
     steps:
       - run:
-          name: Setup custom environment variable "IMAGE_TAG"
+          name: Set env vars for prod
+          command: echo "export ENV_NAME=prod" >> $BASH_ENV
+      - run:
+          name: Set env vars for "IMAGE_TAG"
           command: echo "export ${CIRCLE_SHA1}" >> ${BASH_ENV}
+      - run:
+          name: Set env vars for VPC CIDR
+          command: echo "export VPC_CIDER=172.32.0.0/16" >> ${BASH_ENV}
 
   upload_env_file:
     steps:
@@ -180,9 +186,7 @@ jobs:
       - install
       - save_aws
       - assume_role
-      - run:
-          name: Set env vars for prod
-          command: echo "ENV_NAME=prod" >> $BASH_ENV
+      - set_env_vars
       - setup_remote_docker
       - run: docker-compose up -d --build web nginx
       - login_to_ecr
@@ -196,7 +200,7 @@ jobs:
       - restore_aws
       - install
       - save_aws
-      - set_image_tag
+      - set_env_vars
       - assume_role
       - ecspresso/install
       - ecspresso_deploy
