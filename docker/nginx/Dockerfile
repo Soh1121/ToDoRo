@@ -14,6 +14,7 @@ COPY --from=node /usr/local/lib /usr/local/lib
 COPY --from=node /opt /opt
 # nginx config file will be output to /etc/nginx/conf.d/ by envsubst
 COPY ./docker/nginx/default.conf /etc/nginx/templates/default.conf.template
+COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
 COPY ./web/public /var/www/web/public
 
