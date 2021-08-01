@@ -194,7 +194,7 @@ jobs:
       - push_php_image_to_ecr
 
   deploy_by_ecspresso:
-    executor: general
+    executor: docker-build
     steps:
       - checkout
       - restore_aws
