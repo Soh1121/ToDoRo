@@ -31,6 +31,13 @@ commands:
       - run:
           name: Install php package
           command: |
+            docker-compose exec -T web pwd
+
+  install_composer_:
+    steps:
+      - run:
+          name: Install php package
+          command: |
             docker-compose exec -T web composer install -n --prefer-dist--no-dev
             ls ./
 
@@ -45,6 +52,14 @@ commands:
     steps:
       - restore_cache:
           key: npm-v1-{{ .Revision }}
+
+  build_npm:
+    steps:
+      - run:
+          name: npm run build
+          command: |
+            docker-compose exec -T web cd ./frontend && npm run build
+            ls ./public
 
   save_npm:
     steps:
