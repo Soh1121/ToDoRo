@@ -27,7 +27,7 @@ COPY --chown=www-data:www-data ./web /var/www
 # WORKDIR /var/www
 WORKDIR /work/web
 
-RUN composer install -n --prefer-dist --no-dev \
-  && cd ./frontend \
-  && npm ci \
-  && npm run build
+# RUN composer install -n --prefer-dist --no-dev \
+  # && cd ./frontend \
+  # && npm ci \
+  # && npm run build
