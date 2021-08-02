@@ -7,10 +7,6 @@ executors:
     docker:
       - image: circleci/php:7.4.1-node-browsers
     working_directory: ~/todoro
-  general:
-    docker:
-      - image: cimg/base:stable
-    working_directory: ~/todoro
 
 commands:
   restore_aws:
@@ -30,6 +26,14 @@ commands:
       - restore_cache:
           key: composer-v1-{{ .Revision }}
 
+  install_composer:
+    steps:
+      - run:
+          name: Install php package
+          command: |
+            docker-compose exec -T web composer install -n --prefer-dist--no-dev
+            ls ./
+
   save_composer:
     steps:
       - save_cache:
@@ -48,6 +52,12 @@ commands:
           paths:
             - "web/frontend/node_modules"
           key: npm-v1-{{ .Revision }}
+
+  start_container:
+    steps:
+      - run:
+          name: Start the container
+          command: docker-compose up -d --build web nginx
 
   install:
     steps:
@@ -188,10 +198,11 @@ jobs:
       - assume_role
       - set_env_vars
       - setup_remote_docker
-      - run: docker-compose up -d --build web nginx
-      - login_to_ecr
-      - push_nginx_image_to_ecr
-      - push_php_image_to_ecr
+      - start_container
+      - install_composer
+      # - login_to_ecr
+      # - push_nginx_image_to_ecr
+      # - push_php_image_to_ecr
 
   deploy_by_ecspresso:
     executor: docker-build
@@ -219,11 +230,11 @@ workflows:
               only:
                 - master
                 - feature/configureForProductionEnvironment
-      - deploy_by_ecspresso:
-          requires:
-            - build_and_push_image
-          filters:
-            branches:
-              only:
-                - master
-                - feature/configureForProductionEnvironment
+      # - deploy_by_ecspresso:
+      #     requires:
+      #       - build_and_push_image
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #           - feature/configureForProductionEnvironment
