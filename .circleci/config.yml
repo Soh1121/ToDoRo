@@ -38,7 +38,7 @@ commands:
       - run:
           name: Install php package
           command: |
-            docker-compose exec -T web composer install -n --prefer-dist--no-dev
+            docker-compose exec -T web composer install -n --prefer-dist --no-dev
             ls ./web
 
   restore_npm:
