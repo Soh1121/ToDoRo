@@ -38,6 +38,7 @@ commands:
       - run:
           name: Install php package
           command: |
+            docker-compose exec -T web pwd
             docker-compose exec -T web ls
 
   restore_npm:
