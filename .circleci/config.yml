@@ -31,13 +31,6 @@ commands:
       - run:
           name: Install php package
           command: |
-            docker-compose exec -T web pwd
-
-  install_composer_:
-    steps:
-      - run:
-          name: Install php package
-          command: |
             docker-compose exec -T web cd /work/web && composer install -n --prefer-dist--no-dev
             ls ./
 
