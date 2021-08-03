@@ -32,6 +32,6 @@ COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
 #   && npm ci \
 #   && npm run build
 
-# COPY --chown=www-data:www-data ./web /work/web
+COPY --chown=www-data:www-data ./web /work/web
 
 WORKDIR /work/web

@@ -17,8 +17,6 @@ services:
     ports:
       - 8081:8081
       - 3000:3000
-    volumes:
-      - ./web:/work/web
   database:
     build:
       context: .
