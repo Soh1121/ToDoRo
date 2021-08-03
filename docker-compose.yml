@@ -19,7 +19,7 @@ services:
       - 3000:3000
     volumes:
       - type: bind
-        source: ./web
+        source: ~/todoro/web
         target: /work/web
   database:
     build:
