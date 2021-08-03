@@ -208,7 +208,9 @@ jobs:
       - setup_remote_docker
       - run:
           name: dir
-          command: ls ./
+          command: |
+            ls ./
+            pwd
       - start_container
       - install_php_package
       # - login_to_ecr

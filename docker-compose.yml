@@ -19,8 +19,8 @@ services:
       - 3000:3000
     volumes:
       - type: bind
-        source: "./web"
-        target: "/work/web"
+        source: ./web
+        target: /work/web
   database:
     build:
       context: .
