@@ -206,6 +206,9 @@ jobs:
       - assume_role
       - set_env_vars
       - setup_remote_docker
+      - run:
+          name: dir
+          command: ls ./
       - start_container
       - install_php_package
       # - login_to_ecr
