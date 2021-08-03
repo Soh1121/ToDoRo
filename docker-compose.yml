@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3'
 services:
   nginx:
     build:
@@ -17,10 +17,6 @@ services:
     ports:
       - 8081:8081
       - 3000:3000
-    volumes:
-      - type: bind
-        source: ~/todoro/web
-        target: /work/web
   database:
     build:
       context: .

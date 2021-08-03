@@ -17,21 +17,12 @@ RUN apt-get update \
   && mv composer.phar /usr/local/bin/composer \
   && : 'Install Vue CLI' \
   && npm install -g @vue/cli \
-  && mkdir /var/run/php-fpm \
   && rm -rf /var/lib/apt/lists/*
 
 COPY ./docker/php/php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
-# COPY --chown=www-data:www-data ./web /var/www
+COPY --chown=www-data:www-data ./web /var/www
 
-# WORKDIR /var/www
-# WORKDIR /work/web
+WORKDIR /var/www
 
-# RUN composer install -n --prefer-dist --no-dev \
-#   && cd ./frontend \
-#   && npm ci \
-#   && npm run build
-
-COPY --chown=www-data:www-data ./web /work/web
-
-WORKDIR /work/web
+RUN composer install -n --prefer-dist --no-dev

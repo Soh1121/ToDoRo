@@ -33,26 +33,10 @@ commands:
             - "web/vendor"
           key: composer-v1-{{ .Revision }}
 
-  install_php_package:
-    steps:
-      - run:
-          name: Install php package
-          command: |
-            docker-compose exec -T web pwd
-            docker-compose exec -T web ls
-
   restore_npm:
     steps:
       - restore_cache:
           key: npm-v1-{{ .Revision }}
-
-  build_npm:
-    steps:
-      - run:
-          name: npm run build
-          command: |
-            docker-compose exec -T web bash -c "cd ./frontend && npm run build"
-            ls ./web/public
 
   save_npm:
     steps:
@@ -206,16 +190,9 @@ jobs:
       - assume_role
       - set_env_vars
       - setup_remote_docker
-      - run:
-          name: dir
-          command: |
-            ls ./
-            pwd
-      - start_container
-      - install_php_package
-      # - login_to_ecr
-      # - push_nginx_image_to_ecr
-      # - push_php_image_to_ecr
+      - login_to_ecr
+      - push_nginx_image_to_ecr
+      - push_php_image_to_ecr
 
   deploy_by_ecspresso:
     executor: docker-build

@@ -16,6 +16,25 @@ COPY --from=node /opt /opt
 COPY ./docker/nginx/default.conf /etc/nginx/templates/default.conf.template
 COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
-COPY ./web/public /var/www/web/public
+COPY ./web /work/web
+
+WORKDIR /work/web
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y wget git unzip libpq-dev \
+    && : 'Install Node.js' \
+    && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
+    && apt-get install --no-install-recommends -y nodejs \
+    && npm install -g npm@latest \
+    && : 'Install Vue CLI' \
+    && npm install -g @vue/cli \
+    && : 'build Vue' \
+    && cd frontend \
+    && npm ci \
+    && npm run build \
+    && cd ../ \
+    && cp -r ./public /var/www \
+    && rm -rf ./ \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
