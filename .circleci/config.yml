@@ -26,20 +26,20 @@ commands:
       - restore_cache:
           key: composer-v1-{{ .Revision }}
 
-  install_composer:
-    steps:
-      - run:
-          name: Install php package
-          command: |
-            docker-compose exec -T web cd /work/web && composer install -n --prefer-dist--no-dev
-            ls ./
-
   save_composer:
     steps:
       - save_cache:
           paths:
             - "web/vendor"
           key: composer-v1-{{ .Revision }}
+
+  install_php_package:
+    steps:
+      - run:
+          name: Install php package
+          command: |
+            docker-compose exec -T web composer install -n --prefer-dist--no-dev
+            ls ./web
 
   restore_npm:
     steps:
@@ -207,7 +207,7 @@ jobs:
       - set_env_vars
       - setup_remote_docker
       - start_container
-      - install_composer
+      - install_php_package
       # - login_to_ecr
       # - push_nginx_image_to_ecr
       # - push_php_image_to_ecr
