@@ -39,8 +39,6 @@ commands:
           name: Install php package
           command: |
             docker-compose exec -T web ls
-            docker-compose exec -T web composer install -n --prefer-dist --no-dev
-            ls ./web
 
   restore_npm:
     steps:
@@ -52,8 +50,8 @@ commands:
       - run:
           name: npm run build
           command: |
-            docker-compose exec -T web cd ./frontend && npm run build
-            ls ./public
+            docker-compose exec -T web bash -c "cd ./frontend && npm run build"
+            ls ./web/public
 
   save_npm:
     steps:
