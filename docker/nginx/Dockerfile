@@ -20,14 +20,7 @@ COPY ./web /work/web
 
 WORKDIR /work/web
 
-RUN apt-get update \
-    && apt-get install --no-install-recommends -y wget git unzip libpq-dev \
-    && : 'Install Node.js' \
-    && curl -sL https://deb.nodesource.com/setup_12.x | bash - \
-    && apt-get install --no-install-recommends -y nodejs \
-    && npm install -g npm@latest \
-    && : 'Install Vue CLI' \
-    && npm install -g @vue/cli \
+RUN npm install -g @vue/cli \
     && : 'build Vue' \
     && cd frontend \
     && npm ci \
