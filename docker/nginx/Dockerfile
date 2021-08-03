@@ -27,7 +27,7 @@ RUN npm install -g @vue/cli \
     && npm run build \
     && cd ../ \
     && cp -r ./public /var/www \
-    && rm -rf ./ \
+    && rm -rf ./* \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /var/www
