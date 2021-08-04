@@ -3,8 +3,9 @@ FROM nginx:1.20-alpine
 
 ENV TZ=Asia/Tokyo
 
-RUN apk update && \
-  apk add --update --no-cache --virtual=.build-dependencies g++
+RUN apk update \
+  && apk add --update --no-cache --virtual=.build-dependencies g++ \
+  && mkdir /var/www/public
 
 # node command
 COPY --from=node /usr/local/bin /usr/local/bin
@@ -24,7 +25,6 @@ RUN cd frontend \
   && npm ci \
   && npm run build \
   && cd ../ \
-  && mkdir /var/www/public \
   && cp -r ./public /var/www/public \
   && rm -rf ./* \
   && rm -rf /var/lib/apt/lists/*
