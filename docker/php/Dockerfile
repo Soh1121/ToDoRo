@@ -14,7 +14,9 @@ RUN apt-get update \
   && : 'Install Composer' \
   && chmod 755 /install-composer.sh \
   && /install-composer.sh \
-  && mv composer.phar /usr/local/bin/composer
+  && mv composer.phar /usr/local/bin/composer \
+  && : 'Install Vue CLI' \
+  && npm install -g @vue/cli
 
 COPY ./docker/php/php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
@@ -22,4 +24,9 @@ COPY --chown=www-data:www-data ./web /var/www
 
 WORKDIR /var/www
 
-RUN composer install -n --prefer-dist --no-dev
+RUN composer install -n --prefer-dist --no-dev \
+  && : 'build Vue' \
+  && cd frontend \
+  && npm ci \
+  && npm run build \
+  && rm -rf /var/lib/apt/lists/*
