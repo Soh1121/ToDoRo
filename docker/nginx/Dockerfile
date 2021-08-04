@@ -16,4 +16,15 @@ COPY --from=node /opt /opt
 COPY ./docker/nginx/default.conf /etc/nginx/templates/default.conf.template
 COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
-WORKDIR /var/www
+COPY --chown=data:www-data ./web /work
+
+WORKDIR /work
+
+RUN cd frontend \
+  && npm ci \
+  && npm run build \
+  && cd ../ \
+  && mkdir /var/www/public \
+  && cp -r ./public /var/www/public \
+  && rm -rf ./* \
+  && rm -rf /var/lib/apt/lists/*
