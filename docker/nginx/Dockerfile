@@ -4,9 +4,7 @@ FROM nginx:1.20-alpine
 ENV TZ=Asia/Tokyo
 
 RUN apk update \
-  && apk add --update --no-cache --virtual=.build-dependencies g++ \
-  && mkdir /var/www/public
-
+  && apk add --update --no-cache --virtual=.build-dependencies g++
 # node command
 COPY --from=node /usr/local/bin /usr/local/bin
 # npm command
@@ -17,14 +15,18 @@ COPY --from=node /opt /opt
 COPY ./docker/nginx/default.conf /etc/nginx/templates/default.conf.template
 COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
-COPY ./web /work
+COPY ./web /work/web
 
-WORKDIR /work
+WORKDIR /work/web
 
-RUN cd frontend \
-  && npm ci \
-  && npm run build \
-  && cd ../ \
-  && cp -r ./public /var/www/public \
-  && rm -rf ./* \
-  && rm -rf /var/lib/apt/lists/*
+RUN npm install -g @vue/cli \
+    && : 'build Vue' \
+    && cd frontend \
+    && npm ci \
+    && npm run build \
+    && cd ../ \
+    && cp -r ./public /var/www/public \
+    && rm -rf ./* \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www
