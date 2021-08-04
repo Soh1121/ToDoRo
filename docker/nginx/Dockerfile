@@ -16,18 +16,18 @@ COPY --from=node /opt /opt
 COPY ./docker/nginx/default.conf /etc/nginx/templates/default.conf.template
 COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
-COPY ./web /work/web
+# COPY ./web /work/web
 
-WORKDIR /work/web
+# WORKDIR /work/web
 
-RUN npm install -g @vue/cli \
-    && : 'build Vue' \
-    && cd frontend \
-    && npm ci \
-    && npm run build \
-    && cd ../ \
-    && cp -r ./public /var/www \
-    && rm -rf ./* \
-    && rm -rf /var/lib/apt/lists/*
+# RUN npm install -g @vue/cli \
+#     && : 'build Vue' \
+#     && cd frontend \
+#     && npm ci \
+#     && npm run build \
+#     && cd ../ \
+#     && cp -r ./public /var/www \
+#     && rm -rf ./* \
+#     && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /var/www
+# WORKDIR /var/www
