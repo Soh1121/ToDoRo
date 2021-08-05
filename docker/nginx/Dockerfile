@@ -26,9 +26,9 @@ RUN npm install -g @vue/cli \
     && npm ci \
     && npm run build \
     && cd ../ \
-    && chmod 701 ./public \
     && mkdir -p /var/www/public \
     && cp -r ./public /var/www/public \
+    # && chmod 701
     && rm -rf ./* \
     && rm -rf /var/lib/apt/lists/*
 
