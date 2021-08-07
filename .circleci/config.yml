@@ -51,6 +51,26 @@ commands:
           name: Start the container
           command: docker-compose up -d --build web nginx
 
+  install_php_library:
+    steps:
+      - run:
+          name: Install PHP libraries
+          command: docker-comose exec web composer install -n --prefer-dist --no-dev
+
+  install_js_library:
+    steps:
+      - run:
+          name: Install JavaScript libraries
+          command: docker-compose exec web bash -c "cd frontend && npm ci && npm run build"
+
+  copy_docker_web_directory:
+    steps:
+      - run:
+          name: Copy Docker's web directory to the host
+          command: |
+            rm -rf ./web/*
+            docker cp `docker-compose ps -q web`:~/* ./web
+
   install:
     steps:
       - run:
@@ -190,6 +210,10 @@ jobs:
       - assume_role
       - set_env_vars
       - setup_remote_docker
+      - start_container
+      - install_php_library
+      - install_js_library
+      - copy_docker_web_directory
       - login_to_ecr
       - push_nginx_image_to_ecr
       - push_php_image_to_ecr

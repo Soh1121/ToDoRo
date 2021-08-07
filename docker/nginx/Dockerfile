@@ -19,17 +19,3 @@ COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 COPY ./web /work/web
 
 WORKDIR /work/web
-
-RUN npm install -g @vue/cli \
-    && : 'build Vue' \
-    && cd frontend \
-    && npm ci \
-    && npm run build \
-    && cd ../ \
-    && mkdir -p /var/www/public \
-    && cp -r ./public/* /var/www/public \
-    # && chmod 701 /var/www/public \
-    && rm -rf ./* \
-    && rm -rf /var/lib/apt/lists/*
-
-# WORKDIR /var/www
