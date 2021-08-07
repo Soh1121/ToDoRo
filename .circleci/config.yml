@@ -68,12 +68,9 @@ commands:
       - run:
           name: Copy Docker's web directory to the host
           command: |
-            ls ./web
             rm -rf ./web
-            docker-compose exec web ls /var/www
             docker cp `docker-compose ps -q web`:/var/www ./
             mv www/ web/
-            ls ./web
 
   install:
     steps:
@@ -218,9 +215,9 @@ jobs:
       - install_php_library
       - install_js_library
       - copy_docker_web_directory
-      # - login_to_ecr
-      # - push_nginx_image_to_ecr
-      # - push_php_image_to_ecr
+      - login_to_ecr
+      - push_nginx_image_to_ecr
+      - push_php_image_to_ecr
 
   deploy_by_ecspresso:
     executor: docker-build
@@ -248,11 +245,11 @@ workflows:
               only:
                 - master
                 - feature/configureForProductionEnvironment
-      # - deploy_by_ecspresso:
-      #     requires:
-      #       - build_and_push_image
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
-      #           - feature/configureForProductionEnvironment
+      - deploy_by_ecspresso:
+          requires:
+            - build_and_push_image
+          filters:
+            branches:
+              only:
+                - master
+                - feature/configureForProductionEnvironment
