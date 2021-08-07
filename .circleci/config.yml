@@ -69,7 +69,7 @@ commands:
           name: Copy Docker's web directory to the host
           command: |
             rm -rf ./web/*
-            docker cp `docker-compose ps -q web`:/var/www/* ./web
+            docker cp `docker-compose ps -q web`:/var/www ./web
 
   install:
     steps:
