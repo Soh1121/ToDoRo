@@ -55,7 +55,7 @@ commands:
     steps:
       - run:
           name: Install PHP libraries
-          command: docker-comose exec web composer install -n --prefer-dist --no-dev
+          command: docker-compose exec web composer install -n --prefer-dist --no-dev
 
   install_js_library:
     steps:
