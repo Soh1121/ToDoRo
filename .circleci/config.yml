@@ -68,8 +68,11 @@ commands:
       - run:
           name: Copy Docker's web directory to the host
           command: |
+            ls ./web
             rm -rf ./web/*
+            docker-compose exec web ls /var/www
             docker cp `docker-compose ps -q web`:/var/www ./web
+            ls ./web
 
   install:
     steps:
@@ -244,11 +247,11 @@ workflows:
               only:
                 - master
                 - feature/configureForProductionEnvironment
-      - deploy_by_ecspresso:
-          requires:
-            - build_and_push_image
-          filters:
-            branches:
-              only:
-                - master
-                - feature/configureForProductionEnvironment
+      # - deploy_by_ecspresso:
+      #     requires:
+      #       - build_and_push_image
+      #     filters:
+      #       branches:
+      #         only:
+      #           - master
+      #           - feature/configureForProductionEnvironment
