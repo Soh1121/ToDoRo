@@ -35,7 +35,7 @@ resource "aws_db_parameter_group" "this" {
 
   parameter {
     name  = "collation_server"
-    value = "utf8mb4_0900_ai_ci"
+    value = "utf8mb4_bin"
   }
 
   parameter {
