@@ -53,7 +53,7 @@ resource "aws_security_group" "vpc" {
 
 resource "aws_security_group" "db_todoro" {
   name   = "${aws_vpc.this.tags.Name}-db-todoro"
-  vpc_id = aws_vpc.this.vpc_id
+  vpc_id = aws_vpc.this.id
   ingress {
     from_port = 0
     to_port   = 0
