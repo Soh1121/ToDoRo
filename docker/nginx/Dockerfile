@@ -12,9 +12,10 @@ COPY --from=node /usr/local/bin /usr/local/bin
 COPY --from=node /usr/local/lib /usr/local/lib
 # yarn command
 COPY --from=node /opt /opt
-# nginx config file
-COPY ./docker/nginx/*.conf /etc/nginx/conf.d/default.conf
+# nginx config file will be output to /etc/nginx/conf.d/ by envsubst
+COPY ./docker/nginx/default.conf /etc/nginx/templates/default.conf.template
+COPY ./docker/nginx/nginx.conf /etc/nginx/nginx.conf
 
-COPY ./web/public /var/www/web/public
+COPY ./web/public /var/www/public
 
 WORKDIR /var/www

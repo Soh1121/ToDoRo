@@ -7,10 +7,6 @@ executors:
     docker:
       - image: circleci/php:7.4.1-node-browsers
     working_directory: ~/todoro
-  general:
-    docker:
-      - image: cimg/base:stable
-    working_directory: ~/todoro
 
 commands:
   restore_aws:
@@ -48,6 +44,33 @@ commands:
           paths:
             - "web/frontend/node_modules"
           key: npm-v1-{{ .Revision }}
+
+  start_container:
+    steps:
+      - run:
+          name: Start the container
+          command: docker-compose up -d --build web nginx
+
+  install_php_library:
+    steps:
+      - run:
+          name: Install PHP libraries
+          command: docker-compose exec web composer install -n --prefer-dist --no-dev
+
+  install_js_library:
+    steps:
+      - run:
+          name: Install JavaScript libraries
+          command: docker-compose exec web bash -c "cd frontend && npm ci && npm run build"
+
+  copy_docker_web_directory:
+    steps:
+      - run:
+          name: Copy Docker's web directory to the host
+          command: |
+            rm -rf ./web
+            docker cp `docker-compose ps -q web`:/var/www ./
+            mv www/ web/
 
   install:
     steps:
@@ -122,6 +145,27 @@ commands:
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest
             docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
 
+  set_env_vars:
+    steps:
+      - run:
+          name: Set env vars for prod
+          command: echo "export ENV_NAME=prod" >> $BASH_ENV
+      - run:
+          name: Set env vars for "IMAGE_TAG"
+          command: echo "export IMAGE_TAG=${CIRCLE_SHA1}" >> ${BASH_ENV}
+      - run:
+          name: Set env vars for VPC CIDR
+          command: echo "export VPC_CIDR=172.32.0.0/16" >> ${BASH_ENV}
+
+  upload_env_file:
+    steps:
+      - run:
+          name: Upload env file
+          command: |
+            cd web
+            aws s3 cp .env.$ENV_NAME s3://$SERVICE_NAME-$ENV_NAME-$SERVICE_NAME-env-file/$IMAGE_TAG/.env
+            cd ../
+
   ecspresso_deploy:
     steps:
       - run:
@@ -165,23 +209,26 @@ jobs:
       - install
       - save_aws
       - assume_role
-      - run:
-          name: Set env vars for prod
-          command: echo "ENV_NAME=prod" >> $BASH_ENV
+      - set_env_vars
       - setup_remote_docker
-      - run: docker-compose up -d --build web nginx
+      - start_container
+      - install_php_library
+      - install_js_library
+      - copy_docker_web_directory
       - login_to_ecr
       - push_nginx_image_to_ecr
       - push_php_image_to_ecr
 
   deploy_by_ecspresso:
-    executor: general
+    executor: docker-build
     steps:
       - checkout
       - restore_aws
       - install
       - save_aws
+      - set_env_vars
       - assume_role
+      - upload_env_file
       - ecspresso/install
       - ecspresso_deploy
 

@@ -8,6 +8,8 @@ services:
       - 80:80
     depends_on:
       - web
+    environment:
+      - VPC_CIDR=${VPC_CIDR:-172.32.0.0/16}
   web:
     build:
       context: .
@@ -28,3 +30,9 @@ services:
       - "3306:3306"
     volumes:
       - ./database:/var/lib/mysql
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${VPC_CIDR:-172.32.0.0/16}
