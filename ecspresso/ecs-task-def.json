@@ -69,6 +69,10 @@
         {
           "name": "APP_KEY",
           "valueFrom": "/{{ must_env `SERVICE_NAME` }}/{{ must_env `ENV_NAME` }}/{{ must_env `SERVICE_NAME` }}/APP_KEY"
+        },
+        {
+          "name": "DB_PASSWORD",
+          "valueFrom": "/{{ must_env `SERVICE_NAME` }}/{{ must_env `ENV_NAME` }}/{{ must_env `SERVICE_NAME` }}/DB_PASSWORD"
         }
       ],
       "volumesFrom": []
