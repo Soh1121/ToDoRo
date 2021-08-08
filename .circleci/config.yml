@@ -179,6 +179,7 @@ commands:
       - run:
           name: Register task definition
           command: |
+            cd ecspresso
             ecspresso register --config config_$ENV_NAME.yaml
 
   migrate_database:
@@ -186,6 +187,7 @@ commands:
       - run:
           name: Migrate database
           command: |
+            cd ecspresso
             ecspresso run --config config_$ENV_NAME.yaml \
               --latest-task-definition \
               --watch^container=php \
