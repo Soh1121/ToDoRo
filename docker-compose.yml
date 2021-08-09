@@ -17,6 +17,12 @@ services:
     ports:
       - 8081:8081
       - 3000:3000
+    environment:
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+      - REDIS_HOST=cache
+      - REDIS_PASSWORD=null
+      - REDIS_PORT=6379
   database:
     build:
       context: .
@@ -30,6 +36,8 @@ services:
       - "3306:3306"
     volumes:
       - ./database:/var/lib/mysql
+  cache:
+    image: redis:6.2.4-alpine
 
 networks:
   default:

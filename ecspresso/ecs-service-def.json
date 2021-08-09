@@ -30,7 +30,8 @@
       "assignPublicIp": "DISABLED",
       "securityGroups": [
         "{{ tfstate `data.aws_security_group.vpc.id` }}",
-        "{{ tfstate `data.aws_security_group.db_todoro.id` }}"
+        "{{ tfstate `data.aws_security_group.db_todoro.id` }}",
+        "{{ tfstate `data.aws_security_group.cache_todoro.id` }}"
       ],
       "subnets": [
         "{{ tfstate `data.aws_subnet.private['a'].id`}}",

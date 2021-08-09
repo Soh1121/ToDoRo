@@ -17,3 +17,13 @@ data "terraform_remote_state" "db_todoro" {
     region = "ap-northeast-1"
   }
 }
+
+data "terraform_remote_state" "cache_todoro" {
+  backend = "s3"
+
+  config = {
+    bucket = "todoro-tfstate"
+    key = "${local.service_name}/${local.env_name}/cache/todoro_v1.0.0.tfstate"
+    region = "ap-northeast-1"
+  }
+}
