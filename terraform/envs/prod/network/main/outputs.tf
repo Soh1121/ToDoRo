@@ -10,6 +10,10 @@ output "security_group_db_todoro_id" {
   value = aws_security_group.db_todoro.id
 }
 
+output "security_group_cache_todoro_id" {
+  value = aws_security_group.cache_todoro.id
+}
+
 output "subnet_public" {
   value = aws_subnet.public
 }
