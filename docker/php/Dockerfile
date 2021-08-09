@@ -16,7 +16,10 @@ RUN apt-get update \
   && /install-composer.sh \
   && mv composer.phar /usr/local/bin/composer \
   && : 'Install Vue CLI' \
-  && npm install -g @vue/cli
+  && npm install -g @vue/cli \
+  && : 'Install Redis' \
+  && pecl install redis-5.3.4 \
+  && docker-php-ext-enable redis
 
 COPY ./docker/php/php-fpm.d/zzz-www.conf /usr/local/etc/php-fpm.d/zzz-www.conf
 COPY ./docker/php/php.ini /usr/local/etc/php/php.ini
