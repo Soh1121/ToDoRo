@@ -49,7 +49,7 @@ commands:
     steps:
       - run:
           name: Start the container
-          command: docker-compose up -d --build web nginx
+          command: docker-compose -f docker-compose.prod.yml up -d --build web nginx
 
   install_php_library:
     steps:
