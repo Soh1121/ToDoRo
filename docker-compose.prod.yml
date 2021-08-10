@@ -1,6 +1,46 @@
 version: '3'
 services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - web
+    environment:
+      - VPC_CIDR=${VPC_CIDR:-172.32.0.0/16}
   web:
-    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    ports:
+      - 8081:8081
+      - 3000:3000
+    environment:
+      - SESSION_DRIVER=${SESSION_DRIVER:-redis}
+      - SESSION_LIFETIME=${SESSION_LIFETIME:-120}
+      - REDIS_HOST=cache
+      - REDIS_PASSWORD=null
+      - REDIS_PORT=6379
   database:
-    restart: always
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    environment:
+      MYSQL_DATABASE: todoro
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: password
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./database:/var/lib/mysql
+  cache:
+    image: redis:6.2.4-alpine
+
+networks:
+  default:
+    ipam:
+      config:
+        - subnet: ${VPC_CIDR:-172.32.0.0/16}
