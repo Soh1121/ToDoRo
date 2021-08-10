@@ -265,7 +265,6 @@ workflows:
             branches:
               only:
                 - master
-                - feature/rebuildLocalEnvironment
       - deploy_by_ecspresso:
           requires:
             - build_and_push_image
@@ -273,4 +272,3 @@ workflows:
             branches:
               only:
                 - master
-                - feature/rebuildLocalEnvironment
