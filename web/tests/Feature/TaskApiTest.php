@@ -649,8 +649,14 @@ class TaskApiTest extends TestCase
                     'user' => $user->id,
                 ])
             );
+        $expected_data = [];
 
-        $response->assertStatus(200);
+        $response->assertStatus(200)
+            ->assertJsonStructure()
+            ->assertJsonCount(0, 'data')
+            ->assertJsonFragment([
+                'data' => $expected_data,
+            ]);
     }
 
     /**
