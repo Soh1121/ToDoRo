@@ -637,6 +637,25 @@ class TaskApiTest extends TestCase
     /**
      * @test
      */
+    public function should_タスクを参照できないとき空の配列が返る()
+    {
+        // タスク登録していないユーザーを利用
+        $user = User::where('id', 3)->first();
+        $response = $this
+            ->actingAs($user)
+            ->json(
+                'GET',
+                route('task.index', [
+                    'user' => $user->id,
+                ])
+            );
+
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @test
+     */
     public function should_タスク名を変更できる()
     {
         // 変更に必要な情報の設定

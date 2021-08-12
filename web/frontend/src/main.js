@@ -8,7 +8,7 @@ import "@mdi/font/css/materialdesignicons.css";
 require("@/assets/sass/app.scss");
 
 Vue.config.productionTip = false;
-Vue.config.devtools = false;
+Vue.config.devtools = true;
 
 const createApp = async () => {
   async function loadData() {
