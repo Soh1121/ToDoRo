@@ -198,6 +198,7 @@ export default {
       await this.$store.dispatch("auth/register", this.registerForm);
       if (this.apiStatus) {
         const functions = [
+          this.fetch("task"),
           this.fetch("context"),
           this.fetch("project"),
           this.fetchDefaultData("repeat"),

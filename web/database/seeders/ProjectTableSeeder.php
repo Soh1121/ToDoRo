@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Project;
 use Illuminate\Database\Seeder;
 
 class ProjectTableSeeder extends Seeder
@@ -11,19 +14,19 @@ class ProjectTableSeeder extends Seeder
      */
     public function run()
     {
-        App\Project::create([
+        Project::create([
             'user_id' => 1,
             'name' => '今日1',
         ]);
-        App\Project::create([
+        Project::create([
             'user_id' => 1,
             'name' => '明日1',
         ]);
-        App\Project::create([
+        Project::create([
             'user_id' => 2,
             'name' => '今日2',
         ]);
-        App\Project::create([
+        Project::create([
             'user_id' => 2,
             'name' => '明日2',
         ]);
