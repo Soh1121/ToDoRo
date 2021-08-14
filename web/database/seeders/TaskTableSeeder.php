@@ -1,5 +1,8 @@
 <?php
 
+namespace Database\Seeders;
+
+use App\Task;
 use Illuminate\Database\Seeder;
 
 class TaskTableSeeder extends Seeder
@@ -25,8 +28,8 @@ class TaskTableSeeder extends Seeder
             'repeat_id' => 2,
             'priority_id' => 5,
         ];
-        App\Task::create($param);
+        Task::create($param);
         $param['name'] = 'テスト2';
-        App\Task::create($param);
+        Task::create($param);
     }
 }
