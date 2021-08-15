@@ -1,25 +1,274 @@
-version: 2
-jobs:
-  build:
+version: 2.1
+orbs:
+  ecspresso: fujiwara/ecspresso@0.0.14
+
+executors:
+  docker-build:
     docker:
       - image: circleci/php:7.4.1-node-browsers
-      - working_directory: ~/todoro
-      - steps:
-        - cechkout
+    working_directory: ~/todoro
+
+commands:
+  restore_aws:
+    steps:
+      - restore_cache:
+          key: work-v1-{{ .Revision }}
+
+  save_aws:
+    steps:
+      - save_cache:
+          paths:
+            - "aws-cli"
+          key: work-v1-{{ .Revision }}
+
+  restore_composer:
+    steps:
+      - restore_cache:
+          key: composer-v1-{{ .Revision }}
+
+  save_composer:
+    steps:
+      - save_cache:
+          paths:
+            - "web/vendor"
+          key: composer-v1-{{ .Revision }}
+
+  restore_npm:
+    steps:
+      - restore_cache:
+          key: npm-v1-{{ .Revision }}
+
+  save_npm:
+    steps:
+      - save_cache:
+          paths:
+            - "web/frontend/node_modules"
+          key: npm-v1-{{ .Revision }}
+
+  start_container:
+    steps:
+      - run:
+          name: Start the container
+          command: docker-compose -f docker-compose.prod.yml up -d --build web nginx
+
+  install_php_library:
+    steps:
+      - run:
+          name: Install PHP libraries
+          command: docker-compose exec web composer install -n --prefer-dist --no-dev
+
+  install_js_library:
+    steps:
+      - run:
+          name: Install JavaScript libraries
+          command: docker-compose exec web bash -c "cd frontend && npm ci && npm run build"
+
+  copy_docker_web_directory:
+    steps:
+      - run:
+          name: Copy Docker's web directory to the host
+          command: |
+            rm -rf ./web
+            docker cp `docker-compose ps -q web`:/var/www ./
+            mv www/ web/
+
+  install:
+    steps:
+      - run:
+          name: install
+          command: |
+            if [[ ! -d aws-cli ]]; then
+              curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+              unzip awscliv2.zip
+              sudo ./aws/install --install-dir ~/work/aws-cli
+            fi
+
+  assume_role:
+    steps:
+      - run:
+          name: Assume Role
+          command: |
+            export PATH=$PATH:$HOME/work/aws-cli/v2/current/bin
+
+            aws configure set aws_access_key_id ${PROD_AWS_ACCESS_KEY_ID}
+            aws configure set aws_secret_access_key ${PROD_AWS_SECRET_ACCESS_KEY}
+
+            AWS_STS_CREDENTIALS="$(aws sts assume-role \
+              --role-arn "${PROD_AWS_ASSUME_ROLE_ARN}" \
+              --role-session-name "CircleCI" \
+              --external-id ${AWS_DEPLOY_IAM_ROLE_EXTERNAL_ID} \
+              --duration-seconds 1800 \
+              --query "Credentials" \
+              --output "json")"
+            echo "export AWS_ACCESS_KEY_ID=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.AccessKeyId')" >> ${BASH_ENV}
+            echo "export AWS_SECRET_ACCESS_KEY=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SecretAccessKey')" >> ${BASH_ENV}
+            echo "export AWS_SESSION_TOKEN=$(echo ${AWS_STS_CREDENTIALS} | jq -r '.SessionToken')"  >> ${BASH_ENV}
+
+  login_to_ecr:
+    steps:
+      - run:
+          name: Login to ECR
+          command: |
+            aws ecr get-login-password | docker login --username AWS --password-stdin ${AWS_ACCOUNT_URL}
+
+  push_nginx_image_to_ecr:
+    steps:
+      - run:
+          name: Setup custom environment variables
+          command: |
+            echo "export ECR_NGINX_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-nginx" >> ${BASH_ENV}
+      - run:
+          name: Push nginx image to ECR
+          command: |
+            docker build \
+              --cache-from=$AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
+              -f docker/nginx/Dockerfile \
+              -t $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest \
+              -t $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
+            docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:latest
+            docker push $AWS_ACCOUNT_URL/$ECR_NGINX_REPOSITORY:${CIRCLE_SHA1}
+
+  push_php_image_to_ecr:
+    steps:
+      - run:
+          name: Setup custom environment variables
+          command: |
+            echo "export ECR_PHP_REPOSITORY=${SERVICE_NAME}-${ENV_NAME}-php" >> ${BASH_ENV}
+      - run:
+          name: Push php image to ECR
+          command: |
+            docker build \
+              --cache-from=$AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest --build-arg BUILDKIT_INLINE_CACHE=1 . \
+              -f docker/php/Dockerfile \
+              -t $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest \
+              -t $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
+            docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:latest
+            docker push $AWS_ACCOUNT_URL/$ECR_PHP_REPOSITORY:${CIRCLE_SHA1}
+
+  set_env_vars:
+    steps:
+      - run:
+          name: Set env vars for prod
+          command: echo "export ENV_NAME=prod" >> $BASH_ENV
+      - run:
+          name: Set env vars for "IMAGE_TAG"
+          command: echo "export IMAGE_TAG=${CIRCLE_SHA1}" >> ${BASH_ENV}
+      - run:
+          name: Set env vars for VPC CIDR
+          command: echo "export VPC_CIDR=172.32.0.0/16" >> ${BASH_ENV}
+
+  upload_env_file:
+    steps:
+      - run:
+          name: Upload env file
+          command: |
+            cd web
+            aws s3 cp .env.$ENV_NAME s3://$SERVICE_NAME-$ENV_NAME-$SERVICE_NAME-env-file/$IMAGE_TAG/.env
+            cd ../
+
+  ecspresso_deploy:
+    steps:
+      - run:
+          name: Deploy by ecspresso
+          command: |
+            cd ecspresso
+            ecspresso deploy --config config_$ENV_NAME.yaml
+
+  ecspresso_register:
+    steps:
+      - run:
+          name: Register task definition
+          command: |
+            cd ecspresso
+            ecspresso register --config config_$ENV_NAME.yaml
+
+  migrate_database:
+    steps:
+      - run:
+          name: Migrate database
+          command: |
+            cd ecspresso
+            ecspresso run --config config_$ENV_NAME.yaml \
+              --latest-task-definition \
+              --watch-container=php \
+              --overrides='{"containerOverrides":[{"name":"nginx", "command":["nginx", "-v"]},{"name":"php", "command":["php", "artisan", "migrate", "--force"]}]}'
+
+jobs:
+  test:
+    docker:
+      - image: circleci/php:7.4.1-node-browsers
+    working_directory: ~/todoro
+    steps:
+      - checkout
       - run:
           name: Update apt-get
           command: sudo apt-get update
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "composer.json" }}
+            - v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
             - v1-dependencies-
       - run:
           name: Install PHP libraries
           command: composer install -n --prefer-dist
+          working_directory: ~/todoro/web
       - save_cache:
           paths:
             - ./vendor
-          key: v1-dependencies-{{ checksum "composer.json" }}
+          key: v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
       - run:
           name: Run PHPUnit
           command: vendor/bin/phpunit
+          working_directory: ~/todoro/web
+
+  build_and_push_image:
+    executor: docker-build
+    steps:
+      - checkout
+      - restore_aws
+      - install
+      - save_aws
+      - assume_role
+      - set_env_vars
+      - setup_remote_docker
+      - start_container
+      - install_php_library
+      - install_js_library
+      - copy_docker_web_directory
+      - login_to_ecr
+      - push_nginx_image_to_ecr
+      - push_php_image_to_ecr
+
+  deploy_by_ecspresso:
+    executor: docker-build
+    steps:
+      - checkout
+      - restore_aws
+      - install
+      - save_aws
+      - set_env_vars
+      - assume_role
+      - upload_env_file
+      - ecspresso/install
+      - ecspresso_deploy
+      - ecspresso_register
+      - migrate_database
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - test
+      - build_and_push_image:
+          requires:
+            - test
+          filters:
+            branches:
+              only:
+                - master
+      - deploy_by_ecspresso:
+          requires:
+            - build_and_push_image
+          filters:
+            branches:
+              only:
+                - master

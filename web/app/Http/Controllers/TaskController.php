@@ -88,6 +88,9 @@ class TaskController extends Controller
     public function index(int $user_id)
     {
         $data = $this->search($user_id);
+        if (empty($data)) {
+            return response()->json(['data' => $data]);
+        }
         $task = Task::where('user_id', $user_id)
             ->first();
         $this->authorize('view', $task);

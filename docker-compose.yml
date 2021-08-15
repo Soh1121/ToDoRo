@@ -6,11 +6,13 @@ services:
       - 80:80
     volumes:
       - ./web:/var/www
-      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ./docker/nginx/default.env.conf:/etc/nginx/conf.d/default.conf
     depends_on:
       - web
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile.env
     environment:
       - "TZ=Asia/Tokyo"
     volumes:
