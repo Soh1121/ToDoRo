@@ -202,7 +202,9 @@ jobs:
       - checkout
       - run:
           name: Update apt-get
-          command: sudo apt-get update
+          command: |
+            sudo rm -rf /var/lib/apt/lists/*
+            sudo apt-get update
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "~/todoro/web/composer.json" }}
