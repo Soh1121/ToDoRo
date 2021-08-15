@@ -267,7 +267,6 @@ workflows:
             branches:
               only:
                 - master
-                - fix/cantGetCircleCIToWork
       - deploy_by_ecspresso:
           requires:
             - build_and_push_image
@@ -275,4 +274,3 @@ workflows:
             branches:
               only:
                 - master
-                - fix/cantGetCircleCIToWork
