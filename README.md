@@ -1,13 +1,11 @@
 ## ToDoRo（トゥードーロ）
 
+※ 運営コストに耐えかね、公開を停止しました。ご理解の程、よろしくお願いいたします。
+
 ### 概要
 
 『**ToDoRo（トゥードーロ）**』は、仕事や学習に集中して取り組むことを手助けする**タスク管理アプリ**です。  
 ToDoリストとポモドーロ・テクニック（25分の集中と5分の休憩による時間管理）を組み合わせ、メリハリを付けてタスクに取り組む事ができます。
-
-### URL
-
-[https://todoro.tokyo](https://todoro.tokyo)
 
 <img width="1440" alt="todoro-toppage" src="https://user-images.githubusercontent.com/36541680/129471478-85b4983b-01cc-41b3-b23f-76455c6d194c.png">
 
