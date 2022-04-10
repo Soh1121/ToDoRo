@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@mdi/font": "^5.3.45",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "caniuse-lite": "^1.0.30001219",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
